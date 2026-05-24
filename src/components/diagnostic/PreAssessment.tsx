@@ -230,9 +230,10 @@ function FindErrorStep({
 interface PreAssessmentProps {
   onComplete: (result: DiagnosticResult) => void
   onCancel: () => void
+  userId?: string
 }
 
-export default function PreAssessment({ onComplete, onCancel }: PreAssessmentProps) {
+export default function PreAssessment({ onComplete, onCancel, userId = 'demo-user' }: PreAssessmentProps) {
   const [stepIdx, setStepIdx] = useState(0)
   const [mcqAnswers, setMcqAnswers] = useState<(number | null)[]>(() => Array(SAMPLE_MCQ.length).fill(null))
   const [reorderAnswer, setReorderAnswer] = useState<number[]>(() => SAMPLE_REORDER.map((_, i) => i))
@@ -291,7 +292,7 @@ export default function PreAssessment({ onComplete, onCancel }: PreAssessmentPro
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: 'demo-user',
+          userId,
           stepScores,
           totalScore,
           stage,

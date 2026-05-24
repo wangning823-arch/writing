@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ThinkingIcon, BookIcon } from '@/components/icons'
 import { CHINESE_LEVEL_NAMES, ENGLISH_LEVEL_NAMES, LEVEL_ICONS, STAGE_META } from '@/lib/constants'
+import { useNavigation } from '@/contexts/NavigationContext'
 import type { Stage, TrainingProgress, AbilityProfile } from '@/types'
 
 interface Stats {
@@ -23,6 +24,7 @@ interface DailyRecommendation {
 export default function SubjectPage() {
   const params = useParams()
   const router = useRouter()
+  const { userId } = useNavigation()
   const subject = params.subject as 'chinese' | 'english'
 
   const [grade, setGrade] = useState('高一')
@@ -38,7 +40,7 @@ export default function SubjectPage() {
     const saved = localStorage.getItem('bifeng-grade')
     if (saved) setGrade(saved)
 
-    fetch('/api/progress?userId=demo-user')
+    fetch(`/api/progress?userId=${encodeURIComponent(userId)}`)
       .then(r => r.json())
       .then(data => {
         setStage(subject === 'chinese' ? (data.chineseStage || 'sprout') : (data.englishStage || 'sprout'))
@@ -47,7 +49,7 @@ export default function SubjectPage() {
         setDailyRecommendations(data.dailyRecommendations || [])
       })
       .catch(() => {})
-  }, [subject])
+  }, [subject, userId])
 
   const stageMeta = STAGE_META[stage] || STAGE_META.sprout
 

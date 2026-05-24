@@ -29,9 +29,10 @@ const GRADES: GradeOption[] = [
 interface GradeSelectorProps {
   onComplete: (grade: string) => void
   onSkip: () => void
+  userId?: string
 }
 
-export default function GradeSelector({ onComplete, onSkip }: GradeSelectorProps) {
+export default function GradeSelector({ onComplete, onSkip, userId = 'demo-user' }: GradeSelectorProps) {
   const [selected, setSelected] = useState<string | null>(null)
 
   const handleSelect = async (grade: string) => {
@@ -43,7 +44,7 @@ export default function GradeSelector({ onComplete, onSkip }: GradeSelectorProps
       await fetch('/api/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: 'demo-user', grade }),
+        body: JSON.stringify({ userId, grade }),
       })
     } catch {
       // API save is best-effort; localStorage is the primary store

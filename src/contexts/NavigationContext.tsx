@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useRef, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useRef, useCallback, useEffect, ReactNode } from 'react'
 import { AppView } from '@/lib/viewMapping'
 import { Stage, TrainingProgress, AbilityProfile } from '@/types'
 
@@ -14,6 +14,15 @@ interface SubjectStats {
   totalCount: number
   monthlyCount: number
   streak: number
+}
+
+export interface UserProfile {
+  id: string
+  name: string | null
+  grade: string | null
+  chineseLevel: number
+  englishLevel: number
+  createdAt: string
 }
 
 interface NavigationContextType {
@@ -59,11 +68,16 @@ interface NavigationContextType {
   dailyRecommendations: Array<{ subject: string; level: number; label: string; estimatedMinutes: number }>
   setDailyRecommendations: (r: Array<{ subject: string; level: number; label: string; estimatedMinutes: number }>) => void
   refreshProgress: () => Promise<void>
+  userId: string
+  setUserId: (id: string) => void
+  users: UserProfile[]
+  refreshUsers: () => Promise<void>
+  createUser: (name: string, grade?: string) => Promise<UserProfile | null>
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
 
-async function fetchProgress(): Promise<{
+async function fetchProgress(userId: string): Promise<{
   chineseStage: Stage
   englishStage: Stage
   chineseProgress: TrainingProgress[]
@@ -76,7 +90,7 @@ async function fetchProgress(): Promise<{
   englishAchievements: Array<{ name: string; icon: string }>
 }> {
   try {
-    const res = await fetch('/api/progress?userId=demo-user')
+    const res = await fetch(`/api/progress?userId=${encodeURIComponent(userId)}`)
     if (!res.ok) throw new Error('Failed to fetch progress')
     const data = await res.json()
     return {
@@ -116,6 +130,10 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [feedback, setFeedback] = useState<any | null>(null)
   const [grade, setGrade] = useState<string>('高一')
 
+  const [userId, setUserIdState] = useState<string>('demo-user')
+  const [users, setUsers] = useState<UserProfile[]>([])
+  const [userIdReady, setUserIdReady] = useState(false)
+
   const [chineseStage, setChineseStage] = useState<Stage>('sprout')
   const [englishStage, setEnglishStage] = useState<Stage>('sprout')
   const [progress, setProgress] = useState<{ chinese: TrainingProgress[]; english: TrainingProgress[] }>({ chinese: [], english: [] })
@@ -151,7 +169,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const canGoBack = historyRef.current.length > 1
 
   const refreshProgress = useCallback(async () => {
-    const data = await fetchProgress()
+    const data = await fetchProgress(userId)
     setChineseStage(data.chineseStage)
     setEnglishStage(data.englishStage)
     setProgress({ chinese: data.chineseProgress, english: data.englishProgress })
@@ -161,7 +179,53 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     setEnglishStats(data.englishStats)
     setChineseAchievements(data.chineseAchievements)
     setEnglishAchievements(data.englishAchievements)
+  }, [userId])
+
+  const refreshUsers = useCallback(async () => {
+    try {
+      const res = await fetch('/api/users')
+      if (res.ok) {
+        const data = await res.json()
+        setUsers(data)
+      }
+    } catch { /* ignore */ }
   }, [])
+
+  const createUser = useCallback(async (name: string, grade?: string): Promise<UserProfile | null> => {
+    try {
+      const res = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, grade }),
+      })
+      if (res.ok) {
+        const user = await res.json()
+        await refreshUsers()
+        return user
+      }
+    } catch { /* ignore */ }
+    return null
+  }, [refreshUsers])
+
+  const setUserId = useCallback((id: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('bifeng-user-id', id)
+    }
+    setUserIdState(id)
+  }, [])
+
+  // Sync userId from localStorage after mount (safe for SSR)
+  useEffect(() => {
+    const saved = localStorage.getItem('bifeng-user-id')
+    if (saved && saved !== userId) {
+      setUserIdState(saved)
+    }
+    setUserIdReady(true)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (userIdReady) refreshUsers()
+  }, [refreshUsers, userIdReady])
 
   return (
     <NavigationContext.Provider value={{
@@ -176,7 +240,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
       chineseAchievements, setChineseAchievements,
       englishAchievements, setEnglishAchievements,
       weakPoints, setWeakPoints, errorRecords, setErrorRecords,
-      dailyRecommendations, setDailyRecommendations, refreshProgress
+      dailyRecommendations, setDailyRecommendations, refreshProgress,
+      userId, setUserId, users, refreshUsers, createUser
     }}>
       {children}
     </NavigationContext.Provider>

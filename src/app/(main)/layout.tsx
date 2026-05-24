@@ -2,11 +2,14 @@
 
 import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout'
 import { TrainingProvider } from '@/contexts/TrainingContext'
+import { NavigationProvider } from '@/contexts/NavigationContext'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <TrainingProvider>
-      <ThreeColumnLayout>{children}</ThreeColumnLayout>
-    </TrainingProvider>
+    <NavigationProvider>
+      <TrainingProvider>
+        <ThreeColumnLayout>{children}</ThreeColumnLayout>
+      </TrainingProvider>
+    </NavigationProvider>
   )
 }

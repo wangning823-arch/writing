@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { CHINESE_ARGUMENTATIVE_RUBRIC, ENGLISH_ESSAY_RUBRIC } from '@/lib/training/rubrics'
 import { ThinkingIcon } from '@/components/icons'
+import { useNavigation } from '@/contexts/NavigationContext'
 
 interface Stats {
   totalCount: number
@@ -14,18 +15,19 @@ interface Stats {
 
 export default function RightPanel() {
   const pathname = usePathname()
+  const { userId } = useNavigation()
   const [chineseStats, setChineseStats] = useState<Stats>({ totalCount: 0, monthlyCount: 0, streak: 0 })
   const [englishStats, setEnglishStats] = useState<Stats>({ totalCount: 0, monthlyCount: 0, streak: 0 })
 
   useEffect(() => {
-    fetch('/api/progress?userId=demo-user')
+    fetch(`/api/progress?userId=${encodeURIComponent(userId)}`)
       .then(r => r.json())
       .then(data => {
         setChineseStats(data.chineseStats || { totalCount: 0, monthlyCount: 0, streak: 0 })
         setEnglishStats(data.englishStats || { totalCount: 0, monthlyCount: 0, streak: 0 })
       })
       .catch(() => {})
-  }, [])
+  }, [userId])
 
   const isTrainingPage = pathname.startsWith('/training/')
   const isSubjectPage = pathname.startsWith('/subject/')

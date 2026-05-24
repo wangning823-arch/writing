@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useTraining } from '@/contexts/TrainingContext'
+import { useNavigation } from '@/contexts/NavigationContext'
 import Timer from '@/components/training/Timer'
 import ModelEssayViewer from '@/components/training/ModelEssayViewer'
 import WritingTip from '@/components/training/WritingTip'
@@ -21,6 +22,7 @@ import type { Stage, AIFeedback } from '@/types'
 export default function TrainingPage() {
   const params = useParams()
   const router = useRouter()
+  const { userId } = useNavigation()
   const subject = params.subject as 'chinese' | 'english'
   const level = parseInt(params.level as string)
 
@@ -34,14 +36,14 @@ export default function TrainingPage() {
   >([])
 
   useEffect(() => {
-    fetch('/api/progress?userId=demo-user')
+    fetch(`/api/progress?userId=${encodeURIComponent(userId)}`)
       .then(r => r.json())
       .then(data => {
         setChineseStage(data.chineseStage || 'sprout')
         setEnglishStage(data.englishStage || 'sprout')
       })
       .catch(() => {})
-  }, [])
+  }, [userId])
 
   const currentStage = (subject === 'chinese' ? chineseStage : englishStage) as Stage
   const levelLabel = subject === 'chinese' ? CHINESE_LEVEL_NAMES[level] : ENGLISH_LEVEL_NAMES[level]
@@ -66,7 +68,7 @@ export default function TrainingPage() {
           topicTitle: levelConfig?.name || '',
           topicDescription: levelConfig?.description || '',
           content: levelContent,
-          userId: 'demo-user',
+          userId,
           isRevision: false,
         }),
       })
@@ -97,7 +99,7 @@ export default function TrainingPage() {
     } finally {
       setIsReviewing(false)
     }
-  }, [subject, level, selectedTopic, router, setFeedback, setPreviousContent, setIsReviewing])
+  }, [subject, level, selectedTopic, router, setFeedback, setPreviousContent, setIsReviewing, userId])
 
   const handleBack = () => {
     router.push(`/subject/${subject}`)

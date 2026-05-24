@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import UserSwitcher from '@/components/UserSwitcher'
+import { useNavigation } from '@/contexts/NavigationContext'
 
 export default function HomePage() {
+  const { userId } = useNavigation()
   const [grade, setGrade] = useState('高一')
   const [chineseStage, setChineseStage] = useState('sprout')
   const [englishStage, setEnglishStage] = useState('sprout')
@@ -12,14 +15,14 @@ export default function HomePage() {
     const saved = localStorage.getItem('bifeng-grade')
     if (saved) setGrade(saved)
 
-    fetch('/api/progress?userId=demo-user')
+    fetch(`/api/progress?userId=${encodeURIComponent(userId)}`)
       .then(r => r.json())
       .then(data => {
         setChineseStage(data.chineseStage || 'sprout')
         setEnglishStage(data.englishStage || 'sprout')
       })
       .catch(() => {})
-  }, [])
+  }, [userId])
 
   const stageIcon = (stage: string) => {
     if (stage === 'growing') return '🌿'
@@ -31,17 +34,19 @@ export default function HomePage() {
     <div style={{ padding: '32px', maxWidth: '800px', margin: '0 auto' }}>
       {/* Hero */}
       <div style={{ marginBottom: '40px' }}>
-        <h1
-          style={{
-            fontSize: '2rem',
-            fontWeight: 700,
-            color: 'var(--theme_text)',
-            marginBottom: '8px',
-            fontFamily: 'var(--font-display)',
-          }}
-        >
-          欢迎来到笔锋
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+          <h1
+            style={{
+              fontSize: '2rem',
+              fontWeight: 700,
+              color: 'var(--theme_text)',
+              fontFamily: 'var(--font-display)',
+            }}
+          >
+            欢迎来到笔锋
+          </h1>
+          <UserSwitcher />
+        </div>
         <p style={{ fontSize: '1rem', color: 'var(--theme_text-weak)', lineHeight: 1.6 }}>
           AI驱动的高中语文英语写作提升系统
         </p>

@@ -230,9 +230,10 @@ function FindErrorStep({
 interface EnglishPreAssessmentProps {
   onComplete: (result: DiagnosticResult) => void
   onCancel: () => void
+  userId?: string
 }
 
-export default function EnglishPreAssessment({ onComplete, onCancel }: EnglishPreAssessmentProps) {
+export default function EnglishPreAssessment({ onComplete, onCancel, userId = 'demo-user' }: EnglishPreAssessmentProps) {
   const [stepIdx, setStepIdx] = useState(0)
   const [grammarAnswers, setGrammarAnswers] = useState<(number | null)[]>(() => Array(SAMPLE_GRAMMAR.length).fill(null))
   const [vocabAnswers, setVocabAnswers] = useState<(number | null)[]>(() => Array(SAMPLE_VOCAB.length).fill(null))
@@ -290,7 +291,7 @@ export default function EnglishPreAssessment({ onComplete, onCancel }: EnglishPr
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: 'demo-user',
+          userId,
           subject: 'english',
           stepScores,
           totalScore,

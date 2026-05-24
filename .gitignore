@@ -1,0 +1,41 @@
+# AgentPilot
+.agent-uploads/
+.claude/
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# Prisma
+/src/generated/prisma
+
+# Next.js
+.next/
+out/
+
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# Database
+*.db
+*.db-journal
+
+# Backup files
+*.bak
+
+# Preview files
+preview*.html

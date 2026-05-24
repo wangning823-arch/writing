@@ -1,0 +1,185 @@
+/* ============================================
+   Design Tokens - Airtable Style
+   ============================================ */
+
+/* Colors - Primary */
+:root {
+  /* Deep Navy - Primary text */
+  --color-navy-900: #181d26;
+  --color-navy-800: #1f2533;
+  --color-navy-700: #2d3548;
+
+  /* Airtable Blue - CTA & Links */
+  --color-blue-600: #1b61c9;
+  --color-blue-500: #2563eb;
+  --color-blue-400: #3b82f6;
+  --color-blue-300: #60a5fa;
+  --color-blue-200: #93c5fd;
+  --color-blue-100: #dbeafe;
+  --color-blue-50: #eff6ff;
+
+  /* Neutral */
+  --color-white: #ffffff;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+
+  /* Semantic */
+  --color-success: #006400;
+  --color-success-light: #dcfce7;
+  --color-warning: #b45309;
+  --color-warning-light: #fef3c7;
+  --color-error: #dc2626;
+  --color-error-light: #fee2e2;
+
+  /* Borders */
+  --border-color: #e0e2e6;
+  --border-color-hover: #1b61c9;
+
+  /* Theme Tokens */
+  --theme_text: #181d26;
+  --theme_text-weak: rgba(4,14,32,0.69);
+  --theme_text-muted: rgba(4,14,32,0.45);
+  --theme_bg: #ffffff;
+  --theme_bg-subtle: #f8fafc;
+  --theme_bg-muted: #f1f5f9;
+  --theme_button-primary: #1b61c9;
+  --theme_button-text: #ffffff;
+  --theme_button-text-spotlight: rgba(249,252,255,0.97);
+  --theme_button-secondary-bg: #ffffff;
+  --theme_button-secondary-border: #e0e2e6;
+  --theme_button-secondary-text: #181d26;
+  --theme_button-text-secondary-active: rgba(7,12,20,0.82);
+  --theme_success-text: #006400;
+
+  /* Shadows - Blue-tinted */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: rgba(0,0,0,0.32) 0px 0px 1px, rgba(0,0,0,0.08) 0px 0px 2px, rgba(45,127,249,0.28) 0px 1px 3px, rgba(0,0,0,0.06) 0px 0px 0px 0.5px inset;
+  --shadow-lg: rgba(0,0,0,0.32) 0px 0px 1px, rgba(0,0,0,0.08) 0px 0px 2px, rgba(45,127,249,0.28) 0px 2px 6px, rgba(0,0,0,0.06) 0px 0px 0px 0.5px inset;
+  --shadow-soft: rgba(15,48,106,0.05) 0px 0px 20px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-family: Haas, -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Haas Groot Disp', Haas, sans-serif;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --theme_text: #f1f5f9;
+  --theme_text-weak: rgba(241,245,249,0.69);
+  --theme_text-muted: rgba(241,245,249,0.45);
+  --theme_bg: #0f172a;
+  --theme_bg-subtle: #1e293b;
+  --theme_bg-muted: #334155;
+  --theme_button-primary: #3b82f6;
+  --theme_button-secondary-bg: #1e293b;
+  --theme_button-secondary-border: #334155;
+  --theme_button-secondary-text: #f1f5f9;
+  --border-color: #334155;
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -2px rgba(0,0,0,0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -4px rgba(0,0,0,0.2);
+}
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--theme_bg);
+  color: var(--theme_text);
+  line-height: 1.5;
+  letter-spacing: 0.08px;
+}
+
+/* Button Styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.08px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.button-primary {
+  background: var(--theme_button-primary);
+  color: var(--theme_button-text);
+  border: none;
+}
+
+.button-primary:hover {
+  background: #1558b0;
+  box-shadow: var(--shadow-md);
+}
+
+.button-secondary {
+  background: var(--theme_button-secondary-bg);
+  color: var(--theme_button-secondary-text);
+  border: 1px solid var(--theme_button-secondary-border);
+}
+
+.button-secondary:hover {
+  border-color: var(--theme_button-primary);
+}
+
+/* Card Base */
+.card {
+  background: var(--theme_bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+/* Link Styles */
+a {
+  color: var(--theme_button-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  stage         String    @default("sprout") // sprout|growing|thriving
+  chineseLevel  Int       @default(1)
+  englishLevel  Int       @default(1)
+  grade         String    @default("高一") // 高一|高二|高三
+  theme         String    @default("light") // light|dark
+  currentStreak Int       @default(0) // consecutive training days
+  longestStreak Int       @default(0) // longest streak
+  lastPracticedDate String? // last training date (YYYY-MM-DD)
+  totalTrainings Int      @default(0) // total training count
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  assessments     Assessment[]
+  trainingRecords TrainingRecord[]
+  abilityProfiles AbilityProfile[]
+  materials       Material[]
+  achievements    Achievement[]
+  weakPoints      WeakPoint[]
+  reviewSchedules ReviewSchedule[]
+  errorRecords    ErrorRecord[]
+}
+
+model Assessment {
+  id            String @id @default(cuid())
+  userId        String
+  user          User   @relation(fields: [userId], references: [id])
+
+  // 5 dimensions from diagnostic
+  directionScore Int @default(0) // 审题立意
+  structureScore Int @default(0) // 段落排序
+  vocabScore     Int @default(0) // 词汇选择
+  sentenceScore  Int @default(0) // 句式改写
+  errorScore     Int @default(0) // 找错误
+
+  stage        String   // sprout|growing|thriving
+  chineseLevel Int
+  englishLevel Int
+
+  answers     String   @default("[]") // JSON array - store individual answers
+  completedAt DateTime @default(now())
+}
+
+model Topic {
+  id           String @id
+  source       String // 高考真题|模拟题
+  year         Int?
+  region       String?
+  subject      String // chinese|english
+  type         String // 议论文|记叙书信...
+  title        String
+  description  String
+  requirements String?
+  tags         String @default("[]") // JSON array as string for SQLite
+  sampleEssays String @default("[]") // JSON array
+
+  trainingRecords TrainingRecord[]
+}
+
+model TrainingRecord {
+  id       String  @id @default(cuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+  topicId  String?
+  topic    Topic?  @relation(fields: [topicId], references: [id])
+
+  subject String // chinese|english
+  level   Int    // L1-L7 for chinese, L1-L6 for english
+
+  // Student input
+  content String
+
+  // AI Review results
+  score            Int?
+  dimensionScores  String @default("{}") // JSON: {content, structure, language, norms}
+  feedback         String @default("{}") // JSON: full AIFeedback
+
+  // Revision tracking
+  isRevision Boolean @default(false)
+  revisionOf String? // id of original record if this is a revision
+  progressScore Int? // improvement score after revision
+
+  // Suggestion tracking
+  suggestions String @default("[]") // JSON array of {id, status, text}
+
+  // Time tracking
+  timeSpent Int? // seconds
+  timeLimit Int? // seconds, null for untimed
+
+  errorRecords ErrorRecord[]
+
+  createdAt DateTime @default(now())
+}
+
+model AbilityProfile {
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+
+  subject   String // chinese|english
+  dimension String // content|structure|language|norms
+  score     Int    // 0-100
+
+  source   String  // training|assessment
+  recordId String? // link to TrainingRecord or Assessment
+
+  createdAt DateTime @default(now())
+}
+
+model Material {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  content       String
+  source        String    // '范文' | 'AI推荐' | '学生整理'
+  tags          String    @default("[]") // JSON array
+  category      String    // '论据' | '名言' | '事例' | '好词好句'
+  subject       String    // 'chinese' | 'english'
+  usageCount    Int       @default(0)
+  createdAt     DateTime  @default(now())
+}
+
+model Achievement {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  type          String    // 'first_training' | 'streak_7' | 'monthly_star' | 'first_mastery' | 'comprehensive' | 'overcome_weakness'
+  name          String    // '初试锋芒' | '坚持不懈' | etc.
+  description   String
+  icon          String    @default("🎉")
+  subject       String?   // 'chinese' | 'english' | null (cross-subject)
+  unlockedAt    DateTime  @default(now())
+}
+
+model WeakPoint {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  subject       String?   // 'chinese' | 'english'
+  dimension     String    // '内容' | '结构' | '语言' | '规范'
+  description   String
+  frequency     Int       @default(1)
+  lastOccurrence DateTime
+  improvement   String?
+  recommendedTraining String?
+  createdAt     DateTime  @default(now())
+}
+
+model ReviewSchedule {
+  id            String    @id @default(cuid())
+  userId        String
+  subject       String
+  level         Int
+  lastPracticed DateTime
+  lastScore     Int
+  reviewCount   Int       @default(0)
+  nextReview    DateTime
+  status        String    @default("learning") // new|learning|reviewing|mastered
+  interval      Int       @default(1)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id])
+}
+
+model ErrorRecord {
+  id             String    @id @default(cuid())
+  userId         String
+  trainingRecordId String
+  subject        String?   // 'chinese' | 'english'
+  errorType      String    // '逻辑类-偷换概念'
+  subType        String?   // '偷换概念'
+  location       String
+  originalText   String
+  explanation    String
+  severity       String    @default("medium") // high|medium|low
+  isRecurring    Boolean   @default(false)
+  firstOccurrence DateTime @default(now())
+  lastOccurrence  DateTime @default(now())
+  count          Int       @default(1)
+  createdAt      DateTime  @default(now())
+
+  user           User      @relation(fields: [userId], references: [id])
+  trainingRecord TrainingRecord @relation(fields: [trainingRecordId], references: [id])
+}

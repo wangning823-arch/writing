@@ -26,7 +26,7 @@ export default function TrainingPage() {
   const subject = params.subject as 'chinese' | 'english'
   const level = parseInt(params.level as string)
 
-  const { content, setContent, setFeedback, setPreviousContent, setDiffSegments, isReviewing, setIsReviewing } = useTraining()
+  const { content, setContent, setFeedback, setPreviousContent, setDiffSegments, isReviewing, setIsReviewing, lastRecordId, setLastRecordId, setTopicTitle, setTopicDescription, setTrainingSubject, setTrainingLevel, resumeTopic, setResumeTopic } = useTraining()
 
   const [chineseStage, setChineseStage] = useState<Stage>('sprout')
   const [englishStage, setEnglishStage] = useState<Stage>('sprout')
@@ -51,6 +51,17 @@ export default function TrainingPage() {
   }, [subject, level, userId])
 
   useEffect(() => {
+    // If resuming from history, use the stored topic directly
+    if (resumeTopic) {
+      setSelectedTopic(resumeTopic)
+      setTopicLoading(false)
+      setResumeTopic(null) // consumed, clear it
+      return
+    }
+    // Otherwise fetch a new random topic
+    setLastRecordId(null)
+    setTrainingSubject(subject)
+    setTrainingLevel(level)
     fetchTopic()
   }, [fetchTopic])
 
@@ -72,6 +83,7 @@ export default function TrainingPage() {
   const handleReview = useCallback(async (levelContent: string) => {
     setIsReviewing(true)
     setFeedback(null)
+    const isRevision = !!lastRecordId
     try {
       const res = await fetch('/api/ai/review', {
         method: 'POST',
@@ -84,7 +96,8 @@ export default function TrainingPage() {
           topicDescription: selectedTopic?.description || levelConfig?.description || '',
           content: levelContent,
           userId,
-          isRevision: false,
+          isRevision,
+          originalRecordId: lastRecordId || undefined,
         }),
       })
       const data = await res.json()
@@ -108,13 +121,17 @@ export default function TrainingPage() {
       }
       setFeedback(aiFeedback)
       setPreviousContent(levelContent)
+      setLastRecordId(review.recordId || null)
+      setTopicTitle(selectedTopic?.title || levelConfig?.name || '')
+      setTopicDescription(selectedTopic?.description || levelConfig?.description || '')
+      setResumeTopic(selectedTopic)
       router.push('/result')
     } catch {
       alert('网络错误，请重试')
     } finally {
       setIsReviewing(false)
     }
-  }, [subject, level, selectedTopic, router, setFeedback, setPreviousContent, setIsReviewing, userId])
+  }, [subject, level, selectedTopic, router, setFeedback, setPreviousContent, setIsReviewing, userId, lastRecordId, setLastRecordId, setTopicTitle, setTopicDescription, setResumeTopic])
 
   const handleBack = () => {
     router.push(`/subject/${subject}`)
@@ -176,7 +193,7 @@ export default function TrainingPage() {
       />
 
       {/* Model Essay & Tips */}
-      <ModelEssayViewer subject={subject} level={level} />
+      <ModelEssayViewer subject={subject} level={level} topicId={selectedTopic?.id} />
       <WritingTip subject={subject} level={level} />
 
       {/* Self Assessment */}

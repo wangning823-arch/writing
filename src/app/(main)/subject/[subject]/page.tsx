@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ThinkingIcon, BookIcon } from '@/components/icons'
+import RadarChart from '@/components/training/RadarChart'
 import { CHINESE_LEVEL_NAMES, ENGLISH_LEVEL_NAMES, LEVEL_ICONS, STAGE_META } from '@/lib/constants'
 import { useNavigation } from '@/contexts/NavigationContext'
 import type { Stage, TrainingProgress, AbilityProfile } from '@/types'
@@ -31,6 +32,7 @@ export default function SubjectPage() {
   const [stage, setStage] = useState<Stage>('sprout')
   const [progress, setProgress] = useState<TrainingProgress[]>([])
   const [stats, setStats] = useState<Stats>({ totalCount: 0, monthlyCount: 0, streak: 0 })
+  const [abilityProfile, setAbilityProfile] = useState<Array<{ dimension: string; score: number }>>([])
   const [dailyRecommendations, setDailyRecommendations] = useState<DailyRecommendation[]>([])
 
   const levelNames = subject === 'chinese' ? CHINESE_LEVEL_NAMES : ENGLISH_LEVEL_NAMES
@@ -46,6 +48,7 @@ export default function SubjectPage() {
         setStage(subject === 'chinese' ? (data.chineseStage || 'sprout') : (data.englishStage || 'sprout'))
         setProgress(subject === 'chinese' ? (data.chineseProgress || []) : (data.englishProgress || []))
         setStats(subject === 'chinese' ? (data.chineseStats || { totalCount: 0, monthlyCount: 0, streak: 0 }) : (data.englishStats || { totalCount: 0, monthlyCount: 0, streak: 0 }))
+        setAbilityProfile(subject === 'chinese' ? (data.chineseAbilityProfile || []) : (data.englishAbilityProfile || []))
         setDailyRecommendations(data.dailyRecommendations || [])
       })
       .catch(() => {})
@@ -159,7 +162,13 @@ export default function SubjectPage() {
       </div>
 
       {/* Quick Links */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+        <Link href={`/history/${subject}`} style={{ textDecoration: 'none' }}>
+          <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)', textAlign: 'center' }}>
+            <span style={{ fontSize: '1.5rem' }}>📋</span>
+            <div style={{ fontSize: '0.8125rem', color: 'var(--theme_text)', marginTop: '4px' }}>训练记录</div>
+          </div>
+        </Link>
         <Link href={`/thinking?subject=${subject}`} style={{ textDecoration: 'none' }}>
           <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)', textAlign: 'center' }}>
             <ThinkingIcon size={24} />
@@ -173,6 +182,18 @@ export default function SubjectPage() {
           </div>
         </Link>
       </div>
+
+      {/* Ability Radar */}
+      {abilityProfile.length > 0 && (
+        <div style={{ marginTop: '32px' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--theme_text)', marginBottom: '16px' }}>
+            能力雷达图
+          </h2>
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'var(--theme_bg)' }}>
+            <RadarChart data={abilityProfile} size={260} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

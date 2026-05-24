@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { CHINESE_ARGUMENTATIVE_RUBRIC, ENGLISH_ESSAY_RUBRIC } from '@/lib/training/rubrics'
-import { ThinkingIcon } from '@/components/icons'
 import { useNavigation } from '@/contexts/NavigationContext'
 
 interface Stats {
@@ -190,7 +189,6 @@ export default function RightPanel() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <QuickLink href="/subject/chinese" icon="📖" label="开始语文训练" />
               <QuickLink href="/subject/english" icon="🔤" label="开始英语训练" />
-              <QuickLink href="/thinking" icon={<ThinkingIcon size={16} />} label="思维训练" />
             </div>
           </section>
         </>

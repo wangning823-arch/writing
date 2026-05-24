@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { MODEL_ESSAYS, type ModelEssay } from '@/lib/model-essays'
+import { THEME_ESSAYS, type TopicModelEssay } from '@/lib/topic-essays'
+import ENGLISH_ESSAYS from '@/lib/english-essays.json'
 import { BookIcon } from '@/components/icons'
 
 interface ModelEssayBrowserProps {
@@ -218,6 +220,186 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
             <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📝</p>
             <p>暂无{subject === 'chinese' ? '语文' : '英语'}范文</p>
           </div>
+        )}
+
+        {/* Gaokao real essays by theme - only for Chinese */}
+        {subject === 'chinese' && Object.keys(THEME_ESSAYS).length > 0 && (
+          <>
+            <div style={{ margin: '2rem 0 1rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--accent)' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                历年高考满分/优秀范文
+              </h3>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                来源：高考真题满分作文，按主题分类
+              </p>
+            </div>
+
+            {Object.entries(THEME_ESSAYS).map(([theme, themeEssays]) => (
+              <section key={theme} className="training-section">
+                <h3 className="training-section-title">
+                  {theme} ({themeEssays.length}篇)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {themeEssays.map((essay, idx) => {
+                    const essayKey = `theme-${theme}-${idx}`
+                    const isExpanded = expandedId === essayKey
+                    return (
+                      <div
+                        key={essayKey}
+                        style={{
+                          borderRadius: '0.75rem',
+                          border: '1px solid var(--border-color)',
+                          background: 'var(--bg-card)',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <button
+                          onClick={() => setExpandedId(isExpanded ? null : essayKey)}
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '0.875rem 1rem',
+                            border: 'none',
+                            background: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                          }}
+                        >
+                          <div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                              {essay.title}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.125rem' }}>
+                              {essay.year && `${essay.year}年`}
+                              {essay.region && ` ${essay.region}`}
+                              {' '}{theme}
+                            </div>
+                          </div>
+                          <span style={{
+                            fontSize: '0.75rem',
+                            color: 'var(--text-muted)',
+                            transition: 'transform 0.2s',
+                            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                          }}>
+                            ▼
+                          </span>
+                        </button>
+
+                        {isExpanded && (
+                          <div style={{ padding: '0 1rem 1rem', borderTop: '1px solid var(--border-color)' }}>
+                            <div style={{
+                              padding: '0.75rem 1rem',
+                              margin: '0.75rem 0',
+                              borderRadius: '0.5rem',
+                              background: 'var(--bg-secondary)',
+                              fontSize: '0.875rem',
+                              lineHeight: 1.8,
+                              color: 'var(--text-primary)',
+                              whiteSpace: 'pre-wrap',
+                            }}>
+                              {essay.content}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </section>
+            ))}
+          </>
+        )}
+
+        {/* English gaokao essays by type */}
+        {subject === 'english' && ENGLISH_ESSAYS.topics.length > 0 && (
+          <>
+            <div style={{ margin: '2rem 0 1rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--accent)' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                高考英语优秀范文
+              </h3>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                来源：高考真题优秀作文，按题型分类
+              </p>
+            </div>
+
+            {Object.entries(ENGLISH_ESSAYS.essays_by_type).map(([type, typeEssays]) => (
+              <section key={type} className="training-section">
+                <h3 className="training-section-title">
+                  {type} ({typeEssays.length}篇)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {typeEssays.map((essay, idx) => {
+                    const essayKey = `english-${type}-${idx}`
+                    const isExpanded = expandedId === essayKey
+                    return (
+                      <div
+                        key={essayKey}
+                        style={{
+                          borderRadius: '0.75rem',
+                          border: '1px solid var(--border-color)',
+                          background: 'var(--bg-card)',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <button
+                          onClick={() => setExpandedId(isExpanded ? null : essayKey)}
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '0.875rem 1rem',
+                            border: 'none',
+                            background: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                          }}
+                        >
+                          <div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                              {essay.title}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.125rem' }}>
+                              {essay.year && `${essay.year}年`}
+                              {essay.region && ` ${essay.region}`}
+                              {' '}{type}
+                            </div>
+                          </div>
+                          <span style={{
+                            fontSize: '0.75rem',
+                            color: 'var(--text-muted)',
+                            transition: 'transform 0.2s',
+                            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                          }}>
+                            ▼
+                          </span>
+                        </button>
+
+                        {isExpanded && (
+                          <div style={{ padding: '0 1rem 1rem', borderTop: '1px solid var(--border-color)' }}>
+                            <div style={{
+                              padding: '0.75rem 1rem',
+                              margin: '0.75rem 0',
+                              borderRadius: '0.5rem',
+                              background: 'var(--bg-secondary)',
+                              fontSize: '0.875rem',
+                              lineHeight: 1.8,
+                              color: 'var(--text-primary)',
+                              whiteSpace: 'pre-wrap',
+                            }}>
+                              {essay.content}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </section>
+            ))}
+          </>
         )}
       </main>
     </div>

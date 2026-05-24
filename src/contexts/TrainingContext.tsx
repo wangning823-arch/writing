@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
-import { AIFeedback, DiffSegment } from '@/types'
+import { AIFeedback, DiffSegment, Topic } from '@/types'
 
 interface TrainingContextType {
   content: string
@@ -14,6 +14,18 @@ interface TrainingContextType {
   setDiffSegments: (d: DiffSegment[]) => void
   isReviewing: boolean
   setIsReviewing: (v: boolean) => void
+  lastRecordId: string | null
+  setLastRecordId: (id: string | null) => void
+  topicTitle: string
+  setTopicTitle: (t: string) => void
+  topicDescription: string
+  setTopicDescription: (d: string) => void
+  trainingSubject: string
+  setTrainingSubject: (s: string) => void
+  trainingLevel: number
+  setTrainingLevel: (l: number) => void
+  resumeTopic: Topic | null
+  setResumeTopic: (t: Topic | null) => void
 }
 
 const TrainingContext = createContext<TrainingContextType | undefined>(undefined)
@@ -24,6 +36,12 @@ export function TrainingProvider({ children }: { children: ReactNode }) {
   const [previousContent, setPreviousContent] = useState('')
   const [diffSegments, setDiffSegments] = useState<DiffSegment[]>([])
   const [isReviewing, setIsReviewing] = useState(false)
+  const [lastRecordId, setLastRecordId] = useState<string | null>(null)
+  const [topicTitle, setTopicTitle] = useState('')
+  const [topicDescription, setTopicDescription] = useState('')
+  const [trainingSubject, setTrainingSubject] = useState('chinese')
+  const [trainingLevel, setTrainingLevel] = useState(1)
+  const [resumeTopic, setResumeTopic] = useState<Topic | null>(null)
 
   return (
     <TrainingContext.Provider value={{
@@ -32,6 +50,12 @@ export function TrainingProvider({ children }: { children: ReactNode }) {
       previousContent, setPreviousContent,
       diffSegments, setDiffSegments,
       isReviewing, setIsReviewing,
+      lastRecordId, setLastRecordId,
+      topicTitle, setTopicTitle,
+      topicDescription, setTopicDescription,
+      trainingSubject, setTrainingSubject,
+      trainingLevel, setTrainingLevel,
+      resumeTopic, setResumeTopic,
     }}>
       {children}
     </TrainingContext.Provider>

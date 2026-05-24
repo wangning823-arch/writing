@@ -154,9 +154,10 @@ function SidebarContent() {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   const isActive = (href: string) => {
-    const url = new URL(href, window.location.origin)
-    const hrefPath = url.pathname
-    const hrefSubject = url.searchParams.get('subject')
+    const [hrefPath, hrefSearch] = href.split('?')
+    const hrefSubject = hrefSearch
+      ? new URLSearchParams(hrefSearch).get('subject')
+      : null
 
     if (hrefPath === '/') return pathname === '/'
 

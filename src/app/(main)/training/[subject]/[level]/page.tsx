@@ -12,12 +12,12 @@ import L1TopicAnalysis from '@/components/editor/L1TopicAnalysis'
 import L2ParagraphCards from '@/components/editor/L2ParagraphCards'
 import ParagraphEditor from '@/components/editor/ParagraphEditor'
 import SentenceRewrite from '@/components/editor/SentenceRewrite'
+import TopicSelector from '@/components/training/TopicSelector'
 import { getLevel } from '@/lib/training/config'
 import { getTimeLimit } from '@/lib/training/time-manager'
-import { TOPICS } from '@/lib/topics'
 import { CHINESE_LEVEL_NAMES, ENGLISH_LEVEL_NAMES } from '@/lib/constants'
 import { computeParagraphDiff } from '@/lib/training/diff-engine'
-import type { Stage, AIFeedback } from '@/types'
+import type { Stage, AIFeedback, Topic } from '@/types'
 
 export default function TrainingPage() {
   const params = useParams()
@@ -34,6 +34,25 @@ export default function TrainingPage() {
   const [selfAssessmentIssues, setSelfAssessmentIssues] = useState<
     Array<{ location: string; issue: string; severity: 'high' | 'medium' | 'low' }>
   >([])
+  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null)
+  const [topicLoading, setTopicLoading] = useState(true)
+
+  const fetchTopic = useCallback(async () => {
+    setTopicLoading(true)
+    try {
+      const res = await fetch(`/api/topics?subject=${subject}&level=${level}&userId=${encodeURIComponent(userId)}`)
+      const data = await res.json()
+      setSelectedTopic(data.topic || null)
+    } catch {
+      setSelectedTopic(null)
+    } finally {
+      setTopicLoading(false)
+    }
+  }, [subject, level, userId])
+
+  useEffect(() => {
+    fetchTopic()
+  }, [fetchTopic])
 
   useEffect(() => {
     fetch(`/api/progress?userId=${encodeURIComponent(userId)}`)
@@ -50,14 +69,10 @@ export default function TrainingPage() {
   const levelConfig = getLevel(subject, level)
   const timeLimit = getTimeLimit(subject, level, currentStage)
 
-  const selectedTopic =
-    TOPICS.find((t) => t.subject === subject) || TOPICS[0]
-
   const handleReview = useCallback(async (levelContent: string) => {
     setIsReviewing(true)
     setFeedback(null)
     try {
-      const levelConfig = getLevel(subject, level)
       const res = await fetch('/api/ai/review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,8 +80,8 @@ export default function TrainingPage() {
           subject,
           level,
           topicId: selectedTopic?.id,
-          topicTitle: levelConfig?.name || '',
-          topicDescription: levelConfig?.description || '',
+          topicTitle: selectedTopic?.title || levelConfig?.name || '',
+          topicDescription: selectedTopic?.description || levelConfig?.description || '',
           content: levelContent,
           userId,
           isRevision: false,
@@ -149,6 +164,16 @@ export default function TrainingPage() {
           />
         </div>
       )}
+
+      {/* Topic Selector */}
+      <TopicSelector
+        topic={selectedTopic}
+        onRefresh={fetchTopic}
+        onGenerated={(t) => setSelectedTopic(t)}
+        isLoading={topicLoading}
+        subject={subject}
+        level={level}
+      />
 
       {/* Model Essay & Tips */}
       <ModelEssayViewer subject={subject} level={level} />

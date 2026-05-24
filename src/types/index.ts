@@ -17,6 +17,10 @@ export interface Topic {
   title: string
   description: string
   requirements?: string
+  source?: string
+  year?: number | null
+  region?: string | null
+  tags?: string[]
 }
 
 export interface AIFeedback {

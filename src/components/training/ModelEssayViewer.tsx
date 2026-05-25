@@ -5,14 +5,29 @@ import { getModelEssays, type ModelEssay } from '@/lib/model-essays'
 import { TOPIC_ESSAYS, THEME_ESSAYS, type TopicModelEssay } from '@/lib/topic-essays'
 import ENGLISH_ESSAYS from '@/lib/english-essays.json'
 
+// Theme keyword mapping: tag → THEME_ESSAYS key
+const TAG_TO_THEME: Record<string, string> = {
+  '人生': '人生成长', '成长': '人生成长', '青春': '人生成长', '梦想': '人生成长', '奋斗': '人生成长',
+  '文化': '传统文化', '传统': '传统文化', '传承': '传统文化', '经典': '传统文化',
+  '劳动': '劳动实践', '实践': '劳动实践',
+  '哲理': '哲理思辨', '思辨': '哲理思辨', '思考': '哲理思辨', '辩证': '哲理思辨',
+  '家国': '家国情怀', '爱国': '家国情怀', '责任': '家国情怀', '时代': '家国情怀',
+  '情感': '情感世界', '亲情': '情感世界', '友情': '情感世界',
+  '教育': '教育学习', '学习': '教育学习', '读书': '教育学习',
+  '社会': '社会变迁', '变化': '社会变迁', '发展': '社会变迁',
+  '科技': '科技创新', '人工智能': '科技创新', '创新': '科技创新', '互联网': '科技创新',
+  '自然': '自然生态', '生态': '自然生态', '环保': '自然生态',
+  '艺术': '艺术审美', '审美': '艺术审美', '美': '艺术审美',
+}
+
 interface ModelEssayViewerProps {
   subject: 'chinese' | 'english'
   level: number
   topicId?: string
-  topicTheme?: string
+  topicTags?: string[]
 }
 
-export default function ModelEssayViewer({ subject, level, topicId, topicTheme }: ModelEssayViewerProps) {
+export default function ModelEssayViewer({ subject, level, topicId, topicTags }: ModelEssayViewerProps) {
   const [expanded, setExpanded] = useState(false)
   const [essays, setEssays] = useState<ModelEssay[]>([])
   const [topicEssays, setTopicEssays] = useState<TopicModelEssay[]>([])
@@ -38,16 +53,27 @@ export default function ModelEssayViewer({ subject, level, topicId, topicTheme }
         }))
       }
     } else if (subject === 'chinese') {
-      // Load Chinese gaokao essays from topic-essays.ts
+      // 1. Try exact topic ID match
       if (topicId && TOPIC_ESSAYS[topicId]) {
         gaokaoEssays = TOPIC_ESSAYS[topicId]
-      } else if (topicTheme && THEME_ESSAYS[topicTheme]) {
-        gaokaoEssays = THEME_ESSAYS[topicTheme].slice(0, 5)
+      } else if (topicTags && topicTags.length > 0) {
+        // 2. Match by tags → theme name
+        const matchedThemes = new Set<string>()
+        for (const tag of topicTags) {
+          const theme = TAG_TO_THEME[tag]
+          if (theme && THEME_ESSAYS[theme]) matchedThemes.add(theme)
+        }
+        // Collect essays from matched themes (max 5)
+        for (const theme of matchedThemes) {
+          if (gaokaoEssays.length >= 5) break
+          gaokaoEssays.push(...THEME_ESSAYS[theme])
+        }
+        gaokaoEssays = gaokaoEssays.slice(0, 5)
       }
     }
 
     setTopicEssays(gaokaoEssays)
-  }, [subject, level, topicId, topicTheme])
+  }, [subject, level, topicId, topicTags])
 
   const handleCollect = useCallback(async (essay: ModelEssay) => {
     setCollectingId(essay.id)

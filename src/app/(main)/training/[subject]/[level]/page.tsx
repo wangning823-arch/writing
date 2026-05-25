@@ -118,6 +118,7 @@ export default function TrainingPage() {
         highlights: review.highlights || [],
         suggestions: review.suggestions || [],
         rewrittenParagraphs: [],
+        keywordEvaluation: review.keywordEvaluation || undefined,
       }
       setFeedback(aiFeedback)
       setPreviousContent(levelContent)
@@ -193,7 +194,7 @@ export default function TrainingPage() {
       />
 
       {/* Model Essay & Tips */}
-      <ModelEssayViewer subject={subject} level={level} topicId={selectedTopic?.id} />
+      <ModelEssayViewer subject={subject} level={level} topicId={selectedTopic?.id} topicTags={selectedTopic?.tags} />
       <WritingTip subject={subject} level={level} />
 
       {/* Self Assessment */}

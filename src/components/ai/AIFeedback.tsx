@@ -51,6 +51,22 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
       </div>
       <p className="suggestion-issue">{suggestion.issue}</p>
       <p className="suggestion-fix">{suggestion.fix}</p>
+      {suggestion.example && (
+        <div style={{
+          marginTop: '8px',
+          padding: '10px 12px',
+          borderRadius: '8px',
+          background: 'var(--color-blue-50, #eff6ff)',
+          borderLeft: '3px solid var(--accent, #3b82f6)',
+        }}>
+          <p style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--accent, #3b82f6)', margin: '0 0 4px 0' }}>
+            优秀示例
+          </p>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--theme_text)', lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+            {suggestion.example}
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -106,6 +122,7 @@ export default function AIFeedbackPanel({ feedback }: AIFeedbackPanelProps) {
   const weaknesses = feedback.weaknesses || []
   const highlights = feedback.highlights || []
   const suggestions = feedback.suggestions || []
+  const keywordEval = feedback.keywordEvaluation
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -113,6 +130,38 @@ export default function AIFeedbackPanel({ feedback }: AIFeedbackPanelProps) {
         <h3 className="score-card-title">AI评审结果</h3>
         <ScoreCard feedback={feedback} />
       </div>
+
+      {/* Keyword Evaluation */}
+      {keywordEval && keywordEval.evaluation && (
+        <div className="feedback-section" style={{ padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'var(--theme_bg)' }}>
+          <h3 className="feedback-section-title">关键词评价</h3>
+          <p style={{ fontSize: '0.875rem', color: 'var(--theme_text)', lineHeight: 1.6, marginBottom: '12px' }}>
+            {keywordEval.evaluation}
+          </p>
+          {keywordEval.suggestedKeywords.length > 0 && (
+            <div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--theme_text-muted)', marginBottom: '6px' }}>建议关键词：</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {keywordEval.suggestedKeywords.map((kw, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      background: 'var(--color-blue-50, #eff6ff)',
+                      color: 'var(--accent, #3b82f6)',
+                      fontSize: '0.8125rem',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {kw}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {strengths.length > 0 && (
         <div className="feedback-section strengths-section">

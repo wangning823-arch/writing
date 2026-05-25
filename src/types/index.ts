@@ -37,6 +37,10 @@ export interface AIFeedback {
   suggestions: Suggestion[]
   highlights: Highlight[]
   rewrittenParagraphs: RewrittenParagraph[]
+  keywordEvaluation?: {
+    evaluation: string
+    suggestedKeywords: string[]
+  }
 }
 
 export interface Suggestion {
@@ -44,6 +48,7 @@ export interface Suggestion {
   location: string
   issue: string
   fix: string
+  example?: string
 }
 
 export interface Highlight {
@@ -150,5 +155,6 @@ export interface SuggestionStatus {
   location: string
   issue: string
   fix: string
+  example?: string
   status: 'resolved' | 'unresolved' | 'misdirected' | 'new-issue'
 }

@@ -35,6 +35,10 @@ function buildJsonOutputSpec(subject: 'chinese' | 'english'): string {
     "norms": 维度4分数
   },
   "feedback": "总体评价（${lang}，2-3句话，具体指出优点和核心问题）",
+  "keywordEvaluation": {
+    "evaluation": "对学生提取的关键词的评价（${lang}，分析哪些关键词准确、哪些偏离、哪些遗漏）",
+    "suggestedKeywords": ["更好的关键词1", "更好的关键词2", "更好的关键词3"]
+  },
   "highlights": [
     {
       "text": "原文中的具体片段",
@@ -47,7 +51,8 @@ function buildJsonOutputSpec(subject: 'chinese' | 'english'): string {
       "type": "content|structure|language|norms",
       "location": "具体位置描述",
       "issue": "问题描述（${lang}）",
-      "fix": "修改方向（${lang}，只给方向不给完整改写）"
+      "fix": "修改方向（${lang}，只给方向不给完整改写）",
+      "example": "优秀示例（${lang}，1-2句简短示范，展示修改后的效果，让学生直观理解怎样写才好）"
     }
   ],
   "errorTypes": [
@@ -87,7 +92,7 @@ function chineseL1Prompt(
 - 创新性（25分）：立意角度是否独特？能否从众人中脱颖而出？
 
 ## 评审原则（铁律）
-1. **绝不代写**：如果立意不好，只说"方向不够清晰"或"可以更深一层"，不要给出具体的立意句。
+1. **给方向不给全文**：可以说"可以从XX角度切入，如..."并给出1-2句简短的示例方向（不要给完整段落），让学生明白什么样的方向是好的。
 2. **苏格拉底式引导**：用提问方式帮助学生自己发现问题，例如"你觉得这个题目的关键词是什么？"
 3. **具体可操作**：反馈必须指向学生能自己调整的方向。
 4. 每次只给1-2条最关键的建议，不要列表轰炸。`

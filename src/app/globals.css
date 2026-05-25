@@ -565,8 +565,9 @@ body {
 }
 
 .dimension-scores {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
   margin-top: 1.5rem;
 }
 

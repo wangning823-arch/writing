@@ -11,8 +11,7 @@ interface L1TopicAnalysisProps {
   topicPrompt?: string
 }
 
-const THESIS_MIN = 50
-const THESIS_MAX = 100
+const THESIS_MAX = 200
 
 export default function L1TopicAnalysis({ onConfirm, onBack, topicPrompt }: L1TopicAnalysisProps) {
   const [keywordInput, setKeywordInput] = useState('')
@@ -24,11 +23,10 @@ export default function L1TopicAnalysis({ onConfirm, onBack, topicPrompt }: L1To
     .filter(Boolean)
 
   const charCount = thesis.replace(/\s/g, '').length
-  const isValid = charCount >= THESIS_MIN && charCount <= THESIS_MAX && keywords.length > 0
+  const isValid = charCount > 0 && charCount <= THESIS_MAX && keywords.length > 0
 
   let charCountClass = 'char-count'
-  if (charCount < THESIS_MIN) charCountClass += ' char-count-low'
-  else if (charCount > THESIS_MAX) charCountClass += ' char-count-high'
+  if (charCount > THESIS_MAX) charCountClass += ' char-count-high'
   else charCountClass += ' char-count-ok'
 
   return (
@@ -75,16 +73,13 @@ export default function L1TopicAnalysis({ onConfirm, onBack, topicPrompt }: L1To
           className="l1-textarea"
           value={thesis}
           onChange={(e) => setThesis(e.target.value)}
-          placeholder={`请用一句话概括你的文章中心论点（${THESIS_MIN}-${THESIS_MAX}字）`}
+          placeholder="请用一句话概括你的文章中心论点"
           rows={4}
         />
         <div className="l1-char-row">
           <span className={charCountClass}>
-            {charCount} / {THESIS_MAX} 字
+            {charCount} 字
           </span>
-          {charCount < THESIS_MIN && charCount > 0 && (
-            <span className="l1-char-hint">还需至少 {THESIS_MIN - charCount} 字</span>
-          )}
         </div>
       </div>
 

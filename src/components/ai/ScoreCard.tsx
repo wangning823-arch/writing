@@ -6,22 +6,23 @@ interface ScoreCardProps {
   feedback: AIFeedback
 }
 
-function ScoreRing({ score, max, label, color }: { score: number; max: number; label: string; color: string }) {
+function ScoreRing({ score, max, label, color, size = 56 }: { score: number; max: number; label: string; color: string; size?: number }) {
   const percentage = (score / max) * 100
-  const circumference = 2 * Math.PI * 36
+  const r = (size / 2) - 5
+  const circumference = 2 * Math.PI * r
   const offset = circumference - (percentage / 100) * circumference
 
   return (
     <div className="dimension-score">
-      <div className="score-ring-container">
-        <svg width="80" height="80" viewBox="0 0 80 80" style={{ position: 'absolute', inset: 0 }}>
-          <circle cx="40" cy="40" r="36" stroke="#e5e7eb" strokeWidth="6" fill="none" />
+      <div className="score-ring-container" style={{ width: size, height: size }}>
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: 'absolute', inset: 0 }}>
+          <circle cx={size/2} cy={size/2} r={r} stroke="#e5e7eb" strokeWidth="5" fill="none" />
           <circle
-            cx="40"
-            cy="40"
-            r="36"
+            cx={size/2}
+            cy={size/2}
+            r={r}
             stroke={color}
-            strokeWidth="6"
+            strokeWidth="5"
             fill="none"
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -29,7 +30,7 @@ function ScoreRing({ score, max, label, color }: { score: number; max: number; l
             style={{ transition: 'all 1s ease-out' }}
           />
         </svg>
-        <span className="score-ring-text">{score}</span>
+        <span className="score-ring-text" style={{ fontSize: '0.875rem' }}>{score}</span>
       </div>
       <span className="dimension-label">{label}</span>
     </div>

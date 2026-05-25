@@ -210,6 +210,7 @@ function generateSuggestionsWithIds(
     location: string
     issue: string
     fix: string
+    example?: string
   }>,
 ): SuggestionStatus[] {
   return rawSuggestions.map((s, i) => ({
@@ -220,6 +221,7 @@ function generateSuggestionsWithIds(
     location: s.location,
     issue: s.issue,
     fix: s.fix,
+    example: s.example || undefined,
     status: 'unresolved' as const,
   }))
 }
@@ -303,6 +305,16 @@ export async function reviewTraining(
   const nextLevel = Number(parsed.nextLevel) || level
   const encouragement = String(parsed.encouragement) || ''
 
+  // Parse keyword evaluation (optional, for L1 topic analysis)
+  const keywordEvaluation = parsed.keywordEvaluation
+    ? {
+        evaluation: String(parsed.keywordEvaluation.evaluation) || '',
+        suggestedKeywords: Array.isArray(parsed.keywordEvaluation.suggestedKeywords)
+          ? parsed.keywordEvaluation.suggestedKeywords.map(String)
+          : [],
+      }
+    : undefined
+
   // 4. Process suggestions with IDs
   const suggestions = generateSuggestionsWithIds(rawSuggestions)
 
@@ -359,5 +371,6 @@ export async function reviewTraining(
     encouragement,
     timeSpent,
     progress,
+    keywordEvaluation,
   }
 }

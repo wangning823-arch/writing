@@ -44,13 +44,6 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    if (content.length < 10) {
-      return NextResponse.json(
-        { error: '内容太短，请至少写10字以上再提交评审' },
-        { status: 400 },
-      )
-    }
-
     if (subject !== 'chinese' && subject !== 'english') {
       return NextResponse.json(
         { error: 'Invalid subject. Must be "chinese" or "english".' },

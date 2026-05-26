@@ -194,3 +194,26 @@ model ErrorRecord {
   user           User      @relation(fields: [userId], references: [id])
   trainingRecord TrainingRecord @relation(fields: [trainingRecordId], references: [id])
 }
+
+model EssayAnalysis {
+  id            String   @id @default(cuid())
+  userId        String
+
+  essaySource   String   // 'model' | 'topic' | 'english-json'
+  essayId       String   // ModelEssay.id or composite key like "topic:cn-arg-001:0"
+  essayTitle    String
+  essayContent  String   // denormalized copy for display
+  subject       String   // 'chinese' | 'english'
+
+  contentAnalysis   String @default("{}")  // JSON: 内容立意
+  structureAnalysis String @default("{}")  // JSON: 结构布局
+  languageAnalysis  String @default("{}")  // JSON: 语言表达
+  techniqueAnalysis String @default("{}")  // JSON: 写作技巧
+  takeaways         String @default("[]")  // JSON array: 值得借鉴
+  summary           String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, essaySource, essayId])
+}

@@ -5,6 +5,7 @@ import { MODEL_ESSAYS, type ModelEssay } from '@/lib/model-essays'
 import { THEME_ESSAYS, type TopicModelEssay } from '@/lib/topic-essays'
 import ENGLISH_ESSAYS from '@/lib/english-essays.json'
 import { BookIcon } from '@/components/icons'
+import EssayAnalysisPanel from './EssayAnalysisPanel'
 
 interface ModelEssayBrowserProps {
   onBack: () => void
@@ -205,6 +206,15 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                                 ? '收藏中...'
                                 : '🌟 收藏素材'}
                           </button>
+
+                          <EssayAnalysisPanel
+                            essaySource="model"
+                            essayId={essay.id}
+                            essayTitle={essay.title}
+                            essayContent={essay.content}
+                            subject={subject}
+                            techniques={essay.techniques}
+                          />
                         </div>
                       )}
                     </div>
@@ -301,6 +311,13 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                             }}>
                               {essay.content}
                             </div>
+                            <EssayAnalysisPanel
+                              essaySource="topic"
+                              essayId={`theme:${theme}:${idx}`}
+                              essayTitle={essay.title}
+                              essayContent={essay.content}
+                              subject="chinese"
+                            />
                           </div>
                         )}
                       </div>
@@ -391,6 +408,13 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                             }}>
                               {essay.content}
                             </div>
+                            <EssayAnalysisPanel
+                              essaySource="english-json"
+                              essayId={`english:${type}:${idx}`}
+                              essayTitle={essay.title}
+                              essayContent={essay.content}
+                              subject="english"
+                            />
                           </div>
                         )}
                       </div>

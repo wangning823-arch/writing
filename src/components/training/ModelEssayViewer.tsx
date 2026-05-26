@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { getModelEssays, type ModelEssay } from '@/lib/model-essays'
 import { TOPIC_ESSAYS, THEME_ESSAYS, type TopicModelEssay } from '@/lib/topic-essays'
 import ENGLISH_ESSAYS from '@/lib/english-essays.json'
+import EssayAnalysisPanel from './EssayAnalysisPanel'
 
 // Theme keyword mapping: tag → THEME_ESSAYS key
 const TAG_TO_THEME: Record<string, string> = {
@@ -163,6 +164,15 @@ export default function ModelEssayViewer({ subject, level, topicId, topicTags }:
                   </span>
                 ))}
               </div>
+
+              <EssayAnalysisPanel
+                essaySource="model"
+                essayId={essay.id}
+                essayTitle={essay.title}
+                essayContent={essay.content}
+                subject={subject}
+                techniques={essay.techniques}
+              />
             </div>
           ))}
 
@@ -174,19 +184,30 @@ export default function ModelEssayViewer({ subject, level, topicId, topicTags }:
                   历年高考满分/优秀范文
                 </h4>
               </div>
-              {topicEssays.map((essay, idx) => (
-                <div key={`gaokao-${idx}`} className="model-essay-card">
-                  <div className="model-essay-card-header">
-                    <h4 className="model-essay-card-title">
-                      {essay.title}
-                      {essay.year && <span style={{ fontWeight: 400, fontSize: '0.75rem', color: 'var(--text-secondary)' }}> ({essay.year})</span>}
-                    </h4>
+              {topicEssays.map((essay, idx) => {
+                const essayId = topicId ? `topic:${topicId}:${idx}` : `topic:unknown:${idx}`
+                const essaySource = subject === 'english' ? 'english-json' : 'topic'
+                return (
+                  <div key={`gaokao-${idx}`} className="model-essay-card">
+                    <div className="model-essay-card-header">
+                      <h4 className="model-essay-card-title">
+                        {essay.title}
+                        {essay.year && <span style={{ fontWeight: 400, fontSize: '0.75rem', color: 'var(--text-secondary)' }}> ({essay.year})</span>}
+                      </h4>
+                    </div>
+                    <div className="model-essay-card-content">
+                      {essay.content}
+                    </div>
+                    <EssayAnalysisPanel
+                      essaySource={essaySource}
+                      essayId={essayId}
+                      essayTitle={essay.title}
+                      essayContent={essay.content}
+                      subject={subject}
+                    />
                   </div>
-                  <div className="model-essay-card-content">
-                    {essay.content}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </>
           )}
         </div>

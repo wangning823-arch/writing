@@ -50,6 +50,10 @@ export interface ReviewResponse {
   encouragement: string
   timeSpent: number
   progress?: ProgressResult // Only present for revisions
+  keywordEvaluation?: {
+    evaluation: string
+    suggestedKeywords: string[]
+  }
 }
 
 export interface ReviewRecord {
@@ -306,11 +310,12 @@ export async function reviewTraining(
   const encouragement = String(parsed.encouragement) || ''
 
   // Parse keyword evaluation (optional, for L1 topic analysis)
-  const keywordEvaluation = parsed.keywordEvaluation
+  const rawKeywordEval = parsed.keywordEvaluation as Record<string, unknown> | undefined
+  const keywordEvaluation = rawKeywordEval
     ? {
-        evaluation: String(parsed.keywordEvaluation.evaluation) || '',
-        suggestedKeywords: Array.isArray(parsed.keywordEvaluation.suggestedKeywords)
-          ? parsed.keywordEvaluation.suggestedKeywords.map(String)
+        evaluation: String(rawKeywordEval.evaluation) || '',
+        suggestedKeywords: Array.isArray(rawKeywordEval.suggestedKeywords)
+          ? (rawKeywordEval.suggestedKeywords as unknown[]).map(String)
           : [],
       }
     : undefined

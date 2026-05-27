@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useNavigation } from '@/contexts/NavigationContext'
 
 export default function UserSwitcher() {
-  const { userId, setUserId, users, refreshUsers, createUser } = useNavigation()
+  const { userId, setUserId, users } = useNavigation()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [newName, setNewName] = useState('')
-  const [creating, setCreating] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const currentUser = users.find(u => u.id === userId)
@@ -22,21 +22,14 @@ export default function UserSwitcher() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSwitch = (id: string) => {
+  const handleSwitch = async (id: string) => {
     setUserId(id)
     setOpen(false)
-  }
-
-  const handleCreate = async () => {
-    if (!newName.trim()) return
-    setCreating(true)
-    const user = await createUser(newName.trim())
-    if (user) {
-      setUserId(user.id)
-      setNewName('')
-      setOpen(false)
+    const res = await fetch(`/api/admin/check?userId=${encodeURIComponent(id)}`)
+    const data = await res.json()
+    if (data.isAdmin) {
+      router.push('/admin/dashboard')
     }
-    setCreating(false)
   }
 
   return (
@@ -83,36 +76,6 @@ export default function UserSwitcher() {
               {u.id === userId && <span style={{ color: 'var(--accent)', fontSize: '0.75rem' }}>当前</span>}
             </button>
           ))}
-
-          <div style={{ borderTop: '1px solid var(--border-color)', margin: '4px 0', padding: '8px 10px' }}>
-            <input
-              type="text"
-              value={newName}
-              onChange={e => setNewName(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleCreate()}
-              placeholder="输入新学生姓名..."
-              style={{
-                width: '100%', padding: '6px 8px', borderRadius: '6px',
-                border: '1px solid var(--border-color)',
-                background: 'var(--bg-primary)', color: 'var(--text-primary)',
-                fontSize: '0.8125rem', outline: 'none',
-              }}
-            />
-            <button
-              onClick={handleCreate}
-              disabled={!newName.trim() || creating}
-              style={{
-                width: '100%', marginTop: '6px', padding: '6px',
-                borderRadius: '6px', border: 'none',
-                background: newName.trim() ? 'var(--accent)' : 'var(--border-color)',
-                color: newName.trim() ? '#fff' : 'var(--text-secondary)',
-                cursor: newName.trim() ? 'pointer' : 'not-allowed',
-                fontSize: '0.8125rem', fontWeight: 500,
-              }}
-            >
-              {creating ? '创建中...' : '新建学生'}
-            </button>
-          </div>
         </div>
       )}
     </div>

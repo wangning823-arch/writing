@@ -5,6 +5,7 @@ import { getModelEssays, type ModelEssay } from '@/lib/model-essays'
 import { TOPIC_ESSAYS, THEME_ESSAYS, type TopicModelEssay } from '@/lib/topic-essays'
 import ENGLISH_ESSAYS from '@/lib/english-essays.json'
 import EssayAnalysisPanel from './EssayAnalysisPanel'
+import EssayContent from './EssayContent'
 
 // Theme keyword mapping: tag → THEME_ESSAYS key
 const TAG_TO_THEME: Record<string, string> = {
@@ -149,7 +150,7 @@ export default function ModelEssayViewer({ subject, level, topicId, topicTags }:
               </div>
 
               <div className="model-essay-card-content">
-                {essay.content}
+                <EssayContent content={essay.content} />
               </div>
 
               <div className="model-essay-card-analysis">
@@ -196,7 +197,7 @@ export default function ModelEssayViewer({ subject, level, topicId, topicTags }:
                       </h4>
                     </div>
                     <div className="model-essay-card-content">
-                      {essay.content}
+                      <EssayContent content={essay.content} />
                     </div>
                     <EssayAnalysisPanel
                       essaySource={essaySource}

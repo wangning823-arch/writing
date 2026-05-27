@@ -19,7 +19,6 @@ interface MaterialLibraryProps {
   subject: 'chinese' | 'english'
 }
 
-const CATEGORIES = ['全部', '论据', '名言', '事例', '好词好句']
 const SORT_OPTIONS = [
   { value: 'newest', label: '最新' },
   { value: 'popular', label: '最常用' },
@@ -38,7 +37,8 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
   const [category, setCategory] = useState('全部')
   const [sort, setSort] = useState('newest')
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [categories, setCategories] = useState<string[]>(['全部'])
 
   const fetchMaterials = useCallback(async () => {
     setLoading(true)
@@ -67,27 +67,44 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
     fetchMaterials()
   }, [fetchMaterials])
 
-  const handleUseMaterial = async (id: string) => {
+  // Fetch categories from database
+  useEffect(() => {
+    fetch(`/api/materials/categories?subject=${subject}`)
+      .then(r => r.json())
+      .then(data => {
+        const cats = (data.categories || [])
+          .map((c: { name: string }) => c.name)
+        setCategories(['全部', ...cats])
+      })
+      .catch(() => setCategories(['全部', '论据', '名言', '事例', '好词好句']))
+  }, [subject])
+
+  const copyToClipboard = async (text: string) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+      return
+    }
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.style.position = 'fixed'
+    textarea.style.left = '-9999px'
+    document.body.appendChild(textarea)
+    textarea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textarea)
+  }
+
+  const handleUseMaterial = async (id: string, content: string) => {
     try {
+      await copyToClipboard(content)
       await fetch(`/api/materials/${id}/use`, { method: 'POST' })
+      setCopiedId(id)
       setMaterials(prev =>
         prev.map(m => m.id === id ? { ...m, usageCount: m.usageCount + 1 } : m)
       )
+      setTimeout(() => setCopiedId(null), 2000)
     } catch {
       // silently fail
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('确定要删除这个素材吗？')) return
-    setDeletingId(id)
-    try {
-      await fetch(`/api/materials/${id}`, { method: 'DELETE' })
-      setMaterials(prev => prev.filter(m => m.id !== id))
-    } catch {
-      // silently fail
-    } finally {
-      setDeletingId(null)
     }
   }
 
@@ -120,7 +137,7 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
           </select>
         </div>
         <div className="ml-category-tabs">
-          {CATEGORIES.map(cat => (
+          {categories.map((cat: string) => (
             <button
               key={cat}
               className={`ml-category-tab ${category === cat ? 'ml-category-active' : ''}`}
@@ -186,17 +203,10 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
                 </span>
                 <div className="ml-card-actions">
                   <button
-                    className="ml-use-btn"
-                    onClick={(e) => { e.stopPropagation(); handleUseMaterial(material.id) }}
+                    className={`ml-use-btn ${copiedId === material.id ? 'copied' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); handleUseMaterial(material.id, material.content) }}
                   >
-                    使用此素材
-                  </button>
-                  <button
-                    className="ml-delete-btn"
-                    onClick={(e) => { e.stopPropagation(); handleDelete(material.id) }}
-                    disabled={deletingId === material.id}
-                  >
-                    删除
+                    {copiedId === material.id ? '已复制' : '复制素材'}
                   </button>
                 </div>
               </div>

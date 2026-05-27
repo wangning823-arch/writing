@@ -69,8 +69,37 @@ export async function selectTopic(
   const last10 = new Set(recentTopicIds.slice(0, 10))
   const last20 = new Set(recentTopicIds.slice(0, 20))
 
+  // 3b. Continuity: topics done at previous levels, ranked by coverage
+  let topicLevelCount = new Map<string, number>() // topicId → how many previous levels it appeared in
+  let currentLevelIds = new Set<string>()
+  if (level > 1) {
+    const [prevRecords, currentRecords] = await Promise.all([
+      prisma.trainingRecord.findMany({
+        where: { userId, subject, level: { lt: level } },
+        select: { topicId: true, level: true },
+      }),
+      prisma.trainingRecord.findMany({
+        where: { userId, subject, level },
+        select: { topicId: true },
+      }),
+    ])
+    currentLevelIds = new Set(currentRecords.map(r => r.topicId).filter(Boolean) as string[])
+    // Count how many distinct previous levels each topic was done at
+    for (const r of prevRecords) {
+      if (!r.topicId) continue
+      topicLevelCount.set(r.topicId, (topicLevelCount.get(r.topicId) || 0) + 1)
+    }
+  }
+
   // 4. Weighted random selection
   const weighted: { row: any; weight: number }[] = candidates.map(row => {
+    // Already done at current level → skip
+    if (currentLevelIds.has(row.id)) return { row, weight: 0 }
+    // Done at multiple previous levels → higher priority (more levels = more weight)
+    const levelCount = topicLevelCount.get(row.id) || 0
+    if (levelCount >= 3) return { row, weight: 30 }
+    if (levelCount === 2) return { row, weight: 20 }
+    if (levelCount === 1) return { row, weight: 15 }
     if (last3.has(row.id)) return { row, weight: 0 }
     if (last10.has(row.id)) return { row, weight: 2 }
     if (last20.has(row.id)) return { row, weight: 7 }

@@ -1,9 +1,9 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Sidebar from '@/components/layout/Sidebar'
 import RightPanel from '@/components/layout/RightPanel'
-import { HomeIcon, ThinkingIcon, FolderIcon } from '@/components/icons'
 
 interface ThreeColumnLayoutProps {
   children: ReactNode
@@ -11,6 +11,29 @@ interface ThreeColumnLayoutProps {
 }
 
 export default function ThreeColumnLayout({ children, hideRightPanel = false }: ThreeColumnLayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const closeSidebar = useCallback(() => setSidebarOpen(false), [])
+
+  // Close sidebar on route change or resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setSidebarOpen(false)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Prevent body scroll when sidebar is open
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [sidebarOpen])
+
   return (
     <div
       style={{
@@ -19,8 +42,38 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
         background: 'var(--theme_bg)',
       }}
     >
-      {/* Left Sidebar - hidden on mobile */}
+      {/* Desktop Sidebar */}
       <div className="sidebar-wrapper" style={{ display: 'none' }}>
+        <Sidebar />
+      </div>
+
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="mobile-sidebar-overlay"
+          onClick={closeSidebar}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            zIndex: 200,
+          }}
+        />
+      )}
+
+      {/* Mobile Sidebar Drawer */}
+      <div
+        className="mobile-sidebar-drawer"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          height: '100vh',
+          zIndex: 201,
+          transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.25s ease',
+        }}
+      >
         <Sidebar />
       </div>
 
@@ -33,6 +86,33 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
           overflowY: 'auto',
         }}
       >
+        {/* Mobile Top Bar */}
+        <div className="mobile-top-bar">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-color)',
+              background: 'var(--theme_bg)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--theme_text)',
+              flexShrink: 0,
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <span style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--theme_text)' }}>笔锋</span>
+        </div>
+
         {children}
       </main>
 
@@ -43,9 +123,6 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
         </div>
       )}
 
-      {/* Mobile Bottom Nav */}
-      <MobileBottomNav />
-
       <style jsx>{`
         @media (min-width: 1024px) {
           .sidebar-wrapper {
@@ -54,72 +131,40 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
           .right-panel-wrapper {
             display: block !important;
           }
+          .mobile-sidebar-overlay,
+          .mobile-sidebar-drawer {
+            display: none !important;
+          }
+          .mobile-top-bar {
+            display: none !important;
+          }
         }
         @media (min-width: 768px) and (max-width: 1023px) {
           .sidebar-wrapper {
             display: block !important;
           }
-        }
-      `}</style>
-    </div>
-  )
-}
-
-function MobileBottomNav() {
-  return (
-    <>
-      <nav
-        className="mobile-bottom-nav"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '64px',
-          background: 'var(--theme_bg)',
-          borderTop: '1px solid var(--border-color)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-          padding: '0 8px',
-          zIndex: 100,
-        }}
-      >
-        <MobileNavItem href="/" icon={<HomeIcon size={20} />} label="首页" />
-        <MobileNavItem href="/subject/chinese" icon="📖" label="语文" />
-        <MobileNavItem href="/subject/english" icon="🔤" label="英语" />
-        <MobileNavItem href="/thinking" icon={<ThinkingIcon size={20} />} label="思维" />
-        <MobileNavItem href="/materials" icon={<FolderIcon size={20} />} label="素材" />
-      </nav>
-
-      <style jsx>{`
-        @media (min-width: 768px) {
-          .mobile-bottom-nav {
+          .mobile-sidebar-overlay,
+          .mobile-sidebar-drawer {
+            display: none !important;
+          }
+          .mobile-top-bar {
             display: none !important;
           }
         }
+        @media (max-width: 767px) {
+          .mobile-top-bar {
+            display: flex !important;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: var(--theme_bg);
+            z-index: 50;
+          }
+        }
       `}</style>
-    </>
-  )
-}
-
-function MobileNavItem({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
-  return (
-    <a
-      href={href}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '2px',
-        textDecoration: 'none',
-        color: 'var(--theme_text-weak)',
-        fontSize: '0.625rem',
-        padding: '4px 8px',
-      }}
-    >
-      <span>{icon}</span>
-      <span>{label}</span>
-    </a>
+    </div>
   )
 }

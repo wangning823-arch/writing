@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import ThemeToggle from '@/components/theme/ThemeToggle'
+import { useNavigation } from '@/contexts/NavigationContext'
 
 interface NavItem {
   href: string
@@ -151,7 +152,16 @@ function SidebarContent() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { userId } = useNavigation()
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    fetch(`/api/admin/check?userId=${encodeURIComponent(userId)}`)
+      .then(r => r.json())
+      .then(data => setIsAdmin(data.isAdmin))
+      .catch(() => {})
+  }, [userId])
 
   const isActive = (href: string) => {
     const [hrefPath, hrefSearch] = href.split('?')
@@ -198,35 +208,38 @@ function SidebarContent() {
           borderBottom: '1px solid var(--border-color)',
         }}
       >
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              background: 'var(--theme_button-primary)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.875rem',
-              fontWeight: 700,
-              lineHeight: 1,
-            }}
-          >
-            笔
-          </div>
-          <span
-            style={{
-              fontSize: '1.125rem',
-              fontWeight: 600,
-              color: 'var(--theme_text)',
-              letterSpacing: '0.02em',
-            }}
-          >
-            笔锋
-          </span>
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: 'var(--theme_button-primary)',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.875rem',
+                fontWeight: 700,
+                lineHeight: 1,
+              }}
+            >
+              笔
+            </div>
+            <span
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                color: 'var(--theme_text)',
+                letterSpacing: '0.02em',
+              }}
+            >
+              笔锋
+            </span>
+          </Link>
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Main Navigation */}
@@ -360,11 +373,32 @@ function SidebarContent() {
             </Link>
           )
         })}
-      </div>
-
-      {/* Theme Toggle */}
-      <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border-color)' }}>
-        <ThemeToggle />
+        {isAdmin && (
+          <Link
+            href="/admin/dashboard"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 12px',
+              borderRadius: '8px',
+              marginBottom: '2px',
+              textDecoration: 'none',
+              fontSize: '0.875rem',
+              fontWeight: 400,
+              color: pathname.startsWith('/admin') ? 'var(--theme_button-primary)' : 'var(--theme_text)',
+              background: pathname.startsWith('/admin') ? 'var(--color-blue-50)' : 'transparent',
+              transition: 'all var(--transition-fast)',
+            }}
+          >
+            <span style={{ width: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </span>
+            <span>管理后台</span>
+          </Link>
+        )}
       </div>
     </aside>
   )

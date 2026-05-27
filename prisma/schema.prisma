@@ -10,6 +10,7 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   name          String?
+  role          String    @default("student") // admin|student
   stage         String    @default("sprout") // sprout|growing|thriving
   chineseLevel  Int       @default(1)
   englishLevel  Int       @default(1)
@@ -216,4 +217,45 @@ model EssayAnalysis {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, essaySource, essayId])
+}
+
+model MaterialCategory {
+  id        String   @id @default(cuid())
+  name      String
+  subject   String   // 'chinese' | 'english' | 'all'
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EssayType {
+  id           String   @id @default(cuid())
+  name         String
+  subject      String   // 'chinese' | 'english' | 'all'
+  sortOrder    Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sampleEssays SampleEssay[]
+}
+
+model SampleEssay {
+  id          String   @id @default(cuid())
+  topicId     String
+  title       String
+  content     String
+  source      String   // 'gaokao' | 'admin' | 'ai-generated'
+  essayTypeId String?
+  year        Int?
+  region      String?
+  author      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  essayType   EssayType? @relation(fields: [essayTypeId], references: [id])
+
+  @@index([topicId])
+  @@index([essayTypeId])
 }

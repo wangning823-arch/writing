@@ -6,6 +6,9 @@ async function main() {
   console.log('Seeding database...')
 
   // Clean existing data
+  await prisma.sampleEssay.deleteMany()
+  await prisma.materialCategory.deleteMany()
+  await prisma.essayType.deleteMany()
   await prisma.material.deleteMany()
   await prisma.abilityProfile.deleteMany()
   await prisma.trainingRecord.deleteMany()
@@ -1414,6 +1417,129 @@ async function main() {
     { userId: 'demo-user', content: 'On the one hand... On the other hand... / In contrast / Conversely / Nevertheless', source: '范文', category: '好词好句', subject: 'english', tags: ['contrast', 'transition', 'essay'], usageCount: 6 },
     { userId: 'demo-user', content: 'A growing number of... / An increasing number of... / The majority of...', source: 'AI推荐', category: '好词好句', subject: 'english', tags: ['quantifier', 'academic', 'writing'], usageCount: 4 },
     { userId: 'demo-user', content: 'Last but not least / In conclusion / To sum up / All things considered', source: '范文', category: '好词好句', subject: 'english', tags: ['conclusion', 'transition', 'essay'], usageCount: 7 },
+
+    // ---- Chinese 诗词积累 (Classical Poetry) ----
+    { userId: 'demo-user', content: '"大漠孤烟直，长河落日圆。" ——王维《使至塞上》。赏析：以简洁的线条勾勒出壮阔的边塞风光，"直"与"圆"两字精炼传神，堪称诗中有画的典范。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['王维', '边塞', '写景'], usageCount: 3 },
+    { userId: 'demo-user', content: '"人生自古谁无死？留取丹心照汗青。" ——文天祥《过零丁洋》。赏析：以磅礴气势表达舍生取义的爱国情怀，"丹心"与"汗青"对举，千古传诵。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['文天祥', '爱国', '气节'], usageCount: 5 },
+    { userId: 'demo-user', content: '"沉舟侧畔千帆过，病树前头万木春。" ——刘禹锡《酬乐天扬州初逢席上见赠》。赏析：以自然景象喻人事更迭，表达豁达乐观的人生态度，富有哲理。', source: 'AI推荐', category: '诗词积累', subject: 'chinese', tags: ['刘禹锡', '哲理', '豁达'], usageCount: 4 },
+    { userId: 'demo-user', content: '"会当凌绝顶，一览众山小。" ——杜甫《望岳》。赏析：抒发登顶泰山的豪情壮志，表达勇攀高峰、俯视一切的雄心，适用于奋斗、理想类话题。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['杜甫', '志向', '奋斗'], usageCount: 6 },
+    { userId: 'demo-user', content: '"春蚕到死丝方尽，蜡炬成灰泪始干。" ——李商隐《无题》。赏析：以春蚕和蜡烛比喻至死不渝的奉献精神，常用于赞美教师、科研工作者等无私奉献的人。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['李商隐', '奉献', '比喻'], usageCount: 4 },
+    { userId: 'demo-user', content: '"山重水复疑无路，柳暗花明又一村。" ——陆游《游山西村》。赏析：写山间行走的曲折经历，蕴含困境中蕴含希望的哲理，适用于逆境、希望类话题。', source: 'AI推荐', category: '诗词积累', subject: 'chinese', tags: ['陆游', '哲理', '希望'], usageCount: 5 },
+    { userId: 'demo-user', content: '"落红不是无情物，化作春泥更护花。" ——龚自珍《己亥杂诗》。赏析：以落花自喻辞官离京，表达虽然离开但依然关心国事的奉献精神。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['龚自珍', '奉献', '家国'], usageCount: 3 },
+    { userId: 'demo-user', content: '"问渠那得清如许？为有源头活水来。" ——朱熹《观书有感》。赏析：以池水清澈比喻人需不断学习新知识才能保持思想的活力，适用于学习、创新类话题。', source: 'AI推荐', category: '诗词积累', subject: 'chinese', tags: ['朱熹', '学习', '哲理'], usageCount: 4 },
+    { userId: 'demo-user', content: '"横看成岭侧成峰，远近高低各不同。" ——苏轼《题西林壁》。赏析：从不同角度观察庐山呈现不同面貌，寓意看问题要全面客观，适用于思辨类话题。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['苏轼', '哲理', '思辨'], usageCount: 3 },
+    { userId: 'demo-user', content: '"苟利国家生死以，岂因祸福避趋之。" ——林则徐《赴戍登程口占示家人》。赏析：表达只要对国家有利，不顾个人祸福的爱国精神，适用于家国情怀类话题。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['林则徐', '爱国', '担当'], usageCount: 5 },
+    { userId: 'demo-user', content: '"千淘万漉虽辛苦，吹尽狂沙始到金。" ——刘禹锡《浪淘沙》。赏析：以淘金过程比喻历经磨难终获成功，适用于坚持、奋斗类话题。', source: 'AI推荐', category: '诗词积累', subject: 'chinese', tags: ['刘禹锡', '坚持', '磨砺'], usageCount: 3 },
+    { userId: 'demo-user', content: '"欲穷千里目，更上一层楼。" ——王之涣《登鹳雀楼》。赏析：站得高才能看得远，寓意要有远大志向和不断进取的精神，适用于格局、视野类话题。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['王之涣', '志向', '格局'], usageCount: 4 },
+    { userId: 'demo-user', content: '"出淤泥而不染，濯清涟而不妖。" ——周敦颐《爱莲说》。赏析：以莲花出淤泥不染的品质比喻君子洁身自好的品格，适用于品格、坚守类话题。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['周敦颐', '品格', '坚守'], usageCount: 5 },
+    { userId: 'demo-user', content: '"海内存知己，天涯若比邻。" ——王勃《送杜少府之任蜀州》。赏析：真正的友谊不受距离限制，适用于友情、交流类话题。', source: 'AI推荐', category: '诗词积累', subject: 'chinese', tags: ['王勃', '友情', '豁达'], usageCount: 2 },
+    { userId: 'demo-user', content: '"少年辛苦终身事，莫向光阴惰寸功。" ——杜荀鹤《题弟侄书堂》。赏析：少年时期的勤奋关系到一生的成就，不可虚度光阴，适用于青春、奋斗类话题。', source: '范文', category: '诗词积累', subject: 'chinese', tags: ['杜荀鹤', '勤奋', '惜时'], usageCount: 3 },
+
+    // ---- Chinese 人物素材 (Character Materials) ----
+    { userId: 'demo-user', content: '【屈原】战国时期楚国诗人，创作《离骚》《九歌》等不朽诗篇。主张联齐抗秦，遭贵族排挤被流放。最终投汨罗江自尽。其"举世皆浊我独清"的高洁品格和深沉的爱国情怀，成为中华文化的精神符号。', source: '范文', category: '人物素材', subject: 'chinese', tags: ['屈原', '爱国', '文学', '高洁'], usageCount: 4 },
+    { userId: 'demo-user', content: '【杜甫】唐代伟大现实主义诗人，被誉为"诗圣"。一生颠沛流离，却始终心系苍生。"安得广厦千万间，大庇天下寒士俱欢颜"体现了他推己及人的博大胸襟。其诗被称为"诗史"，记录了唐朝由盛转衰的历史。', source: '范文', category: '人物素材', subject: 'chinese', tags: ['杜甫', '忧国忧民', '文学', '现实主义'], usageCount: 3 },
+    { userId: 'demo-user', content: '【王阳明】明代思想家、军事家，创立"心学"。提出"知行合一""致良知"等思想，强调道德实践的重要性。平定宁王叛乱，用兵如神。其思想影响深远，被誉为"立德、立功、立言"三不朽的圣人。', source: 'AI推荐', category: '人物素材', subject: 'chinese', tags: ['王阳明', '知行合一', '心学', '实践'], usageCount: 5 },
+    { userId: 'demo-user', content: '【钱学森】中国"两弹一星"元勋，冲破美国重重阻挠回到祖国。主持研制了中国第一枚导弹和第一颗人造卫星，为中国航天事业奠定基础。被誉为"中国航天之父""中国导弹之父"。', source: '范文', category: '人物素材', subject: 'chinese', tags: ['钱学森', '爱国', '科技', '航天'], usageCount: 4 },
+    { userId: 'demo-user', content: '【曹雪芹】清代小说家，创作了中国古典文学巅峰之作《红楼梦》。晚年穷困潦倒仍"披阅十载，增删五次"，以毕生心血铸就这部百科全书式的文学巨著。其坚韧不拔的创作精神令人敬佩。', source: 'AI推荐', category: '人物素材', subject: 'chinese', tags: ['曹雪芹', '文学', '坚持', '创作'], usageCount: 3 },
+    { userId: 'demo-user', content: '【林则徐】清代政治家，领导了虎门销烟，维护了中华民族的尊严和利益。被贬至新疆伊犁后，仍心系边疆建设，兴修水利、开垦屯田。"苟利国家生死以，岂因祸福避趋之"是其一生的真实写照。', source: '范文', category: '人物素材', subject: 'chinese', tags: ['林则徐', '爱国', '担当', '逆境'], usageCount: 4 },
+    { userId: 'demo-user', content: '【钟南山】中国工程院院士，2003年抗击非典时敢于直言"病原不是衣原体"，2020年新冠疫情暴发后以84岁高龄逆行武汉。一生致力于呼吸系统疾病研究，敢于讲真话、讲实话，是国民心中的"定海神针"。', source: 'AI推荐', category: '人物素材', subject: 'chinese', tags: ['钟南山', '担当', '科学精神', '医者'], usageCount: 5 },
+    { userId: 'demo-user', content: '【李白】唐代浪漫主义诗人，被誉为"诗仙"。一生傲岸不羁，追求自由与理想。"天生我材必有用，千金散尽还复来"展现了他自信豪迈的人生态度。其诗歌想象丰富、气势磅礴，对后世影响深远。', source: '范文', category: '人物素材', subject: 'chinese', tags: ['李白', '自信', '浪漫', '自由'], usageCount: 3 },
+    { userId: 'demo-user', content: '【邓稼先】中国核武器研制工作的开拓者和奠基者，"两弹一星"元勋。隐姓埋名28年，在艰苦条件下带领团队成功研制出原子弹和氢弹。临终前说："死而无憾。"被誉为"中华民族的核盾牌"。', source: 'AI推荐', category: '人物素材', subject: 'chinese', tags: ['邓稼先', '奉献', '科技', '爱国'], usageCount: 4 },
+    { userId: 'demo-user', content: '【鲁迅】中国现代文学奠基人，以笔为武器批判封建礼教和社会黑暗。"横眉冷对千夫指，俯首甘为孺子牛"是其精神写照。弃医从文，用文字唤醒国人，被誉为"民族魂"。其作品深刻犀利，至今仍具现实意义。', source: '范文', category: '人物素材', subject: 'chinese', tags: ['鲁迅', '批判精神', '文学', '担当'], usageCount: 5 },
+
+    // ---- Chinese 时事热点 (Current Events) ----
+    { userId: 'demo-user', content: '2025年DeepSeek等中国AI大模型崛起，标志着中国在人工智能领域从"跟跑"转向"领跑"。科技创新成为国家核心竞争力，青年学子应紧跟时代步伐，培养创新思维。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['AI', '科技', '创新', '时代'], usageCount: 4 },
+    { userId: 'demo-user', content: '2024年巴黎奥运会上，中国代表团取得境外参赛最佳成绩。潘展乐打破世界纪录夺金，郑钦文创造网球历史。新一代运动员展现了自信、开放、拼搏的中国青年形象。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['奥运', '体育', '拼搏', '青年'], usageCount: 3 },
+    { userId: 'demo-user', content: '中国新能源汽车产销量连续多年全球第一，比亚迪等品牌走向世界。从"换道超车"到引领全球绿色出行变革，展现了中国制造业转型升级的成功路径。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['新能源', '制造业', '创新', '绿色'], usageCount: 3 },
+    { userId: 'demo-user', content: '2025年中国空间站全面建成并进入常态化运营阶段，"天宫"成为人类探索太空的重要平台。从"两弹一星"到"天宫"遨游，中国航天人用奋斗书写了星辰大海的征途。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['航天', '科技', '奋斗', '梦想'], usageCount: 4 },
+    { userId: 'demo-user', content: '《黑神话：悟空》成为中国首款3A游戏大作，上线后风靡全球。它以中国古典名著《西游记》为背景，用现代游戏技术讲述中国故事，是文化自信与科技创新融合的典范。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['文化', '游戏', '创新', '文化自信'], usageCount: 5 },
+    { userId: 'demo-user', content: '全国多地推进"新高考"改革，强调综合素质评价和多元录取。教育从"唯分数论"转向全面育人，引导学生发展个性特长、培养创新精神和社会责任感。', source: '范文', category: '时事热点', subject: 'chinese', tags: ['教育', '改革', '素质', '全面发展'], usageCount: 2 },
+    { userId: 'demo-user', content: '中国提出"双碳"目标（2030年碳达峰、2060年碳中和），推动绿色低碳发展。光伏、风电装机容量全球第一，新能源技术输出"一带一路"国家，展现大国责任担当。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['环保', '碳中和', '责任', '绿色发展'], usageCount: 3 },
+    { userId: 'demo-user', content: '2024年中国春节被列入联合国教科文组织人类非物质文化遗产代表作名录。中华传统文化在全球范围内影响力持续扩大，文化软实力成为综合国力的重要组成部分。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['文化', '非遗', '传承', '文化自信'], usageCount: 3 },
+    { userId: 'demo-user', content: '数字人民币试点范围持续扩大，覆盖全国多个城市和多种场景。金融科技的发展改变了人们的支付方式和生活习惯，也对传统银行业务模式带来深刻变革。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['金融科技', '数字人民币', '创新', '变革'], usageCount: 2 },
+    { userId: 'demo-user', content: '中国国产大飞机C919投入商业运营，打破了波音和空客长期垄断的格局。从运十到C919，中国航空人用数十年的坚持和努力，实现了"大飞机梦"。', source: 'AI推荐', category: '时事热点', subject: 'chinese', tags: ['C919', '航空', '自主创新', '坚持'], usageCount: 4 },
+
+    // ---- Chinese 成语典故 (Idioms & Allusions) ----
+    { userId: 'demo-user', content: '【卧薪尝胆】春秋时期越王勾践战败后睡在柴草上，每天尝苦胆以提醒自己不忘耻辱。最终灭吴复国。比喻刻苦自励、发愤图强。适用于逆境奋斗、知耻后勇类话题。', source: '范文', category: '成语典故', subject: 'chinese', tags: ['卧薪尝胆', '勾践', '逆境', '奋斗'], usageCount: 5 },
+    { userId: 'demo-user', content: '【破釜沉舟】项羽渡河后砸锅沉船，不留退路，以示决一死战的决心。比喻下定决心、不顾一切地干到底。适用于决心、勇气、背水一战类话题。', source: '范文', category: '成语典故', subject: 'chinese', tags: ['破釜沉舟', '项羽', '决心', '勇气'], usageCount: 4 },
+    { userId: 'demo-user', content: '【悬梁刺股】孙敬读书时用绳子把头发系在房梁上防止打瞌睡，苏秦用锥子刺大腿提神。形容刻苦学习、勤奋攻读。适用于勤奋学习、刻苦钻研类话题。', source: 'AI推荐', category: '成语典故', subject: 'chinese', tags: ['悬梁刺股', '勤奋', '学习', '刻苦'], usageCount: 3 },
+    { userId: 'demo-user', content: '【愚公移山】愚公决心移走门前的两座大山，不怕困难，坚持不懈，最终感动天帝将山移走。比喻做事有毅力、不怕困难。适用于坚持、信念、毅力类话题。', source: '范文', category: '成语典故', subject: 'chinese', tags: ['愚公移山', '坚持', '毅力', '信念'], usageCount: 6 },
+    { userId: 'demo-user', content: '【塞翁失马】边塞老翁丢了马，邻居安慰他，他却说"怎知不是福"。后来马带回一匹好马。比喻祸福相依、得失无常。适用于辩证思维、逆境转机类话题。', source: 'AI推荐', category: '成语典故', subject: 'chinese', tags: ['塞翁失马', '祸福', '辩证', '哲理'], usageCount: 4 },
+    { userId: 'demo-user', content: '【画龙点睛】张僧繇在金陵安乐寺画了四条龙但不点眼睛，说点了龙就会飞走。众人不信，他点了两条龙的眼睛，龙果然破壁飞去。比喻在关键处用几笔点明要旨，使内容更加生动。适用于写作技巧类话题。', source: '范文', category: '成语典故', subject: 'chinese', tags: ['画龙点睛', '写作', '关键', '点题'], usageCount: 3 },
+    { userId: 'demo-user', content: '【杯弓蛇影】乐广请客喝酒，客人看见杯中有蛇影，回家后吓出病来。后来发现是墙上弓的倒影。比喻疑神疑鬼、自相惊扰。适用于心理、理性思考类话题。', source: 'AI推荐', category: '成语典故', subject: 'chinese', tags: ['杯弓蛇影', '心理', '理性', '疑虑'], usageCount: 2 },
+    { userId: 'demo-user', content: '【水滴石穿】水不停地滴，能把石头滴穿。比喻只要有恒心、不断努力，就一定能成功。适用于坚持、积累、毅力类话题。', source: '范文', category: '成语典故', subject: 'chinese', tags: ['水滴石穿', '坚持', '积累', '恒心'], usageCount: 5 },
+    { userId: 'demo-user', content: '【邯郸学步】燕国人到赵国邯郸学走路，结果没学会赵国人走路的姿势，连自己原来的走法也忘了。比喻模仿别人不成，反而丧失了自己原有的本领。适用于保持自我、文化自信类话题。', source: 'AI推荐', category: '成语典故', subject: 'chinese', tags: ['邯郸学步', '模仿', '自我', '文化'], usageCount: 3 },
+    { userId: 'demo-user', content: '【程门立雪】杨时和游酢去拜见老师程颐，程颐正在闭目休息，两人恭敬地站在门外等候，当时正下大雪。后来老师醒来时，门外的雪已积了一尺深。形容尊师重道、求学心切。适用于尊师、求学类话题。', source: '范文', category: '成语典故', subject: 'chinese', tags: ['程门立雪', '尊师', '求学', '礼仪'], usageCount: 4 },
+
+    // ---- Chinese 写作技法 (Writing Techniques) ----
+    { userId: 'demo-user', content: '【开头技法·设问引入】以设问句开篇，引发读者思考。如："什么是真正的勇气？是临危不惧的镇定，还是知难而进的抉择？" 设问开头能迅速抓住读者注意力，引出论点。', source: '范文', category: '写作技法', subject: 'chinese', tags: ['开头', '设问', '技巧'], usageCount: 5 },
+    { userId: 'demo-user', content: '【开头技法·引用名言】以名人名言或经典诗句开篇，增强文采和说服力。如以"路漫漫其修远兮，吾将上下而求索"引出"探索"主题。注意引用要准确，与主题紧密相关。', source: '范文', category: '写作技法', subject: 'chinese', tags: ['开头', '引用', '名言'], usageCount: 4 },
+    { userId: 'demo-user', content: '【论证技法·对比论证】将正反两方面的事例或道理进行对比，突出论点。如将"坚持"与"放弃"的结果对比，使论证更加鲜明有力。注意对比要公正客观，避免片面。', source: 'AI推荐', category: '写作技法', subject: 'chinese', tags: ['论证', '对比', '方法'], usageCount: 4 },
+    { userId: 'demo-user', content: '【论证技法·举例论证】用具体事例证明论点，是最常用的论证方法。事例要典型、新颖、有说服力。可用"古今中外"的例子增强论证的广度和深度。叙述事例要简洁，突出与论点的关联。', source: '范文', category: '写作技法', subject: 'chinese', tags: ['论证', '举例', '方法'], usageCount: 6 },
+    { userId: 'demo-user', content: '【结尾技法·首尾呼应】结尾呼应开头，使文章结构完整、浑然一体。如开头用"路漫漫其修远兮"，结尾可用"在求索的路上，我们永不止步"。首尾呼应能深化主题，给人以完整感。', source: 'AI推荐', category: '写作技法', subject: 'chinese', tags: ['结尾', '首尾呼应', '结构'], usageCount: 3 },
+    { userId: 'demo-user', content: '【论证技法·比喻论证】用打比方的方式来论证道理，使抽象的道理变得形象生动。如用"水滴石穿"比喻坚持的力量。比喻要贴切自然，不可牵强附会。', source: '范文', category: '写作技法', subject: 'chinese', tags: ['论证', '比喻', '方法'], usageCount: 3 },
+    { userId: 'demo-user', content: '【结尾技法·升华主题】在结尾处将个人层面的思考上升到社会、国家、人类层面，使文章立意更高。如从"个人奋斗"升华到"民族复兴"，从"学习"升华到"文化传承"。', source: 'AI推荐', category: '写作技法', subject: 'chinese', tags: ['结尾', '升华', '立意'], usageCount: 4 },
+    { userId: 'demo-user', content: '【结构技法·层层递进】按照"是什么—为什么—怎么做"的逻辑层次展开论述。这种结构条理清晰、逻辑严密，特别适合议论文。每一层之间要有自然的过渡和衔接。', source: '范文', category: '写作技法', subject: 'chinese', tags: ['结构', '递进', '逻辑'], usageCount: 5 },
+
+    // ---- English 高级词汇 (Advanced Vocabulary) ----
+    { userId: 'demo-user', content: '替换 "important": crucial / vital / essential / indispensable / paramount。例句：Education is indispensable to the development of a nation.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'important'], usageCount: 6 },
+    { userId: 'demo-user', content: '替换 "good": outstanding / exceptional / remarkable / splendid / exquisite。例句：The museum houses an exquisite collection of ancient artifacts.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'good'], usageCount: 5 },
+    { userId: 'demo-user', content: '替换 "bad": detrimental / adverse / unfavorable / detrimental / deplorable。例句：Air pollution has detrimental effects on human health.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'bad'], usageCount: 4 },
+    { userId: 'demo-user', content: '替换 "think": contend / argue / maintain / assert / reckon。例句：Some researchers contend that climate change is the greatest threat of our time.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'think'], usageCount: 5 },
+    { userId: 'demo-user', content: '替换 "more and more": a growing number of / an increasing number of / a multitude of / a plethora of。例句：A growing number of students are choosing to study abroad.', source: '范文', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'quantity', 'increase'], usageCount: 7 },
+    { userId: 'demo-user', content: '替换 "show": demonstrate / illustrate / indicate / reveal / manifest。例句：Numerous studies have demonstrated the link between exercise and mental health.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'show'], usageCount: 5 },
+    { userId: 'demo-user', content: '替换 "solve": address / tackle / resolve / overcome / combat。例句：Governments must take immediate action to address the housing crisis.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'solve'], usageCount: 4 },
+    { userId: 'demo-user', content: '替换 "very": exceedingly / extremely / incredibly / remarkably / extraordinarily。例句：The project was an extraordinary success, exceeding all expectations.', source: '范文', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'very'], usageCount: 6 },
+    { userId: 'demo-user', content: '替换 "help": facilitate / contribute to / promote / enhance / foster。例句：Technology can facilitate communication between people from different cultures.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'help'], usageCount: 4 },
+    { userId: 'demo-user', content: '替换 "because": owing to / due to / on account of / as a result of / in light of。例句：Owing to the pandemic, many businesses have shifted to online operations.', source: '范文', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'because'], usageCount: 5 },
+    { userId: 'demo-user', content: '替换 "important": of great significance / of vital importance / plays a pivotal role / is instrumental in。例句：Teamwork plays a pivotal role in achieving organizational goals.', source: 'AI推荐', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'phrase', 'important'], usageCount: 4 },
+    { userId: 'demo-user', content: '替换 "like": be fond of / be keen on / have a passion for / be enthusiastic about。例句：She has a passion for reading classic literature.', source: '范文', category: '高级词汇', subject: 'english', tags: ['vocabulary', 'replace', 'like'], usageCount: 3 },
+
+    // ---- English 写作模板 (Writing Templates) ----
+    { userId: 'demo-user', content: '【书信模板·建议信】Dear ___, I am writing to offer my suggestions regarding ___. First and foremost, I would recommend that ___. Additionally, it would be beneficial to ___. I hope these suggestions will be helpful. Yours sincerely, ___', source: '范文', category: '写作模板', subject: 'english', tags: ['letter', 'suggestion', 'template'], usageCount: 7 },
+    { userId: 'demo-user', content: '【书信模板·申请信】Dear ___, I am writing to apply for the position of ___. I believe I am well-qualified for this role because ___. I would appreciate the opportunity to ___. I look forward to your favorable reply. Yours faithfully, ___', source: '范文', category: '写作模板', subject: 'english', tags: ['letter', 'application', 'template'], usageCount: 5 },
+    { userId: 'demo-user', content: '【议论文模板】With the development of ___, ___ has become a hot topic. People hold different views on this issue. Some argue that ___, while others contend that ___. In my opinion, ___. Only in this way can we ___.', source: '范文', category: '写作模板', subject: 'english', tags: ['essay', 'argument', 'template'], usageCount: 8 },
+    { userId: 'demo-user', content: '【通知模板】Notice\nTo: All students\nFrom: Student Union\nDate: ___\n\nA meeting will be held in the school hall at 2:00 PM on ___. The purpose of the meeting is to ___. All students are expected to attend on time.\n\nStudent Union', source: 'AI推荐', category: '写作模板', subject: 'english', tags: ['notice', 'template', 'formal'], usageCount: 4 },
+    { userId: 'demo-user', content: '【演讲模板】Good morning/afternoon, everyone! It is my great honor to stand here and talk about ___. As we all know, ___ plays an important role in our daily lives. Today, I would like to share my thoughts on ___. First, ___. Second, ___. In conclusion, ___. Thank you for listening!', source: '范文', category: '写作模板', subject: 'english', tags: ['speech', 'template', 'presentation'], usageCount: 6 },
+    { userId: 'demo-user', content: '【感谢信模板】Dear ___, I am writing to express my heartfelt gratitude for ___. Your generous help has made a significant difference in ___. I truly appreciate your kindness and support. I will never forget your generosity. With best wishes, ___', source: 'AI推荐', category: '写作模板', subject: 'english', tags: ['letter', 'thanks', 'template'], usageCount: 4 },
+    { userId: 'demo-user', content: '【道歉信模板】Dear ___, I am writing to apologize for ___. I realize that my behavior has caused inconvenience to ___. I will make sure that this will not happen again. I hope you can forgive me. Sincerely, ___', source: 'AI推荐', category: '写作模板', subject: 'english', tags: ['letter', 'apology', 'template'], usageCount: 3 },
+    { userId: 'demo-user', content: '【图表作文模板】As is clearly shown in the chart/graph, ___ has undergone significant changes over the past ___. According to the data, ___ accounted for __%, while ___ only reached __%. Several factors contribute to this trend. Firstly, ___. Secondly, ___. In conclusion, ___.', source: '范文', category: '写作模板', subject: 'english', tags: ['chart', 'essay', 'template'], usageCount: 5 },
+    { userId: 'demo-user', content: '【读后续写模板·开头】Paragraph 1: 描写环境/氛围 → 引出人物动作 → 设置悬念\nParagraph 2: 人物心理活动 → 关键转折 → 问题解决/情感升华\n注意：续写要与原文风格一致，保持人称和时态统一。', source: 'AI推荐', category: '写作模板', subject: 'english', tags: ['continuation', 'writing', 'template'], usageCount: 4 },
+    { userId: 'demo-user', content: '【邀请信模板】Dear ___, I am delighted to invite you to ___. The event will be held at ___ on ___. It will be a wonderful opportunity to ___. We would be honored by your presence. Please let me know if you can attend. Best regards, ___', source: '范文', category: '写作模板', subject: 'english', tags: ['letter', 'invitation', 'template'], usageCount: 3 },
+
+    // ---- English 高级句型 (Advanced Sentence Patterns) ----
+    { userId: 'demo-user', content: '【倒装句】Not only does reading broaden our horizons, but it also enriches our minds. (否定词前置引起的部分倒装，用于强调)', source: 'AI推荐', category: '高级句型', subject: 'english', tags: ['inversion', 'not only', 'emphasis'], usageCount: 6 },
+    { userId: 'demo-user', content: '【强调句】It is through perseverance that we achieve our goals. (It is...that... 强调句型，强调方式状语 through perseverance)', source: 'AI推荐', category: '高级句型', subject: 'english', tags: ['cleft sentence', 'emphasis', 'structure'], usageCount: 5 },
+    { userId: 'demo-user', content: '【虚拟语气】If I were you, I would seize every opportunity to broaden my horizons. (与现在事实相反的虚拟语气，表示建议)', source: '范文', category: '高级句型', subject: 'english', tags: ['subjunctive', 'if', 'suggestion'], usageCount: 7 },
+    { userId: 'demo-user', content: '【非限制性定语从句】The Great Wall, which stretches over 21,000 kilometers, is one of the greatest architectural achievements in human history. (which引导非限制性定语从句，补充说明)', source: 'AI推荐', category: '高级句型', subject: 'english', tags: ['relative clause', 'which', 'description'], usageCount: 4 },
+    { userId: 'demo-user', content: '【with复合结构】With the rapid development of technology, our lives have become more convenient than ever before. (with + 名词 + 分词/形容词，表示伴随状况)', source: '范文', category: '高级句型', subject: 'english', tags: ['with structure', 'accompanying', 'context'], usageCount: 5 },
+    { userId: 'demo-user', content: '【倒装句】Had I known the importance of time management earlier, I would have achieved more. (省略if的虚拟条件句，had提前倒装)', source: 'AI推荐', category: '高级句型', subject: 'english', tags: ['inversion', 'subjunctive', 'conditional'], usageCount: 4 },
+    { userId: 'demo-user', content: '【独立主格结构】Weather permitting, we will hold the sports meeting outdoors on Friday. (名词 + 分词构成独立主格，表示条件)', source: 'AI推荐', category: '高级句型', subject: 'english', tags: ['absolute construction', 'condition', 'weather'], usageCount: 3 },
+    { userId: 'demo-user', content: '【what引导的名词性从句】What makes a great person is not talent alone, but the relentless pursuit of excellence. (what引导主语从句，表示"所...的事")', source: '范文', category: '高级句型', subject: 'english', tags: ['noun clause', 'what', 'subject'], usageCount: 5 },
+    { userId: 'demo-user', content: '【Only + 状语前置倒装】Only by working hard can we achieve our dreams. (only + 方式状语前置，主句用部分倒装)', source: 'AI推荐', category: '高级句型', subject: 'english', tags: ['inversion', 'only', 'dreams'], usageCount: 6 },
+    { userId: 'demo-user', content: '【现在分词作状语】Facing increasing pressure, many students turn to exercise as a way to relieve stress. (现在分词短语作原因/时间状语，使句子更简洁)', source: '范文', category: '高级句型', subject: 'english', tags: ['participle', 'adverbial', 'concise'], usageCount: 4 },
+
+    // ---- English 时事素材 (Current Events) ----
+    { userId: 'demo-user', content: 'ChatGPT and AI chatbots are transforming education worldwide. While some worry about academic dishonesty, others see AI as a powerful learning tool that can personalize education and make knowledge accessible to all.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['AI', 'education', 'technology'], usageCount: 5 },
+    { userId: 'demo-user', content: 'The 2024 Paris Olympics showcased not only athletic excellence but also sustainability efforts. The games featured the first-ever carbon-neutral opening ceremony and promoted eco-friendly transportation.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['Olympics', 'sustainability', 'Paris'], usageCount: 3 },
+    { userId: 'demo-user', content: 'Space tourism is becoming a reality as companies like SpaceX and Blue Origin offer suborbital flights to civilians. This raises questions about the ethics of space travel when billions still face poverty on Earth.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['space', 'tourism', 'ethics'], usageCount: 4 },
+    { userId: 'demo-user', content: 'Global climate change has led to more frequent extreme weather events. In 2024, record-breaking heatwaves affected multiple continents, highlighting the urgent need for international cooperation on environmental protection.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['climate', 'environment', 'cooperation'], usageCount: 4 },
+    { userId: 'demo-user', content: 'Electric vehicles are rapidly gaining popularity worldwide. China leads the global EV market, with brands like BYD and NIO competing with Tesla. This shift is reshaping the automotive industry and reducing carbon emissions.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['electric vehicle', 'green', 'industry'], usageCount: 3 },
+    { userId: 'demo-user', content: 'The rise of remote work has changed traditional office culture. Many companies now offer hybrid working models, allowing employees to work from home several days a week, improving work-life balance.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['remote work', 'lifestyle', 'change'], usageCount: 4 },
+    { userId: 'demo-user', content: 'Renewable energy sources like solar and wind power are becoming increasingly cost-effective. Many countries are investing heavily in clean energy to reduce dependence on fossil fuels and combat climate change.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['renewable energy', 'solar', 'climate'], usageCount: 3 },
+    { userId: 'demo-user', content: 'Social media platforms are implementing stricter content moderation policies to combat misinformation. This raises debates about the balance between free speech and preventing the spread of false information online.', source: 'AI推荐', category: '时事素材', subject: 'english', tags: ['social media', 'misinformation', 'freedom'], usageCount: 3 },
+
+    // ---- English 习语搭配 (Idioms & Collocations) ----
+    { userId: 'demo-user', content: 'break the ice (打破僵局) — The teacher told a joke to break the ice on the first day of school.', source: '范文', category: '习语搭配', subject: 'english', tags: ['idiom', 'social', 'communication'], usageCount: 4 },
+    { userId: 'demo-user', content: 'hit the nail on the head (一针见血) — Your analysis of the problem really hit the nail on the head.', source: '范文', category: '习语搭配', subject: 'english', tags: ['idiom', 'accuracy', 'insight'], usageCount: 3 },
+    { userId: 'demo-user', content: 'a piece of cake (小菜一碟) — The math exam was a piece of cake for her because she had studied hard.', source: 'AI推荐', category: '习语搭配', subject: 'english', tags: ['idiom', 'easy', 'confidence'], usageCount: 5 },
+    { userId: 'demo-user', content: 'burn the midnight oil (挑灯夜战) — Students often burn the midnight oil preparing for final exams.', source: '范文', category: '习语搭配', subject: 'english', tags: ['idiom', 'study', 'effort'], usageCount: 4 },
+    { userId: 'demo-user', content: 'Actions speak louder than actions. (事实胜于雄辩) — He proved his dedication through his work rather than words.', source: 'AI推荐', category: '习语搭配', subject: 'english', tags: ['proverb', 'action', 'dedication'], usageCount: 5 },
+    { userId: 'demo-user', content: 'Every coin has two sides. (凡事都有两面性) — Technology brings convenience, but it also causes privacy concerns.', source: '范文', category: '习语搭配', subject: 'english', tags: ['proverb', 'balance', 'perspective'], usageCount: 6 },
+    { userId: 'demo-user', content: 'practice makes perfect (熟能生巧) — The only way to improve your writing is to practice makes perfect.', source: 'AI推荐', category: '习语搭配', subject: 'english', tags: ['proverb', 'practice', 'improvement'], usageCount: 4 },
+    { userId: 'demo-user', content: 'the tip of the冰山 (冰山一角) — What we see is just the tip of the iceberg; the real problem lies beneath the surface.', source: '范文', category: '习语搭配', subject: 'english', tags: ['idiom', 'hidden', 'depth'], usageCount: 3 },
+    { userId: 'demo-user', content: 'look on the bright side (看到光明面) — Even in difficult times, we should look on the bright side and stay optimistic.', source: 'AI推荐', category: '习语搭配', subject: 'english', tags: ['idiom', 'optimism', 'attitude'], usageCount: 4 },
+    { userId: 'demo-user', content: 'Rome was not built in a day. (罗马不是一天建成的) — Mastering a language takes time and patience.', source: '范文', category: '习语搭配', subject: 'english', tags: ['proverb', 'patience', 'persistence'], usageCount: 5 },
   ]
 
   // Create a demo user
@@ -1428,7 +1554,64 @@ async function main() {
     },
   })
 
-  console.log('Demo user created!')
+  // Create admin user
+  await prisma.user.create({
+    data: {
+      id: 'admin-user',
+      name: '管理员',
+      role: 'admin',
+      stage: 'thriving',
+      chineseLevel: 7,
+      englishLevel: 6,
+      grade: '高三',
+    },
+  })
+
+  console.log('Users created (demo + admin)!')
+
+  // ========== Material Categories ==========
+  const materialCategories = [
+    { name: '论据', subject: 'chinese', sortOrder: 0 },
+    { name: '名言', subject: 'chinese', sortOrder: 1 },
+    { name: '事例', subject: 'chinese', sortOrder: 2 },
+    { name: '好词好句', subject: 'chinese', sortOrder: 3 },
+    { name: '诗词积累', subject: 'chinese', sortOrder: 4 },
+    { name: '人物素材', subject: 'chinese', sortOrder: 5 },
+    { name: '时事热点', subject: 'chinese', sortOrder: 6 },
+    { name: '成语典故', subject: 'chinese', sortOrder: 7 },
+    { name: '写作技法', subject: 'chinese', sortOrder: 8 },
+    { name: '论据', subject: 'english', sortOrder: 0 },
+    { name: '名言', subject: 'english', sortOrder: 1 },
+    { name: '事例', subject: 'english', sortOrder: 2 },
+    { name: '好词好句', subject: 'english', sortOrder: 3 },
+    { name: '高级词汇', subject: 'english', sortOrder: 4 },
+    { name: '写作模板', subject: 'english', sortOrder: 5 },
+    { name: '高级句型', subject: 'english', sortOrder: 6 },
+    { name: '时事素材', subject: 'english', sortOrder: 7 },
+    { name: '习语搭配', subject: 'english', sortOrder: 8 },
+  ]
+
+  for (const cat of materialCategories) {
+    await prisma.materialCategory.create({ data: cat })
+  }
+  console.log(`Inserted ${materialCategories.length} material categories!`)
+
+  // ========== Essay Types ==========
+  const essayTypes = [
+    { name: '议论文', subject: 'chinese', sortOrder: 0 },
+    { name: '记叙文', subject: 'chinese', sortOrder: 1 },
+    { name: '散文', subject: 'chinese', sortOrder: 2 },
+    { name: '应用文', subject: 'chinese', sortOrder: 3 },
+    { name: '书信', subject: 'english', sortOrder: 0 },
+    { name: '通知', subject: 'english', sortOrder: 1 },
+    { name: '演讲', subject: 'english', sortOrder: 2 },
+    { name: '读后续写', subject: 'english', sortOrder: 3 },
+  ]
+
+  for (const type of essayTypes) {
+    await prisma.essayType.create({ data: type })
+  }
+  console.log(`Inserted ${essayTypes.length} essay types!`)
 
   console.log(`Inserting ${materials.length} materials...`)
 

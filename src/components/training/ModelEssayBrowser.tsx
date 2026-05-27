@@ -6,6 +6,7 @@ import { THEME_ESSAYS, type TopicModelEssay } from '@/lib/topic-essays'
 import ENGLISH_ESSAYS from '@/lib/english-essays.json'
 import { BookIcon } from '@/components/icons'
 import EssayAnalysisPanel from './EssayAnalysisPanel'
+import EssayContent from './EssayContent'
 
 interface ModelEssayBrowserProps {
   onBack: () => void
@@ -160,9 +161,8 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                             fontSize: '0.875rem',
                             lineHeight: 1.7,
                             color: 'var(--text-primary)',
-                            whiteSpace: 'pre-wrap',
                           }}>
-                            {essay.content}
+                            <EssayContent content={essay.content} />
                           </div>
 
                           {/* Analysis */}
@@ -307,9 +307,8 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                               fontSize: '0.875rem',
                               lineHeight: 1.8,
                               color: 'var(--text-primary)',
-                              whiteSpace: 'pre-wrap',
                             }}>
-                              {essay.content}
+                              <EssayContent content={essay.content} />
                             </div>
                             <EssayAnalysisPanel
                               essaySource="topic"
@@ -404,9 +403,8 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                               fontSize: '0.875rem',
                               lineHeight: 1.8,
                               color: 'var(--text-primary)',
-                              whiteSpace: 'pre-wrap',
                             }}>
-                              {essay.content}
+                              <EssayContent content={essay.content} />
                             </div>
                             <EssayAnalysisPanel
                               essaySource="english-json"

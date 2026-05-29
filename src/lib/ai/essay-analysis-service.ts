@@ -3,7 +3,7 @@ import { complete } from './client'
 import { getEssayAnalysisPrompt } from './prompts/essay-analysis'
 
 export interface EssayAnalysisRequest {
-  essaySource: 'model' | 'topic' | 'english-json'
+  essaySource: 'model' | 'topic' | 'english-json' | 'gaokao'
   essayId: string
   essayTitle: string
   essayContent: string

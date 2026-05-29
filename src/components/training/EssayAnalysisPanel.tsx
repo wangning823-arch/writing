@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import type { EssayAnalysisResult } from '@/lib/ai/essay-analysis-service'
 
 interface EssayAnalysisPanelProps {
-  essaySource: 'model' | 'topic' | 'english-json'
+  essaySource: 'model' | 'topic' | 'english-json' | 'gaokao'
   essayId: string
   essayTitle: string
   essayContent: string

@@ -242,20 +242,28 @@ model EssayType {
 }
 
 model SampleEssay {
-  id          String   @id @default(cuid())
-  topicId     String
-  title       String
-  content     String
-  source      String   // 'gaokao' | 'admin' | 'ai-generated'
-  essayTypeId String?
-  year        Int?
-  region      String?
-  author      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  topicId      String   @default("")
+  title        String
+  content      String
+  source       String   // 'gaokao' | 'admin' | 'ai-generated' | 'theme' | 'model'
+  essayTypeId  String?
+  year         Int?
+  region       String?
+  author       String?
+  theme        String?  // 主题分类: 人生成长, 传统文化, etc.
+  abilityPoint String?  // 能力点: 开头段, 论证段, etc.
+  level        Int?     // 难度等级
+  techniques   String?  // 技巧标签 JSON array
+  genre        String?  // 体裁: 议论文, 记叙文, etc.
+  analysis     String?  // 赏析文字
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   essayType   EssayType? @relation(fields: [essayTypeId], references: [id])
 
   @@index([topicId])
   @@index([essayTypeId])
+  @@index([theme])
+  @@index([source])
 }

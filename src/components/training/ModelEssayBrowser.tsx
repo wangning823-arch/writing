@@ -1,12 +1,29 @@
 'use client'
 
-import { useState } from 'react'
-import { MODEL_ESSAYS, type ModelEssay } from '@/lib/model-essays'
-import { THEME_ESSAYS, type TopicModelEssay } from '@/lib/topic-essays'
-import ENGLISH_ESSAYS from '@/lib/english-essays.json'
+import { useState, useEffect } from 'react'
 import { BookIcon } from '@/components/icons'
 import EssayAnalysisPanel from './EssayAnalysisPanel'
 import EssayContent from './EssayContent'
+
+const CHINESE_THEMES = [
+  '人生成长', '传统文化', '劳动实践', '哲理思辨', '家国情怀',
+  '情感世界', '教育学习', '社会变迁', '科技创新', '自然生态', '艺术审美',
+]
+
+interface EssayData {
+  id: string
+  title: string
+  content: string
+  source: string
+  year?: number | null
+  region?: string | null
+  theme?: string | null
+  abilityPoint?: string | null
+  level?: number | null
+  techniques?: string[]
+  genre?: string | null
+  analysis?: string | null
+}
 
 interface ModelEssayBrowserProps {
   onBack: () => void
@@ -36,17 +53,55 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [collectedIds, setCollectedIds] = useState<Set<string>>(new Set())
   const [collectingId, setCollectingId] = useState<string | null>(null)
+  const [modelEssays, setModelEssays] = useState<EssayData[]>([])
+  const [themeEssays, setThemeEssays] = useState<Record<string, EssayData[]>>({})
+  const [englishEssays, setEnglishEssays] = useState<Record<string, EssayData[]>>({})
 
-  const essays = MODEL_ESSAYS.filter(e => e.subject === subject)
+  // Fetch all data from database
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch curated teaching essays
+        const modelRes = await fetch(`/api/essays?source=model&subject=${subject}`)
+        const modelData = await modelRes.json()
+        setModelEssays(modelData.essays || [])
 
-  // Group by level
-  const grouped = essays.reduce<Record<number, ModelEssay[]>>((acc, essay) => {
-    if (!acc[essay.level]) acc[essay.level] = []
-    acc[essay.level].push(essay)
+        // Fetch gaokao essays
+        if (subject === 'chinese') {
+          const grouped: Record<string, EssayData[]> = {}
+          for (const theme of CHINESE_THEMES) {
+            const res = await fetch(`/api/essays?theme=${encodeURIComponent(theme)}&limit=10`)
+            const data = await res.json()
+            if (data.essays?.length) grouped[theme] = data.essays
+          }
+          setThemeEssays(grouped)
+        } else {
+          const res = await fetch(`/api/essays?subject=english&limit=200`)
+          const data = await res.json()
+          const grouped: Record<string, EssayData[]> = {}
+          for (const essay of data.essays || []) {
+            const key = essay.topicId || 'other'
+            if (!grouped[key]) grouped[key] = []
+            grouped[key].push(essay)
+          }
+          setEnglishEssays(grouped)
+        }
+      } catch {
+        // silently fail
+      }
+    }
+    fetchData()
+  }, [subject])
+
+  // Group model essays by level
+  const grouped = modelEssays.reduce<Record<number, EssayData[]>>((acc, essay) => {
+    const lvl = essay.level || 0
+    if (!acc[lvl]) acc[lvl] = []
+    acc[lvl].push(essay)
     return acc
   }, {})
 
-  const handleCollect = async (essay: ModelEssay) => {
+  const handleCollect = async (essay: EssayData) => {
     setCollectingId(essay.id)
     try {
       const res = await fetch('/api/materials/collect', {
@@ -57,7 +112,7 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
           source: '范文',
           tags: essay.techniques,
           category: essay.abilityPoint,
-          subject: essay.subject,
+          subject,
         }),
       })
       if (res.ok) {
@@ -92,7 +147,7 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
       </header>
 
       <main className="app-container">
-        {/* Essays grouped by level */}
+        {/* Model essays grouped by level */}
         {Object.entries(grouped).map(([levelStr, levelEssays]) => {
           const level = parseInt(levelStr, 10)
           const labels = LEVEL_LABELS[subject] || {}
@@ -116,7 +171,6 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                         overflow: 'hidden',
                       }}
                     >
-                      {/* Header - clickable */}
                       <button
                         onClick={() => setExpandedId(isExpanded ? null : essay.id)}
                         style={{
@@ -149,10 +203,8 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                         </span>
                       </button>
 
-                      {/* Expanded content */}
                       {isExpanded && (
                         <div style={{ padding: '0 1rem 1rem', borderTop: '1px solid var(--border-color)' }}>
-                          {/* Essay content */}
                           <div style={{
                             padding: '0.75rem 1rem',
                             margin: '0.75rem 0',
@@ -165,27 +217,28 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                             <EssayContent content={essay.content} />
                           </div>
 
-                          {/* Analysis */}
-                          <div style={{
-                            padding: '0.75rem 1rem',
-                            borderRadius: '0.5rem',
-                            background: 'var(--accent-light)',
-                            fontSize: '0.8125rem',
-                            lineHeight: 1.6,
-                            color: 'var(--text-primary)',
-                            marginBottom: '0.75rem',
-                          }}>
-                            <span style={{ fontWeight: 600 }}>赏析：</span>{essay.analysis}
-                          </div>
+                          {essay.analysis && (
+                            <div style={{
+                              padding: '0.75rem 1rem',
+                              borderRadius: '0.5rem',
+                              background: 'var(--accent-light)',
+                              fontSize: '0.8125rem',
+                              lineHeight: 1.6,
+                              color: 'var(--text-primary)',
+                              marginBottom: '0.75rem',
+                            }}>
+                              <span style={{ fontWeight: 600 }}>赏析：</span>{essay.analysis}
+                            </div>
+                          )}
 
-                          {/* Techniques */}
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '0.75rem' }}>
-                            {essay.techniques.map((t) => (
-                              <span key={t} className="model-essay-technique-badge">{t}</span>
-                            ))}
-                          </div>
+                          {essay.techniques && essay.techniques.length > 0 && (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '0.75rem' }}>
+                              {essay.techniques.map((t) => (
+                                <span key={t} className="model-essay-technique-badge">{t}</span>
+                              ))}
+                            </div>
+                          )}
 
-                          {/* Collect button */}
                           <button
                             onClick={() => handleCollect(essay)}
                             disabled={collectingId === essay.id || collectedIds.has(essay.id)}
@@ -225,15 +278,15 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
           )
         })}
 
-        {essays.length === 0 && (
+        {modelEssays.length === 0 && (
           <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-secondary)' }}>
             <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📝</p>
             <p>暂无{subject === 'chinese' ? '语文' : '英语'}范文</p>
           </div>
         )}
 
-        {/* Gaokao real essays by theme - only for Chinese */}
-        {subject === 'chinese' && Object.keys(THEME_ESSAYS).length > 0 && (
+        {/* Gaokao essays by theme - Chinese */}
+        {subject === 'chinese' && Object.keys(themeEssays).length > 0 && (
           <>
             <div style={{ margin: '2rem 0 1rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--accent)' }}>
               <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -244,13 +297,13 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
               </p>
             </div>
 
-            {Object.entries(THEME_ESSAYS).map(([theme, themeEssays]) => (
+            {Object.entries(themeEssays).map(([theme, themeEssayList]) => (
               <section key={theme} className="training-section">
                 <h3 className="training-section-title">
-                  {theme} ({themeEssays.length}篇)
+                  {theme} ({themeEssayList.length}篇)
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {themeEssays.map((essay, idx) => {
+                  {themeEssayList.map((essay, idx) => {
                     const essayKey = `theme-${theme}-${idx}`
                     const isExpanded = expandedId === essayKey
                     return (
@@ -311,8 +364,8 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                               <EssayContent content={essay.content} />
                             </div>
                             <EssayAnalysisPanel
-                              essaySource="topic"
-                              essayId={`theme:${theme}:${idx}`}
+                              essaySource="gaokao"
+                              essayId={essay.id}
                               essayTitle={essay.title}
                               essayContent={essay.content}
                               subject="chinese"
@@ -328,8 +381,8 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
           </>
         )}
 
-        {/* English gaokao essays by type */}
-        {subject === 'english' && ENGLISH_ESSAYS.topics.length > 0 && (
+        {/* English gaokao essays by topic */}
+        {subject === 'english' && Object.keys(englishEssays).length > 0 && (
           <>
             <div style={{ margin: '2rem 0 1rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--accent)' }}>
               <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -340,14 +393,14 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
               </p>
             </div>
 
-            {Object.entries(ENGLISH_ESSAYS.essays_by_type).map(([type, typeEssays]) => (
-              <section key={type} className="training-section">
+            {Object.entries(englishEssays).map(([topicId, topicEssayList]) => (
+              <section key={topicId} className="training-section">
                 <h3 className="training-section-title">
-                  {type} ({typeEssays.length}篇)
+                  {topicId} ({topicEssayList.length}篇)
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {typeEssays.map((essay, idx) => {
-                    const essayKey = `english-${type}-${idx}`
+                  {topicEssayList.map((essay, idx) => {
+                    const essayKey = `english-${topicId}-${idx}`
                     const isExpanded = expandedId === essayKey
                     return (
                       <div
@@ -380,7 +433,6 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.125rem' }}>
                               {essay.year && `${essay.year}年`}
                               {essay.region && ` ${essay.region}`}
-                              {' '}{type}
                             </div>
                           </div>
                           <span style={{
@@ -407,8 +459,8 @@ export default function ModelEssayBrowser({ onBack, initialSubject }: ModelEssay
                               <EssayContent content={essay.content} />
                             </div>
                             <EssayAnalysisPanel
-                              essaySource="english-json"
-                              essayId={`english:${type}:${idx}`}
+                              essaySource="gaokao"
+                              essayId={essay.id}
                               essayTitle={essay.title}
                               essayContent={essay.content}
                               subject="english"

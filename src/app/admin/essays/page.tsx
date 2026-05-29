@@ -21,6 +21,7 @@ interface EssayType {
   id: string
   name: string
   subject: string
+  isActive?: boolean
 }
 
 const inputStyle = {

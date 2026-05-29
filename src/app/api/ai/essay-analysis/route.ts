@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     } = body as EssayAnalysisRequest & { userId?: string }
 
     // Validation
-    if (!essaySource || !['model', 'topic', 'english-json'].includes(essaySource)) {
+    if (!essaySource || !['model', 'topic', 'english-json', 'gaokao'].includes(essaySource)) {
       return NextResponse.json({ error: '无效的essaySource' }, { status: 400 })
     }
     if (!essayId) {

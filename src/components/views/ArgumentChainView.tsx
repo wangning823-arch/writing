@@ -30,10 +30,7 @@ export default function ArgumentChainView({ onBack, subject }: ArgumentChainView
       <ArgumentChain
         topic="论证训练"
         subject={subject}
-        onComplete={(score: number) => {
-          alert(`训练完成！得分：${score}`)
-          onBack()
-        }}
+        onComplete={() => {}}
       />
     </div>
   )

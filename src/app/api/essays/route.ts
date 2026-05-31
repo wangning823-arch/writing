@@ -27,14 +27,8 @@ export async function GET(req: NextRequest) {
     }
 
     if (subject) {
-      // For model essays, subject is encoded in abilityPoint/genre patterns
-      // For gaokao essays, filter via Topic join
-      if (source === 'model') {
-        // Model essays: chinese ones have Chinese abilityPoint, english have English
-        // We'll filter after fetch since there's no subject column
-      } else {
-        where.topic = { subject }
-      }
+      // Filter by subject field directly
+      where.subject = subject
     }
 
     if (level) where.level = parseInt(level)
@@ -49,6 +43,7 @@ export async function GET(req: NextRequest) {
         title: true,
         content: true,
         source: true,
+        subject: true,
         year: true,
         region: true,
         topicId: true,
@@ -61,20 +56,8 @@ export async function GET(req: NextRequest) {
       },
     })
 
-    // Filter model essays by subject (chinese essays have Chinese abilityPoint like 开头段)
-    let result = essays
-    if (source === 'model' && subject) {
-      const isChinese = (e: any) => {
-        const ap = e.abilityPoint || ''
-        return /[一-龥]/.test(ap)
-      }
-      result = subject === 'chinese'
-        ? essays.filter(isChinese)
-        : essays.filter(e => !isChinese(e))
-    }
-
     // Parse techniques JSON
-    const parsed = result.map((e: any) => ({
+    const parsed = essays.map((e: any) => ({
       ...e,
       techniques: e.techniques ? JSON.parse(e.techniques) : [],
     }))

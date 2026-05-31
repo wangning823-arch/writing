@@ -15,6 +15,8 @@ export interface ExamStrategy {
   totalTime: number // minutes
   stages: ExamStage[]
   generalTips: string[]
+  emergencyTips: string[] // 应急策略
+  formatReminders: string[] // 卷面提醒
 }
 
 export const CHINESE_EXAM_STRATEGY: ExamStrategy = {
@@ -75,6 +77,20 @@ export const CHINESE_EXAM_STRATEGY: ExamStrategy = {
     '结尾要升华，从个人上升到群体或时代',
     '卷面整洁也是得分因素',
   ],
+  emergencyTips: [
+    '时间紧迫时，优先完成首尾段，中间段可用论据快速填充',
+    '想不出论据时，用"试想如果..."的假设论证法',
+    '遇到不熟悉的题目，从"是什么-为什么-怎么办"三角度展开',
+    '写不完时，确保有完整的结尾，哪怕只有一句话',
+    '卡壳时，先跳过写后面，回头再补',
+  ],
+  formatReminders: [
+    '每段首行空两格',
+    '标点符号占一格',
+    '书写工整，字迹清晰',
+    '修改时用删除线，不要涂黑',
+    '卷面整洁可额外加2-5分',
+  ],
 }
 
 export const ENGLISH_EXAM_STRATEGY: ExamStrategy = {
@@ -133,6 +149,20 @@ export const ENGLISH_EXAM_STRATEGY: ExamStrategy = {
     '高级词汇和句式能提升档次',
     '注意书信格式：称呼、正文、落款',
     '检查语法错误是最容易提分的地方',
+  ],
+  emergencyTips: [
+    '时间不够时，先写首尾段，确保结构完整',
+    '想不出高级词汇时，用简单词+准确表达',
+    '不确定语法时，用简单句代替复杂句',
+    '写不完时，用一句话总结观点作为结尾',
+    '书信格式不确定时，至少保证有称呼和落款',
+  ],
+  formatReminders: [
+    '书信格式：Dear..., Yours sincerely/truly, ...',
+    '段落之间空一行',
+    '注意大小写和标点',
+    '书写工整，字母清晰',
+    '词数控制在要求范围内（120-150词）',
   ],
 }
 

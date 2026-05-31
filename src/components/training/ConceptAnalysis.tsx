@@ -1,0 +1,135 @@
+'use client'
+
+import { useState } from 'react'
+import { CONCEPT_EXERCISES, type ConceptExercise } from '@/lib/training/concept-exercises'
+import ScoreResultPanel from './ScoreResultPanel'
+
+interface ConceptAnalysisProps {
+  subject: 'chinese' | 'english'
+  onComplete: (result: any) => void
+  onBack: () => void
+  userId?: string
+}
+
+const TYPE_LABELS = { synonym: '近义词辨析', definition: '概念定义', relation: '概念关系' }
+
+export default function ConceptAnalysis({ subject, onComplete, onBack, userId }: ConceptAnalysisProps) {
+  const exercises = CONCEPT_EXERCISES.filter((e) => e.subject === subject)
+  const [currentIdx, setCurrentIdx] = useState(0)
+  const [response, setResponse] = useState('')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [result, setResult] = useState<any>(null)
+
+  const exercise = exercises[currentIdx]
+  if (!exercise) return <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>暂无可用练习</p>
+
+  const handleSubmit = async () => {
+    if (!response.trim()) return
+    setIsAnalyzing(true)
+    try {
+      const res = await fetch('/api/ai/concept-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ exercise, response, userId, subject }),
+      })
+      const result = await res.json()
+      setResult(result)
+      onComplete(result)
+    } catch {
+      onComplete({ overallScore: 70, summary: '分析完成' })
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }
+
+  if (result) {
+    return (
+      <ScoreResultPanel
+        overallScore={result.overallScore || 0}
+        summary={result.summary}
+        strengths={result.strengths}
+        suggestions={result.suggestions}
+        scoringCriteria={result.scoringCriteria}
+        referenceAnswer={result.referenceAnswer}
+        exampleVariants={result.exampleVariants}
+        hasNext={currentIdx < exercises.length - 1}
+        onNext={() => { setCurrentIdx(currentIdx + 1); setResponse(''); setResult(null) }}
+        onRetry={() => { setResponse(''); setResult(null) }}
+      />
+    )
+  }
+
+  return (
+    <div style={{ padding: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#f0fdf4', color: '#16a34a' }}>
+          {TYPE_LABELS[exercise.type]}
+        </span>
+        <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary, #9ca3af)' }}>
+          {exercise.difficulty === 'easy' ? '基础' : exercise.difficulty === 'medium' ? '进阶' : '挑战'}
+        </span>
+      </div>
+
+      <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--bg-secondary, #f9fafb)', border: '1px solid var(--border-color, #e5e7eb)', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+          {exercise.concepts.map((c) => (
+            <span key={c} style={{ fontSize: '0.875rem', fontWeight: 600, color: '#3b82f6', background: '#eff6ff', padding: '0.25rem 0.75rem', borderRadius: '9999px' }}>{c}</span>
+          ))}
+        </div>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary, #6b7280)', margin: 0, lineHeight: 1.6 }}>{exercise.prompt}</p>
+      </div>
+
+      <textarea
+        value={response}
+        onChange={(e) => setResponse(e.target.value)}
+        rows={8}
+        placeholder="请写下你的分析..."
+        style={{
+          width: '100%', padding: '0.75rem', borderRadius: '0.5rem',
+          border: '1px solid var(--border-color, #e5e7eb)', background: 'var(--bg-card, #fff)',
+          fontSize: '0.875rem', color: 'var(--text-primary, #111827)', resize: 'vertical', boxSizing: 'border-box', marginBottom: '1rem',
+        }}
+      />
+
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <button
+          onClick={() => { setCurrentIdx(Math.max(0, currentIdx - 1)); setResponse('') }}
+          disabled={currentIdx === 0}
+          style={{
+            padding: '0.5rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--border-color, #e5e7eb)',
+            background: 'var(--bg-card, #fff)',
+            color: currentIdx === 0 ? 'var(--text-tertiary, #9ca3af)' : 'var(--text-primary, #111827)',
+            cursor: currentIdx === 0 ? 'not-allowed' : 'pointer', fontSize: '0.875rem',
+          }}
+        >
+          ← 上一题
+        </button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          {currentIdx < exercises.length - 1 && (
+            <button
+              onClick={() => { setCurrentIdx(currentIdx + 1); setResponse('') }}
+              style={{ padding: '0.5rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--border-color, #e5e7eb)', background: 'var(--bg-card, #fff)', color: 'var(--text-primary, #111827)', cursor: 'pointer', fontSize: '0.875rem' }}
+            >
+              下一题
+            </button>
+          )}
+          <button
+            onClick={handleSubmit}
+            disabled={!response.trim() || isAnalyzing}
+            style={{
+              padding: '0.5rem 1.5rem', borderRadius: '0.5rem', border: 'none',
+              background: response.trim() && !isAnalyzing ? '#3b82f6' : '#9ca3af',
+              color: '#fff', cursor: response.trim() && !isAnalyzing ? 'pointer' : 'not-allowed', fontSize: '0.875rem', fontWeight: 500,
+            }}
+          >
+            {isAnalyzing ? '分析中...' : '提交分析'}
+          </button>
+        </div>
+      </div>
+
+      <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-tertiary, #9ca3af)', marginTop: '1rem' }}>
+        {currentIdx + 1} / {exercises.length}
+      </p>
+    </div>
+  )
+}

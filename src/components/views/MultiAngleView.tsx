@@ -30,10 +30,7 @@ export default function MultiAngleView({ onBack, subject }: MultiAngleViewProps)
       <MultiAngleAnalysis
         topic="多角度分析"
         subject={subject}
-        onComplete={(score: number) => {
-          alert(`训练完成！得分：${score}`)
-          onBack()
-        }}
+        onComplete={() => {}}
       />
     </div>
   )

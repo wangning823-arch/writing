@@ -28,10 +28,7 @@ export default function WritingPsychologyView({ onBack, subject }: WritingPsycho
         {subject === 'chinese' ? '语文' : '英语'}写作心理训练
       </h1>
       <WritingPsychology
-        onComplete={() => {
-          alert('心理训练完成！')
-          onBack()
-        }}
+        onComplete={() => {}}
       />
     </div>
   )

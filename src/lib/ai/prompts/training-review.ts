@@ -65,7 +65,21 @@ function buildJsonOutputSpec(subject: 'chinese' | 'english'): string {
   ],
   "pass": true或false（是否达到本层级合格线，合格线为60分）,
   "nextLevel": 下一层级编号,
-  "encouragement": "一句鼓励语（${lang}）"
+  "encouragement": "一句鼓励语（${lang}）",
+  "depthEvaluation": {
+    "score": 思想深度分数(0-100),
+    "dialecticalThinking": "辩证思考评价",
+    "problemEssence": "问题本质洞察评价",
+    "originalInsight": "独到见解评价",
+    "summary": "思想深度总评"
+  },
+  "emotionalEvaluation": {
+    "score": 情感真实性分数(0-100),
+    "authenticity": "情感真实性评价",
+    "resonance": "情感共鸣度评价",
+    "expression": "情感表达技巧评价",
+    "summary": "情感真实性总评"
+  }
 }
 
 ## 错误分类分类体系

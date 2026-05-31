@@ -30,10 +30,7 @@ export default function ParagraphOrderingView({ onBack, subject }: ParagraphOrde
       <ParagraphOrdering
         topic="段落排序"
         subject={subject}
-        onComplete={(score: number) => {
-          alert(`训练完成！得分：${score}`)
-          onBack()
-        }}
+        onComplete={() => {}}
       />
     </div>
   )

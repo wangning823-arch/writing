@@ -31,6 +31,8 @@ model User {
   weakPoints      WeakPoint[]
   reviewSchedules ReviewSchedule[]
   errorRecords    ErrorRecord[]
+  dailyCheckins   DailyCheckin[]
+  journals        Journal[]
 }
 
 model Assessment {
@@ -247,6 +249,7 @@ model SampleEssay {
   title        String
   content      String
   source       String   // 'gaokao' | 'admin' | 'ai-generated' | 'theme' | 'model'
+  subject      String   @default("chinese") // 'chinese' | 'english'
   essayTypeId  String?
   year         Int?
   region       String?
@@ -266,4 +269,74 @@ model SampleEssay {
   @@index([essayTypeId])
   @@index([theme])
   @@index([source])
+  @@index([subject])
+}
+
+model DailyCheckin {
+  id         String   @id @default(cuid())
+  userId     String
+  date       String   // YYYY-MM-DD
+  wordCount  Int      @default(0)
+  goalTarget Int      @default(200)
+  content    String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, date])
+}
+
+model Journal {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // '随笔'|'日记'|'读后感'
+  title     String?
+  content   String
+  wordCount Int      @default(0)
+  tags      String   @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model WeeklyReading {
+  id        String   @id @default(cuid())
+  weekStart String   // YYYY-MM-DD
+  subject   String
+  articles  String   @default("[]") // JSON array of articles
+  createdAt DateTime @default(now())
+
+  @@unique([weekStart, subject])
+}
+
+model PeerReview {
+  id         String   @id @default(cuid())
+  authorId   String
+  reviewerId String?
+  essayContent String
+  rating     Int?
+  comment    String?
+  qualityScore Int?   // AI quality evaluation
+  status     String   @default("pending") // pending|reviewed|expired
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([reviewerId])
+}
+
+model WritingGoal {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  target    Int
+  current   Int      @default(0)
+  unit      String   @default("篇")
+  deadline  String?
+  status    String   @default("active") // active|completed|expired
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

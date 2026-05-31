@@ -23,18 +23,12 @@ function ThinkingPageContent() {
   }, [searchParams])
 
   const handleSelectTraining = (type: string) => {
-    if (type === 'paragraph-ordering') {
-      router.push(`/thinking/paragraph-ordering?subject=${subject}`)
-    } else if (type === 'argument-chain') {
-      router.push(`/thinking/argument-chain?subject=${subject}`)
-    } else if (type === 'multi-angle') {
-      router.push(`/thinking/multi-angle?subject=${subject}`)
-    } else if (type === 'writing-psychology') {
-      router.push(`/thinking/writing-psychology?subject=${subject}`)
-    } else if (type === 'topic-analysis') {
+    if (type === 'topic-analysis') {
       router.push(`/training/${subject}/1`)
     } else if (type === 'paragraph-cards') {
       router.push(`/training/${subject}/2`)
+    } else {
+      router.push(`/thinking/${type}?subject=${subject}`)
     }
   }
 

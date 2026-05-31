@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface AbilityDiagnosisProps {
   subject: 'chinese' | 'english'
@@ -29,21 +30,50 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
   const [result, setResult] = useState<DiagnosisResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   const handleDiagnose = async () => {
     setLoading(true)
     setError('')
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/ability-diagnosis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, subject }),
+        body: JSON.stringify({ userId, subject, stream: true }),
       })
-      const data = await res.json()
-      if (data.error) throw new Error(data.error)
-      setResult(data)
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '诊断失败')
+        setLoading(false)
+        return
+      }
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setLoading(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') setResult(event.data)
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch (e: any) {
-      setError(e.message || '诊断失败，请稍后重试')
+      setStreamError(e.message || '诊断失败，请稍后重试')
     } finally {
       setLoading(false)
     }
@@ -69,6 +99,18 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
       case 'down': return '#dc2626'
       default: return '#6b7280'
     }
+  }
+
+  if (loading) {
+    return (
+      <div style={{ padding: '1.5rem' }}>
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setLoading(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
+      </div>
+    )
   }
 
   if (!result) {

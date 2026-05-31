@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { LANGUAGE_STYLE_EXERCISES } from '@/lib/training/language-style-exercises'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface LanguageStyleExerciseProps {
   subject: 'chinese' | 'english'
@@ -14,6 +15,8 @@ export default function LanguageStyleExercise({ subject, onComplete, onBack }: L
   const [response, setResponse] = useState('')
   const [showAnalysis, setShowAnalysis] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   const exercises = LANGUAGE_STYLE_EXERCISES.filter(e => e.subject === subject)
   const exercise = exercises[currentIdx]
@@ -22,6 +25,8 @@ export default function LanguageStyleExercise({ subject, onComplete, onBack }: L
   const handleSubmit = async () => {
     if (!response.trim()) return
     setLoading(true)
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/rhetoric', {
         method: 'POST',
@@ -32,16 +37,54 @@ export default function LanguageStyleExercise({ subject, onComplete, onBack }: L
           response,
           rhetoricType: '语言风格',
           subject,
+          stream: true,
         }),
       })
-      const result = await res.json()
-      setShowAnalysis(true)
-      onComplete?.(result)
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '分析失败')
+        setLoading(false)
+        return
+      }
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setLoading(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') { setShowAnalysis(true); onComplete?.(event.data) }
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch {
-      setShowAnalysis(true)
+      setStreamError('网络错误，请重试')
     } finally {
       setLoading(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div style={{ padding: '1.5rem' }}>
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setLoading(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
+      </div>
+    )
   }
 
   return (

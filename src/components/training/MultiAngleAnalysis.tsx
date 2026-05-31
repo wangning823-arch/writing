@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface MultiAngleAnalysisProps {
   topic: string
@@ -43,6 +44,8 @@ export default function MultiAngleAnalysis({
   )
   const [activeAngle, setActiveAngle] = useState(0)
   const [isEvaluating, setIsEvaluating] = useState(false)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
   const [results, setResults] = useState<{
     angles: Array<{ score: number; feedback: string }>
     overallDepth: string
@@ -70,6 +73,8 @@ export default function MultiAngleAnalysis({
   const handleSubmit = async () => {
     if (!allValid) return
     setIsEvaluating(true)
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/multi-angle', {
         method: 'POST',
@@ -81,19 +86,54 @@ export default function MultiAngleAnalysis({
             angle: subject === 'chinese' ? a.label : a.labelEn,
             content: a.content,
           })),
+          stream: true,
         }),
       })
-      const data = await res.json()
       if (!res.ok) {
-        alert(data.error || '评估失败，请重试')
+        const data = await res.json()
+        setStreamError(data.error || '评估失败')
+        setIsEvaluating(false)
         return
       }
-      setResults(data)
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setIsEvaluating(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') setResults(event.data)
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch {
-      alert('网络错误，请重试')
+      setStreamError('网络错误，请重试')
     } finally {
       setIsEvaluating(false)
     }
+  }
+
+  if (isEvaluating) {
+    return (
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1.5rem' }}>
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setIsEvaluating(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
+      </div>
+    )
   }
 
   if (results) {

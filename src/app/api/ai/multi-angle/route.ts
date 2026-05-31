@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { complete } from '@/lib/ai/client'
+import { streamAIResponse, SSE_HEADERS } from '@/lib/ai/stream-helper'
 
+/**
+ * POST /api/ai/multi-angle — 多角度分析评估
+ *
+ * 评估学生从多个角度分析话题的能力，从深度、相关性、独创性、清晰度四个维度打分。
+ * 支持 SSE 流式传输（请求体传 stream: true）。
+ *
+ * Body: { topic, subject, analyses: AngleAnalysis[], stream? }
+ */
+
+/** 单个角度分析的输入结构 */
 interface AngleAnalysis {
   angle: string
   content: string
@@ -9,24 +20,16 @@ interface AngleAnalysis {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { topic, subject, analyses } = body as {
-      topic: string
-      subject: string
-      analyses: AngleAnalysis[]
+    const { topic, subject, analyses, stream: enableStream } = body as {
+      topic: string; subject: string; analyses: AngleAnalysis[]; stream?: boolean
     }
 
     if (!topic || !subject || !analyses || !Array.isArray(analyses) || analyses.length === 0) {
-      return NextResponse.json(
-        { error: '缺少必要字段：topic, subject, analyses' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: '缺少必要字段：topic, subject, analyses' }, { status: 400 })
     }
 
     const lang = subject === 'english' ? 'English' : 'Chinese'
-
-    const analysisText = analyses
-      .map((a, i) => `Angle ${i + 1} - ${a.angle}:\n${a.content}`)
-      .join('\n\n')
+    const analysisText = analyses.map((a, i) => `Angle ${i + 1} - ${a.angle}:\n${a.content}`).join('\n\n')
 
     const prompt = `You are a writing instructor evaluating multi-angle analysis for a ${lang} essay.
 
@@ -54,22 +57,19 @@ Return ONLY a JSON object (no markdown code blocks) with this exact structure:
 
 Score each angle 0-100. The totalScore should weight depth (40%), breadth (30%), and individual angle quality (30%).`
 
-    const { text } = await complete(prompt, { maxTokens: 2048 })
-
-    let jsonStr = text.trim()
-    if (jsonStr.startsWith('```')) {
-      jsonStr = jsonStr.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+    if (enableStream) {
+      const readable = await streamAIResponse(prompt, { maxTokens: 2048 })
+      return new Response(readable, { headers: SSE_HEADERS })
     }
 
+    const { text } = await complete(prompt, { maxTokens: 2048 })
+    let jsonStr = text.trim()
+    if (jsonStr.startsWith('```')) jsonStr = jsonStr.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
     const result = JSON.parse(jsonStr)
-
     return NextResponse.json(result)
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
     console.error('Multi-Angle Analysis Error:', message)
-    return NextResponse.json(
-      { error: '评估失败: ' + message },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: '评估失败: ' + message }, { status: 500 })
   }
 }

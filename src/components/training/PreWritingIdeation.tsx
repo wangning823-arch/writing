@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface PreWritingIdeationProps {
   topic: string
@@ -17,20 +18,49 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
   const [idea, setIdea] = useState('')
   const [result, setResult] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   const handleAnalyze = async () => {
     setLoading(true)
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/pre-writing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, genre, currentIdea: idea, phase, subject }),
+        body: JSON.stringify({ topic, genre, currentIdea: idea, phase, subject, stream: true }),
       })
-      const data = await res.json()
-      setResult(data)
-      if (phase === 'polish') onComplete(data)
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '分析失败')
+        setLoading(false)
+        return
+      }
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setLoading(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') { setResult(event.data); if (phase === 'polish') onComplete(event.data) }
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch {
-      setResult({ encouragement: '构思完成，继续加油！' })
+      setStreamError('网络错误，请重试')
     } finally {
       setLoading(false)
     }
@@ -110,7 +140,15 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
         {loading ? 'AI 分析中...' : 'AI 引导构思'}
       </button>
 
-      {result && (
+      {loading && (
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setLoading(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
+      )}
+
+      {!loading && result && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {result.questions && (
             <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#fef3c7', border: '1px solid #fcd34d' }}>

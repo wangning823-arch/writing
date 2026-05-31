@@ -1,5 +1,7 @@
 'use client'
 
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
+
 interface StageTimeRecord {
   stage: string
   recommended: number // minutes
@@ -38,6 +40,8 @@ interface SimulationReportProps {
     strategyAdvice: string[]
   } | null
   isReviewing: boolean
+  streamText?: string
+  streamError?: string | null
   onRetry?: () => void
   onBackToHome?: () => void
 }
@@ -72,6 +76,8 @@ export default function SimulationReport({
   essayContent,
   reviewResult,
   isReviewing,
+  streamText,
+  streamError,
   onRetry,
   onBackToHome,
 }: SimulationReportProps) {
@@ -230,21 +236,13 @@ export default function SimulationReport({
           background: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
           borderRadius: '0.75rem',
-          padding: '2rem',
-          textAlign: 'center',
+          overflow: 'hidden',
         }}>
-          <div style={{
-            width: '1.5rem',
-            height: '1.5rem',
-            border: '2px solid var(--border-color)',
-            borderTopColor: 'var(--accent)',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto 0.75rem',
-          }} />
-          <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-            AI正在分析你的考场表现...
-          </p>
+          <ReviewStreamPanel
+            text={streamText || ''}
+            error={streamError}
+            onRetry={streamError ? onRetry : undefined}
+          />
         </div>
       )}
 

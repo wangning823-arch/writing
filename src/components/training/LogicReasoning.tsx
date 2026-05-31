@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { LOGIC_EXERCISES, type LogicExercise } from '@/lib/training/logic-exercises'
 import ScoreResultPanel from './ScoreResultPanel'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface LogicReasoningProps {
   subject: 'chinese' | 'english'
@@ -26,6 +27,8 @@ export default function LogicReasoning({ subject, onComplete, onBack, userId }: 
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [showShortWarning, setShowShortWarning] = useState(false)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   const exercise = exercises[currentIdx]
   if (!exercise) return <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>暂无可用练习</p>
@@ -48,22 +51,62 @@ export default function LogicReasoning({ subject, onComplete, onBack, userId }: 
     }
 
     setIsAnalyzing(true)
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/logic-reasoning', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ exercise, response, userId, subject }),
+        body: JSON.stringify({ exercise, response, userId, subject, stream: true }),
       })
-      const result = await res.json()
-      if (result.error) {
-        setResult({ overallScore: 70, summary: result.error, strengths: [], suggestions: [], scoringCriteria: {}, referenceAnswer: '', exampleVariants: [] })
-      } else {
-        setResult(result)
+
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '分析失败')
+        setIsAnalyzing(false)
+        return
       }
-      onComplete(result)
+
+      const reader = res.body?.getReader()
+      if (!reader) {
+        setStreamError('无法读取响应流')
+        setIsAnalyzing(false)
+        return
+      }
+
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') {
+              setStreamText(prev => prev + event.text)
+            } else if (event.type === 'result') {
+              setResult(event.data)
+              onComplete(event.data)
+            } else if (event.type === 'error') {
+              setStreamError(event.message)
+            }
+          } catch {
+            // skip malformed chunks
+          }
+        }
+      }
     } catch (e) {
       console.error('Logic reasoning fetch error:', e)
-      onComplete({ overallScore: 70, summary: '分析完成' })
+      setStreamError('网络错误，请重试')
     } finally {
       setIsAnalyzing(false)
     }
@@ -91,9 +134,22 @@ export default function LogicReasoning({ subject, onComplete, onBack, userId }: 
         referenceAnswer={result.referenceAnswer}
         exampleVariants={result.exampleVariants}
         hasNext={currentIdx < exercises.length - 1}
-        onNext={() => { setCurrentIdx(currentIdx + 1); setSelectedOption(null); setResponse(''); setShowExplanation(false); setResult(null) }}
-        onRetry={() => { setSelectedOption(null); setResponse(''); setShowExplanation(false); setResult(null) }}
+        onNext={() => { setCurrentIdx(currentIdx + 1); setSelectedOption(null); setResponse(''); setShowExplanation(false); setResult(null); setStreamText(''); setStreamError(null) }}
+        onRetry={() => { setSelectedOption(null); setResponse(''); setShowExplanation(false); setResult(null); setStreamText(''); setStreamError(null) }}
       />
+    )
+  }
+
+  // Streaming in progress
+  if (isAnalyzing) {
+    return (
+      <div style={{ padding: '1.5rem' }}>
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setIsAnalyzing(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
+      </div>
     )
   }
 

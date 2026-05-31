@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface Annotation {
   technique: string
@@ -45,6 +46,8 @@ export default function DeepReadingExercise({
   const [reflection, setReflection] = useState<Reflection>({ summary: '', techniques: '', inspiration: '' })
   const [phase, setPhase] = useState<'reading' | 'reflection' | 'submitting'>('reading')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   const addAnnotation = () => {
     if (!currentAnnotation.technique) return
@@ -62,6 +65,8 @@ export default function DeepReadingExercise({
   const handleAnalyze = async () => {
     setPhase('submitting')
     setIsAnalyzing(true)
+    setStreamText('')
+    setStreamError(null)
     try {
       const annotationList = Object.entries(annotations).flatMap(([paraIdx, annos]) =>
         annos.map((a) => ({ paragraphIndex: parseInt(paraIdx), ...a }))
@@ -77,12 +82,39 @@ export default function DeepReadingExercise({
           reflection,
           userId,
           subject,
+          stream: true,
         }),
       })
-      const result = await res.json()
-      onComplete(result)
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '分析失败')
+        setIsAnalyzing(false)
+        return
+      }
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setIsAnalyzing(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') onComplete(event.data)
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch {
-      onComplete({ overallScore: 70, summary: '分析完成', strengths: [], suggestions: [] })
+      setStreamError('网络错误，请重试')
     } finally {
       setIsAnalyzing(false)
     }
@@ -90,11 +122,12 @@ export default function DeepReadingExercise({
 
   if (phase === 'submitting') {
     return (
-      <div style={{ textAlign: 'center', padding: '3rem' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📖</div>
-        <p style={{ color: 'var(--text-secondary, #6b7280)' }}>
-          {isAnalyzing ? 'AI 正在分析您的阅读批注...' : '正在提交...'}
-        </p>
+      <div style={{ padding: '1.5rem' }}>
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setPhase('reflection'); setIsAnalyzing(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
       </div>
     )
   }

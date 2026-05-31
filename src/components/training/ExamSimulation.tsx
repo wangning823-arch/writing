@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { getExamStrategy, type ExamStrategy, type ExamStage } from '@/lib/training/exam-strategy'
 import SimulationReport from './SimulationReport'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface ExamSimulationProps {
   topic: string
@@ -63,6 +64,8 @@ export default function ExamSimulation({
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [showConfirm, setShowConfirm] = useState(false)
   const [timerActive, setTimerActive] = useState(true)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const currentStage: ExamStage = strategy.stages[currentStageIndex]
@@ -158,6 +161,8 @@ export default function ExamSimulation({
     setPhase('report')
     setIsReviewing(true)
     setTimerActive(false)
+    setStreamText('')
+    setStreamError(null)
 
     if (timerRef.current) {
       clearInterval(timerRef.current)
@@ -174,14 +179,39 @@ export default function ExamSimulation({
           topic,
           stageData: stageContents,
           timeAnalysis: allRecords,
+          stream: true,
         }),
       })
-      const data = await res.json()
-      if (res.ok && data.result) {
-        setReviewResult(data.result)
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '评审失败')
+        setIsReviewing(false)
+        return
+      }
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setIsReviewing(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') setReviewResult(event.data)
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
       }
     } catch {
-      // Review failed - still show report with time data
+      setStreamError('网络错误，请重试')
     } finally {
       setIsReviewing(false)
     }
@@ -420,6 +450,8 @@ export default function ExamSimulation({
         essayContent={stageContents['正文写作'] || content}
         reviewResult={reviewResult}
         isReviewing={isReviewing}
+        streamText={streamText}
+        streamError={streamError}
         onRetry={() => {
           setPhase('intro')
           setStageTimeRecords([])
@@ -428,6 +460,8 @@ export default function ExamSimulation({
           setContent('')
           setCurrentStageIndex(0)
           setElapsedSeconds(0)
+          setStreamText('')
+          setStreamError(null)
         }}
         onBackToHome={onComplete}
       />

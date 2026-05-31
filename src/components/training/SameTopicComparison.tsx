@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface SameTopicComparisonProps {
   studentEssay: string
@@ -51,6 +52,8 @@ export default function SameTopicComparison({
   const [result, setResult] = useState<ComparisonResult | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
   const [expandedParagraph, setExpandedParagraph] = useState<number | null>(null)
   const [expandedOverall, setExpandedOverall] = useState<string | null>(null)
 
@@ -72,20 +75,44 @@ export default function SameTopicComparison({
   const handleCompare = useCallback(async () => {
     setIsAnalyzing(true)
     setError(null)
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/compare', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentEssay, modelEssay, subject, topic }),
+        body: JSON.stringify({ studentEssay, modelEssay, subject, topic, stream: true }),
       })
-      const data = await res.json()
       if (!res.ok) {
-        setError(data.error || '对比分析失败')
+        const data = await res.json()
+        setStreamError(data.error || '对比分析失败')
+        setIsAnalyzing(false)
         return
       }
-      setResult(data.result)
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setIsAnalyzing(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') setResult(event.data)
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch {
-      setError('网络错误，请重试')
+      setStreamError('网络错误，请重试')
     } finally {
       setIsAnalyzing(false)
     }
@@ -473,24 +500,12 @@ export default function SameTopicComparison({
 
       {/* Loading state */}
       {isAnalyzing && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem',
-          gap: '0.75rem',
-        }}>
-          <div style={{
-            width: '1.25rem',
-            height: '1.25rem',
-            border: '2px solid var(--border-color)',
-            borderTopColor: 'var(--accent)',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-          }} />
-          <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-            AI正在逐段分析对比...
-          </span>
+        <div style={{ padding: '1.25rem' }}>
+          <ReviewStreamPanel
+            text={streamText}
+            error={streamError}
+            onRetry={streamError ? () => { setIsAnalyzing(false); setStreamText(''); setStreamError(null) } : undefined}
+          />
         </div>
       )}
 

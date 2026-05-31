@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { DIALECTICAL_EXERCISES, type DialecticalExercise } from '@/lib/training/dialectical-exercises'
 import ScoreResultPanel from './ScoreResultPanel'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface DialecticalThinkingProps {
   subject: 'chinese' | 'english'
@@ -18,6 +19,8 @@ export default function DialecticalThinking({ subject, onComplete, onBack, userI
   const [responseB, setResponseB] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [result, setResult] = useState<any>(null)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   const exercise = exercises[currentIdx]
   if (!exercise) return <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>暂无可用练习</p>
@@ -25,17 +28,44 @@ export default function DialecticalThinking({ subject, onComplete, onBack, userI
   const handleSubmit = async () => {
     if (!responseA.trim() || !responseB.trim()) return
     setIsAnalyzing(true)
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/dialectical-thinking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ exercise, responseA, responseB, userId, subject }),
+        body: JSON.stringify({ exercise, responseA, responseB, userId, subject, stream: true }),
       })
-      const result = await res.json()
-      setResult(result)
-      onComplete(result)
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '分析失败')
+        setIsAnalyzing(false)
+        return
+      }
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setIsAnalyzing(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') { setResult(event.data); onComplete(event.data) }
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch {
-      onComplete({ overallScore: 70, summary: '分析完成' })
+      setStreamError('网络错误，请重试')
     } finally {
       setIsAnalyzing(false)
     }
@@ -56,9 +86,21 @@ export default function DialecticalThinking({ subject, onComplete, onBack, userI
         referenceAnswer={result.referenceAnswer}
         exampleVariants={result.exampleVariants}
         hasNext={currentIdx < exercises.length - 1}
-        onNext={() => { setCurrentIdx(currentIdx + 1); setResponseA(''); setResponseB(''); setResult(null) }}
-        onRetry={() => { setResponseA(''); setResponseB(''); setResult(null) }}
+        onNext={() => { setCurrentIdx(currentIdx + 1); setResponseA(''); setResponseB(''); setResult(null); setStreamText(''); setStreamError(null) }}
+        onRetry={() => { setResponseA(''); setResponseB(''); setResult(null); setStreamText(''); setStreamError(null) }}
       />
+    )
+  }
+
+  if (isAnalyzing) {
+    return (
+      <div style={{ padding: '1.5rem' }}>
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setIsAnalyzing(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
+      </div>
     )
   }
 

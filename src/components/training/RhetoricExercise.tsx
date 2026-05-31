@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { RHETORIC_EXERCISES, type RhetoricExercise } from '@/lib/training/rhetoric-exercises'
 import ScoreResultPanel from './ScoreResultPanel'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 
 interface RhetoricExerciseProps {
   subject: 'chinese' | 'english'
@@ -21,6 +22,8 @@ export default function RhetoricExerciseComponent({ subject, onComplete, onBack,
   const [showResult, setShowResult] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [result, setResult] = useState<any>(null)
+  const [streamText, setStreamText] = useState('')
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   const exercise = RHETORIC_EXERCISES[currentIdx]
   if (!exercise) return null
@@ -34,17 +37,44 @@ export default function RhetoricExerciseComponent({ subject, onComplete, onBack,
     }
     if (!response.trim()) return
     setIsAnalyzing(true)
+    setStreamText('')
+    setStreamError(null)
     try {
       const res = await fetch('/api/ai/rhetoric', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ exercise, response, userId }),
+        body: JSON.stringify({ exercise, response, userId, stream: true }),
       })
-      const result = await res.json()
-      setResult(result)
-      onComplete(result)
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '分析失败')
+        setIsAnalyzing(false)
+        return
+      }
+      const reader = res.body?.getReader()
+      if (!reader) { setStreamError('无法读取响应流'); setIsAnalyzing(false); return }
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') setStreamText(prev => prev + event.text)
+            else if (event.type === 'result') { setResult(event.data); onComplete(event.data) }
+            else if (event.type === 'error') setStreamError(event.message)
+          } catch {}
+        }
+      }
     } catch {
-      onComplete({ overallScore: 70, summary: '分析完成' })
+      setStreamError('网络错误，请重试')
     } finally {
       setIsAnalyzing(false)
     }
@@ -59,6 +89,18 @@ export default function RhetoricExerciseComponent({ subject, onComplete, onBack,
     }
   }
 
+  if (isAnalyzing) {
+    return (
+      <div style={{ padding: '1.5rem' }}>
+        <ReviewStreamPanel
+          text={streamText}
+          error={streamError}
+          onRetry={streamError ? () => { setIsAnalyzing(false); setStreamText(''); setStreamError(null) } : undefined}
+        />
+      </div>
+    )
+  }
+
   if (result) {
     return (
       <ScoreResultPanel
@@ -70,8 +112,8 @@ export default function RhetoricExerciseComponent({ subject, onComplete, onBack,
         referenceAnswer={result.referenceAnswer}
         exampleVariants={result.exampleVariants}
         hasNext={currentIdx < RHETORIC_EXERCISES.length - 1}
-        onNext={() => { setCurrentIdx(currentIdx + 1); setResponse(''); setSelectedRecognition(''); setShowResult(false); setResult(null) }}
-        onRetry={() => { setResponse(''); setSelectedRecognition(''); setShowResult(false); setResult(null) }}
+        onNext={() => { setCurrentIdx(currentIdx + 1); setResponse(''); setSelectedRecognition(''); setShowResult(false); setResult(null); setStreamText(''); setStreamError(null) }}
+        onRetry={() => { setResponse(''); setSelectedRecognition(''); setShowResult(false); setResult(null); setStreamText(''); setStreamError(null) }}
       />
     )
   }

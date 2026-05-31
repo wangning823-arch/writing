@@ -26,6 +26,12 @@ interface TrainingContextType {
   setTrainingLevel: (l: number) => void
   resumeTopic: Topic | null
   setResumeTopic: (t: Topic | null) => void
+  reviewStreamText: string
+  setReviewStreamText: (t: string | ((prev: string) => string)) => void
+  isStreamComplete: boolean
+  setIsStreamComplete: (v: boolean) => void
+  streamError: string | null
+  setStreamError: (e: string | null) => void
 }
 
 const TrainingContext = createContext<TrainingContextType | undefined>(undefined)
@@ -42,6 +48,9 @@ export function TrainingProvider({ children }: { children: ReactNode }) {
   const [trainingSubject, setTrainingSubject] = useState('chinese')
   const [trainingLevel, setTrainingLevel] = useState(1)
   const [resumeTopic, setResumeTopic] = useState<Topic | null>(null)
+  const [reviewStreamText, setReviewStreamText] = useState('')
+  const [isStreamComplete, setIsStreamComplete] = useState(false)
+  const [streamError, setStreamError] = useState<string | null>(null)
 
   return (
     <TrainingContext.Provider value={{
@@ -56,6 +65,9 @@ export function TrainingProvider({ children }: { children: ReactNode }) {
       trainingSubject, setTrainingSubject,
       trainingLevel, setTrainingLevel,
       resumeTopic, setResumeTopic,
+      reviewStreamText, setReviewStreamText,
+      isStreamComplete, setIsStreamComplete,
+      streamError, setStreamError,
     }}>
       {children}
     </TrainingContext.Provider>

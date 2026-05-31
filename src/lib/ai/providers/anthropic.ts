@@ -4,9 +4,9 @@ const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
-export async function complete(prompt: string, options?: { system?: string; maxTokens?: number }) {
+export async function complete(prompt: string, options?: { system?: string; maxTokens?: number; model?: string }) {
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: options?.model || 'claude-sonnet-4-20250514',
     max_tokens: options?.maxTokens ?? 4096,
     system: options?.system,
     messages: [{ role: 'user', content: prompt }],
@@ -20,9 +20,9 @@ export async function complete(prompt: string, options?: { system?: string; maxT
   return { text: textBlock.text }
 }
 
-export async function* stream(prompt: string, options?: { system?: string; maxTokens?: number }) {
+export async function* stream(prompt: string, options?: { system?: string; maxTokens?: number; model?: string }) {
   const stream = client.messages.stream({
-    model: 'claude-sonnet-4-20250514',
+    model: options?.model || 'claude-sonnet-4-20250514',
     max_tokens: options?.maxTokens ?? 1024,
     system: options?.system,
     messages: [{ role: 'user', content: prompt }],

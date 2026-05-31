@@ -3,13 +3,32 @@
 import { useRouter } from 'next/navigation'
 import { useTraining } from '@/contexts/TrainingContext'
 import ScoreCard from '@/components/ai/ScoreCard'
+import ReviewStreamPanel from '@/components/ai/ReviewStreamPanel'
 import DiffView from '@/components/diff/DiffView'
 import { CHINESE_LEVEL_NAMES, ENGLISH_LEVEL_NAMES } from '@/lib/constants'
 
 export default function ResultPage() {
   const router = useRouter()
-  const { feedback, previousContent, diffSegments, setContent, setFeedback, lastRecordId, setLastRecordId, topicTitle, topicDescription, trainingSubject, trainingLevel } = useTraining()
+  const { feedback, previousContent, diffSegments, setContent, setFeedback, lastRecordId, setLastRecordId, topicTitle, topicDescription, trainingSubject, trainingLevel, isReviewing, reviewStreamText, isStreamComplete, streamError, setStreamError, setIsReviewing, setReviewStreamText, setIsStreamComplete, setPreviousContent, setTopicTitle, setTopicDescription, setTrainingSubject, setTrainingLevel, setResumeTopic, setLastRecordId: setLastRecordId2 } = useTraining()
 
+  // State 1: Streaming in progress
+  if (isReviewing && !isStreamComplete) {
+    return (
+      <ReviewStreamPanel
+        text={reviewStreamText}
+        error={streamError}
+        onRetry={() => {
+          setStreamError(null)
+          setReviewStreamText('')
+          setIsStreamComplete(false)
+          // Retry is handled by navigating back — user can re-submit
+          router.back()
+        }}
+      />
+    )
+  }
+
+  // State 2: No data at all
   if (!feedback) {
     return (
       <div style={{ padding: '32px', textAlign: 'center' }}>

@@ -2,9 +2,9 @@ const BASE_URL = process.env.MIMO_BASE_URL || 'https://api.xiaomimimo.com/v1'
 const API_KEY = process.env.MIMO_API_KEY || ''
 const MODEL = process.env.MIMO_MODEL || 'mimo-v2-flash'
 
-async function callMIMO(messages: { role: string; content: string }[], options?: { maxTokens?: number; stream?: boolean }) {
+async function callMIMO(messages: { role: string; content: string }[], options?: { maxTokens?: number; stream?: boolean; model?: string }) {
   const body = {
-    model: MODEL,
+    model: options?.model || MODEL,
     messages,
     max_completion_tokens: options?.maxTokens ?? 4096,
     temperature: 0.7,
@@ -29,13 +29,13 @@ async function callMIMO(messages: { role: string; content: string }[], options?:
   return response
 }
 
-export async function complete(prompt: string, options?: { system?: string; maxTokens?: number }) {
+export async function complete(prompt: string, options?: { system?: string; maxTokens?: number; model?: string }) {
   const messages = [
     ...(options?.system ? [{ role: 'system', content: options.system }] : []),
     { role: 'user', content: prompt },
   ]
 
-  const response = await callMIMO(messages, { maxTokens: options?.maxTokens, stream: false })
+  const response = await callMIMO(messages, { maxTokens: options?.maxTokens, stream: false, model: options?.model })
   const data = await response.json()
 
   const text = data.choices?.[0]?.message?.content
@@ -46,13 +46,13 @@ export async function complete(prompt: string, options?: { system?: string; maxT
   return { text }
 }
 
-export async function* stream(prompt: string, options?: { system?: string; maxTokens?: number }) {
+export async function* stream(prompt: string, options?: { system?: string; maxTokens?: number; model?: string }) {
   const messages = [
     ...(options?.system ? [{ role: 'system', content: options.system }] : []),
     { role: 'user', content: prompt },
   ]
 
-  const response = await callMIMO(messages, { maxTokens: options?.maxTokens, stream: true })
+  const response = await callMIMO(messages, { maxTokens: options?.maxTokens, stream: true, model: options?.model })
 
   if (!response.body) {
     throw new Error('MIMO stream response has no body')

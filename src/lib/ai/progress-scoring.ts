@@ -139,7 +139,7 @@ export async function calculateProgress(
     previousFeedback,
   )
 
-  const { text } = await complete(user, { system, maxTokens: 4096 })
+  const { text } = await complete(user, { system, maxTokens: 4096, model: process.env.MIMO_FAST_MODEL })
 
   // Parse the AI response
   let jsonStr = text.trim()

@@ -8,7 +8,7 @@ export interface AIStreamChunk {
 
 const PROVIDER = process.env.AI_PROVIDER || 'anthropic'
 
-export async function complete(prompt: string, options?: { system?: string; maxTokens?: number }): Promise<AIResponse> {
+export async function complete(prompt: string, options?: { system?: string; maxTokens?: number; model?: string }): Promise<AIResponse> {
   if (PROVIDER === 'mimo') {
     const { complete: mimoComplete } = await import('./providers/openai')
     return mimoComplete(prompt, options)
@@ -18,7 +18,7 @@ export async function complete(prompt: string, options?: { system?: string; maxT
   return anthropicComplete(prompt, options)
 }
 
-export async function* stream(prompt: string, options?: { system?: string; maxTokens?: number }): AsyncGenerator<AIStreamChunk> {
+export async function* stream(prompt: string, options?: { system?: string; maxTokens?: number; model?: string }): AsyncGenerator<AIStreamChunk> {
   if (PROVIDER === 'mimo') {
     const { stream: mimoStream } = await import('./providers/openai')
     yield* mimoStream(prompt, options)

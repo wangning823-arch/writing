@@ -26,7 +26,7 @@ export default function TrainingPage() {
   const subject = params.subject as 'chinese' | 'english'
   const level = parseInt(params.level as string)
 
-  const { content, setContent, setFeedback, setPreviousContent, setDiffSegments, isReviewing, setIsReviewing, lastRecordId, setLastRecordId, setTopicTitle, setTopicDescription, setTrainingSubject, setTrainingLevel, resumeTopic, setResumeTopic } = useTraining()
+  const { content, setContent, setFeedback, setPreviousContent, setDiffSegments, isReviewing, setIsReviewing, lastRecordId, setLastRecordId, setTopicTitle, setTopicDescription, setTrainingSubject, setTrainingLevel, resumeTopic, setResumeTopic, setReviewStreamText, setIsStreamComplete, setStreamError } = useTraining()
 
   const [chineseStage, setChineseStage] = useState<Stage>('sprout')
   const [englishStage, setEnglishStage] = useState<Stage>('sprout')
@@ -81,9 +81,27 @@ export default function TrainingPage() {
   const timeLimit = getTimeLimit(subject, level, currentStage)
 
   const handleReview = useCallback(async (levelContent: string) => {
-    setIsReviewing(true)
-    setFeedback(null)
     const isRevision = !!lastRecordId
+
+    // Set metadata in context before navigating
+    setPreviousContent(levelContent)
+    setTopicTitle(selectedTopic?.title || levelConfig?.name || '')
+    setTopicDescription(selectedTopic?.description || levelConfig?.description || '')
+    setTrainingSubject(subject)
+    setTrainingLevel(level)
+    setResumeTopic(selectedTopic)
+    if (lastRecordId) setLastRecordId(lastRecordId)
+
+    // Reset streaming state
+    setReviewStreamText('')
+    setIsStreamComplete(false)
+    setStreamError(null)
+    setFeedback(null)
+    setIsReviewing(true)
+
+    // Navigate immediately — streaming continues in background via TrainingContext
+    router.push('/result')
+
     try {
       const res = await fetch('/api/ai/review', {
         method: 'POST',
@@ -98,41 +116,79 @@ export default function TrainingPage() {
           userId,
           isRevision,
           originalRecordId: lastRecordId || undefined,
+          stream: true,
         }),
       })
-      const data = await res.json()
-      if (!res.ok) { alert(data.error || '评审失败'); return }
 
-      const review = data.feedback
-      const aiFeedback: AIFeedback = {
-        overallScore: review.score || 0,
-        scores: {
-          content: review.dimensionScores?.content || 0,
-          structure: review.dimensionScores?.structure || 0,
-          language: review.dimensionScores?.language || 0,
-          norm: review.dimensionScores?.norms || 0,
-        },
-        grade: review.isPass ? '合格' : '待提高',
-        strengths: [],
-        weaknesses: [],
-        highlights: review.highlights || [],
-        suggestions: review.suggestions || [],
-        rewrittenParagraphs: [],
-        keywordEvaluation: review.keywordEvaluation || undefined,
+      if (!res.ok) {
+        const data = await res.json()
+        setStreamError(data.error || '评审失败')
+        setIsReviewing(false)
+        return
       }
-      setFeedback(aiFeedback)
-      setPreviousContent(levelContent)
-      setLastRecordId(review.recordId || null)
-      setTopicTitle(selectedTopic?.title || levelConfig?.name || '')
-      setTopicDescription(selectedTopic?.description || levelConfig?.description || '')
-      setResumeTopic(selectedTopic)
-      router.push('/result')
+
+      const reader = res.body?.getReader()
+      if (!reader) {
+        setStreamError('无法读取响应流')
+        setIsReviewing(false)
+        return
+      }
+
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+
+          try {
+            const event = JSON.parse(data)
+            if (event.type === 'chunk') {
+              setReviewStreamText(prev => prev + event.text)
+            } else if (event.type === 'result') {
+              const review = event.data
+              const aiFeedback: AIFeedback = {
+                overallScore: review.score || 0,
+                scores: {
+                  content: review.dimensionScores?.content || 0,
+                  structure: review.dimensionScores?.structure || 0,
+                  language: review.dimensionScores?.language || 0,
+                  norm: review.dimensionScores?.norms || 0,
+                },
+                grade: review.isPass ? '合格' : '待提高',
+                strengths: [],
+                weaknesses: [],
+                highlights: review.highlights || [],
+                suggestions: review.suggestions || [],
+                rewrittenParagraphs: [],
+                keywordEvaluation: review.keywordEvaluation || undefined,
+              }
+              setFeedback(aiFeedback)
+              setLastRecordId(review.recordId || null)
+            } else if (event.type === 'error') {
+              setStreamError(event.message)
+            }
+          } catch {
+            // skip malformed chunks
+          }
+        }
+      }
+
+      setIsStreamComplete(true)
     } catch {
-      alert('网络错误，请重试')
+      setStreamError('网络错误，请重试')
     } finally {
       setIsReviewing(false)
     }
-  }, [subject, level, selectedTopic, router, setFeedback, setPreviousContent, setIsReviewing, userId, lastRecordId, setLastRecordId, setTopicTitle, setTopicDescription, setResumeTopic])
+  }, [subject, level, selectedTopic, router, setFeedback, setPreviousContent, setIsReviewing, userId, lastRecordId, setLastRecordId, setTopicTitle, setTopicDescription, setResumeTopic, setReviewStreamText, setIsStreamComplete, setStreamError, setTrainingSubject, setTrainingLevel, levelConfig])
 
   const handleBack = () => {
     router.push(`/subject/${subject}`)
@@ -354,40 +410,6 @@ export default function TrainingPage() {
         />
       )}
 
-      {/* Reviewing Overlay */}
-      {isReviewing && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(255,255,255,0.85)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 50,
-        }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              border: '4px solid var(--border-color)',
-              borderTopColor: 'var(--theme_button-primary)',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto 16px',
-            }} />
-            <p style={{ fontWeight: 500, color: 'var(--theme_text)' }}>AI正在评审...</p>
-            <p style={{ fontSize: '0.875rem', color: 'var(--theme_text-weak)', marginTop: '4px' }}>
-              分析{levelLabel}表现
-            </p>
-          </div>
-        </div>
-      )}
-
-      <style jsx>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   )
 }

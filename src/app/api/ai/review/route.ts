@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { reviewTraining, advanceUserLevel } from '@/lib/ai/review-service'
+import { reviewTraining, streamReviewTraining, advanceUserLevel } from '@/lib/ai/review-service'
 import { complete } from '@/lib/ai/client'
 import { CHINESE_ESSAY_PROMPT } from '@/lib/ai/prompts/chinese-essay'
 import { ENGLISH_ESSAY_PROMPT } from '@/lib/ai/prompts/english-essay'
@@ -18,6 +18,8 @@ import { ENGLISH_ESSAY_PROMPT } from '@/lib/ai/prompts/english-essay'
  *
  * Revision mode: include `isRevision: true` and `originalRecordId`
  * to trigger progress tracking.
+ *
+ * Streaming: include `stream: true` to get SSE response with real-time chunks.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -34,6 +36,7 @@ export async function POST(req: NextRequest) {
       isRevision,
       originalRecordId,
       timeSpent,
+      stream: enableStream,
     } = body
 
     // --- Validation ---
@@ -61,7 +64,7 @@ export async function POST(req: NextRequest) {
         )
       }
 
-      const result = await reviewTraining({
+      const reviewRequest = {
         userId,
         subject,
         level: levelNum,
@@ -72,9 +75,43 @@ export async function POST(req: NextRequest) {
         isRevision: Boolean(isRevision),
         originalRecordId,
         timeSpent: timeSpent ? Number(timeSpent) : undefined,
-      })
+      }
 
-      // If passed, advance user level
+      // --- Streaming path ---
+      if (enableStream) {
+        const generator = streamReviewTraining(reviewRequest)
+        const encoder = new TextEncoder()
+        const readable = new ReadableStream({
+          async start(controller) {
+            try {
+              for await (const event of generator) {
+                const data = JSON.stringify(event)
+                controller.enqueue(encoder.encode(`data: ${data}\n\n`))
+              }
+              controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+              controller.close()
+            } catch (err) {
+              const message = err instanceof Error ? err.message : 'Unknown error'
+              const errorData = JSON.stringify({ type: 'error', message })
+              controller.enqueue(encoder.encode(`data: ${errorData}\n\n`))
+              controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+              controller.close()
+            }
+          },
+        })
+
+        return new Response(readable, {
+          headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            Connection: 'keep-alive',
+          },
+        })
+      }
+
+      // --- Non-streaming path ---
+      const result = await reviewTraining(reviewRequest)
+
       let levelAdvanced = false
       if (result.isPass) {
         const advance = await advanceUserLevel(userId, subject, levelNum)

@@ -7,7 +7,7 @@
  * This is the main entry point for the training review system.
  */
 
-import { complete } from '@/lib/ai/client'
+import { complete, stream } from '@/lib/ai/client'
 import { getTrainingReviewPrompt } from '@/lib/ai/prompts/training-review'
 import { calculateProgress, type ProgressResult } from '@/lib/ai/progress-scoring'
 import type { SuggestionStatus } from '@/types'
@@ -377,5 +377,156 @@ export async function reviewTraining(
     timeSpent,
     progress,
     keywordEvaluation,
+  }
+}
+
+/**
+ * Streaming variant of reviewTraining.
+ *
+ * Yields text chunks as they arrive from the AI, then yields the final
+ * parsed result once the stream completes.
+ */
+export async function* streamReviewTraining(
+  request: ReviewRequest,
+): AsyncGenerator<
+  | { type: 'chunk'; text: string }
+  | { type: 'result'; data: ReviewResponse }
+> {
+  const {
+    userId,
+    subject,
+    level,
+    topicTitle = '自由写作',
+    topicDescription = '',
+    content,
+    isRevision = false,
+    originalRecordId,
+    timeSpent = 0,
+  } = request
+
+  // 1. Get the appropriate prompt for this level
+  let previousFeedback: string | undefined
+  if (isRevision && originalRecordId) {
+    const originalRecord = await getRecordById(originalRecordId)
+    if (originalRecord) {
+      previousFeedback = originalRecord.feedback
+    }
+  }
+
+  const { system, user } = getTrainingReviewPrompt(
+    subject,
+    level,
+    topicTitle,
+    topicDescription,
+    content,
+    isRevision,
+    previousFeedback,
+  )
+
+  // 2. Stream the AI response
+  let fullText = ''
+  for await (const chunk of stream(user, { system, maxTokens: 4096 })) {
+    fullText += chunk.text
+    yield { type: 'chunk', text: chunk.text }
+  }
+
+  // 3. Parse the accumulated response
+  let jsonStr = fullText.trim()
+  if (jsonStr.startsWith('```')) {
+    jsonStr = jsonStr.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+  }
+
+  let parsed: Record<string, unknown>
+  try {
+    parsed = JSON.parse(jsonStr)
+  } catch {
+    throw new Error('AI返回内容解析失败: ' + fullText.substring(0, 200))
+  }
+
+  const score = Number(parsed.score) || 0
+  const ds = (parsed.dimensionScores || {}) as Record<string, number>
+  const dimensionScores = {
+    content: Number(ds.content) || 0,
+    structure: Number(ds.structure) || 0,
+    language: Number(ds.language) || 0,
+    norms: Number(ds.norms) || 0,
+  }
+  const feedback = String(parsed.feedback) || ''
+  const highlights = Array.isArray(parsed.highlights) ? parsed.highlights : []
+  const rawSuggestions = Array.isArray(parsed.suggestions)
+    ? parsed.suggestions
+    : []
+  const isPass = Boolean(parsed.pass)
+  const nextLevel = Number(parsed.nextLevel) || level
+  const encouragement = String(parsed.encouragement) || ''
+
+  const rawKeywordEval = parsed.keywordEvaluation as Record<string, unknown> | undefined
+  const keywordEvaluation = rawKeywordEval
+    ? {
+        evaluation: String(rawKeywordEval.evaluation) || '',
+        suggestedKeywords: Array.isArray(rawKeywordEval.suggestedKeywords)
+          ? (rawKeywordEval.suggestedKeywords as unknown[]).map(String)
+          : [],
+      }
+    : undefined
+
+  const suggestions = generateSuggestionsWithIds(rawSuggestions)
+
+  // 4. If revision, calculate progress (fast model)
+  let progress: ProgressResult | undefined
+  if (isRevision && originalRecordId) {
+    const originalRecord = await getRecordById(originalRecordId)
+    if (originalRecord && previousFeedback) {
+      try {
+        progress = await calculateProgress(
+          subject,
+          level,
+          originalRecord.content,
+          content,
+          previousFeedback,
+        )
+      } catch (err) {
+        console.error('Progress calculation failed:', err)
+      }
+    }
+  }
+
+  // 5. Save the record
+  const recordId = await saveRecord({
+    id: 'temp',
+    userId,
+    subject,
+    level,
+    topicId: request.topicId,
+    content,
+    score,
+    dimensionScores,
+    feedback,
+    suggestions,
+    isPass,
+    timeSpent,
+    createdAt: new Date(),
+    isRevision,
+    originalRecordId,
+    progress,
+  })
+
+  // 6. Yield the final result
+  yield {
+    type: 'result',
+    data: {
+      recordId,
+      score,
+      dimensionScores,
+      feedback,
+      highlights,
+      suggestions,
+      isPass,
+      nextLevel,
+      encouragement,
+      timeSpent,
+      progress,
+      keywordEvaluation,
+    },
   }
 }

@@ -33,6 +33,7 @@ tsconfig.tsbuildinfo
 # Database
 *.db
 *.db-journal
+!prisma/dev.db
 
 # Backup files
 *.bak

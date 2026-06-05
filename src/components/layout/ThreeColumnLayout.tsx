@@ -123,7 +123,7 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         @media (min-width: 1024px) {
           .sidebar-wrapper {
             display: block !important;

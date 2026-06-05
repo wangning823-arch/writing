@@ -3,12 +3,13 @@ import { prisma } from '@/lib/db'
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string; essayId: string } }
+  { params }: { params: Promise<{ id: string; essayId: string }> }
 ) {
   try {
+    const { essayId } = await params
     const body = await req.json()
     const essay = await prisma.sampleEssay.update({
-      where: { id: params.essayId },
+      where: { id: essayId },
       data: body,
     })
     return NextResponse.json({ essay })
@@ -20,10 +21,11 @@ export async function PUT(
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { id: string; essayId: string } }
+  { params }: { params: Promise<{ id: string; essayId: string }> }
 ) {
   try {
-    await prisma.sampleEssay.delete({ where: { id: params.essayId } })
+    const { essayId } = await params
+    await prisma.sampleEssay.delete({ where: { id: essayId } })
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'

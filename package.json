@@ -1,6 +1,6 @@
 {
   "name": "writing-assistant",
-  "version": "1.0.0",
+  "version": "0.1.20260605.1600",
   "private": true,
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
-    "next": "^14.2.35",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",

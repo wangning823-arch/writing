@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const body = await req.json()
     const user = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: body,
       select: {
         id: true,
@@ -24,9 +25,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const userId = params.id
+    const { id: userId } = await params
     if (userId === 'admin-user' || userId === 'demo-user') {
       return NextResponse.json({ error: 'Cannot delete built-in users' }, { status: 400 })
     }

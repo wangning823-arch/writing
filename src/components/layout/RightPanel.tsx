@@ -193,6 +193,20 @@ export default function RightPanel() {
           </section>
         </>
       )}
+
+      {/* Version */}
+      <div
+        style={{
+          marginTop: 'auto',
+          paddingTop: '16px',
+          borderTop: '1px solid var(--border-color)',
+          fontSize: '0.6875rem',
+          color: 'var(--theme_text-muted)',
+          textAlign: 'center',
+        }}
+      >
+        v0.1.20260605.1600
+      </div>
     </aside>
   )
 }

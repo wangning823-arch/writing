@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const body = await req.json()
     const category = await prisma.materialCategory.update({
-      where: { id: params.id },
+      where: { id },
       data: body,
     })
     return NextResponse.json({ category })
@@ -15,9 +16,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    await prisma.materialCategory.delete({ where: { id: params.id } })
+    const { id } = await params
+    await prisma.materialCategory.delete({ where: { id } })
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'

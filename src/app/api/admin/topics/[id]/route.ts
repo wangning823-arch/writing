@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const topic = await prisma.topic.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { _count: { select: { trainingRecords: true } } },
     })
 
@@ -19,13 +20,14 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const body = await req.json()
     const { source, year, region, subject, type, title, description, requirements, tags } = body
 
     const topic = await prisma.topic.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(source !== undefined && { source }),
         ...(year !== undefined && { year }),
@@ -46,10 +48,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    await prisma.sampleEssay.deleteMany({ where: { topicId: params.id } })
-    await prisma.topic.delete({ where: { id: params.id } })
+    const { id } = await params
+    await prisma.sampleEssay.deleteMany({ where: { topicId: id } })
+    await prisma.topic.delete({ where: { id } })
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'

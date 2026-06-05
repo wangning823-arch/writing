@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {},
+  // Next.js 15+ 配置
 }
 
 module.exports = nextConfig

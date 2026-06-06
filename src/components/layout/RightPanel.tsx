@@ -195,18 +195,7 @@ export default function RightPanel() {
       )}
 
       {/* Version */}
-      <div
-        style={{
-          marginTop: 'auto',
-          paddingTop: '16px',
-          borderTop: '1px solid var(--border-color)',
-          fontSize: '0.6875rem',
-          color: 'var(--theme_text-muted)',
-          textAlign: 'center',
-        }}
-      >
-        v0.1.20260605.1600
-      </div>
+      <VersionFooter />
     </aside>
   )
 }
@@ -223,6 +212,26 @@ function StatCard({ label, value }: { label: string; value: number }) {
     >
       <div style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--theme_text)' }}>{value}</div>
       <div style={{ fontSize: '0.6875rem', color: 'var(--theme_text-muted)', marginTop: '2px' }}>{label}</div>
+    </div>
+  )
+}
+
+function VersionFooter() {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+  if (!mounted) return null
+  return (
+    <div
+      style={{
+        marginTop: 'auto',
+        paddingTop: '16px',
+        borderTop: '1px solid var(--border-color)',
+        fontSize: '0.6875rem',
+        color: 'var(--theme_text-muted)',
+        textAlign: 'center',
+      }}
+    >
+      v0.1.20260605.1700
     </div>
   )
 }

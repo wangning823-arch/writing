@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, Children, Fragment } from 'react'
 import Sidebar from '@/components/layout/Sidebar'
 import RightPanel from '@/components/layout/RightPanel'
 
@@ -113,7 +113,9 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
           <span style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--theme_text)' }}>笔锋</span>
         </div>
 
-        {children}
+        {Children.toArray(children).map((child, i) => (
+          <Fragment key={i}>{child}</Fragment>
+        ))}
       </main>
 
       {/* Right Panel - hidden on mobile/tablet */}
@@ -123,7 +125,7 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
         </div>
       )}
 
-      <style>{`
+      <style key="layout-styles">{`
         @media (min-width: 1024px) {
           .sidebar-wrapper {
             display: block !important;

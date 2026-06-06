@@ -1,6 +1,6 @@
 {
   "name": "writing-assistant",
-  "version": "0.1.20260605.1600",
+  "version": "0.1.20260605.1700",
   "private": true,
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

@@ -33,7 +33,7 @@ function ThinkingPageContent() {
   }
 
   return (
-    <div style={{ padding: '32px', maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ padding: '32px' }}>
       <ThinkingTrainingHub subject={subject} onSelectTraining={handleSelectTraining} />
     </div>
   )

@@ -305,9 +305,12 @@ const DIFFICULTY_COLORS: Record<string, { bg: string; text: string }> = {
   hard: { bg: 'var(--danger-light)', text: 'var(--danger-dark)' },
 }
 
+export function getSidebarItems(subject: Subject) {
+  return TRAINING_TYPES.filter((t) => t.availableFor.includes(subject) && t.category === 'sidebar')
+}
+
 export default function ThinkingTrainingHub({ subject, onSelectTraining }: ThinkingTrainingHubProps) {
   const coreTrainings = TRAINING_TYPES.filter((t) => t.availableFor.includes(subject) && t.category === 'core')
-  const sidebarItems = TRAINING_TYPES.filter((t) => t.availableFor.includes(subject) && t.category === 'sidebar')
 
   const renderCard = (training: TrainingType) => {
     const diffColor = DIFFICULTY_COLORS[training.difficulty]
@@ -428,7 +431,7 @@ export default function ThinkingTrainingHub({ subject, onSelectTraining }: Think
   }
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.5rem' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1.5rem' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h2
           style={{
@@ -450,120 +453,8 @@ export default function ThinkingTrainingHub({ subject, onSelectTraining }: Think
         </p>
       </div>
 
-      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
-        {/* 左侧 - 核心训练区 */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h3
-            style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              color: 'var(--text-secondary, #6b7280)',
-              marginBottom: '0.75rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-            }}
-          >
-            核心训练
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {coreTrainings.map(renderCard)}
-          </div>
-        </div>
-
-        {/* 右侧 - 辅助功能区 */}
-        <div style={{ width: '280px', flexShrink: 0 }}>
-          <h3
-            style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              color: 'var(--text-secondary, #6b7280)',
-              marginBottom: '0.75rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-            }}
-          >
-            辅助工具
-          </h3>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-              padding: '1rem',
-              borderRadius: '0.75rem',
-              background: 'var(--bg-secondary, #f9fafb)',
-              border: '1px solid var(--border-color, #e5e7eb)',
-            }}
-          >
-            {sidebarItems.map((training) => (
-              <button
-                key={training.id}
-                onClick={() => onSelectTraining(training.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '0.75rem',
-                  borderRadius: '0.5rem',
-                  border: 'none',
-                  background: 'var(--bg-card, #fff)',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  width: '100%',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              >
-                <span
-                  style={{
-                    width: '2rem',
-                    height: '2rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '0.5rem',
-                    background: 'var(--bg-secondary, #f3f4f6)',
-                    flexShrink: 0,
-                    color: 'var(--text-primary, #111827)',
-                  }}
-                >
-                  {training.icon}
-                </span>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <h4
-                    style={{
-                      fontSize: '0.8125rem',
-                      fontWeight: 500,
-                      color: 'var(--text-primary, #111827)',
-                      margin: 0,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {training.name}
-                  </h4>
-                  <p
-                    style={{
-                      fontSize: '0.75rem',
-                      color: 'var(--text-tertiary, #9ca3af)',
-                      margin: 0,
-                      lineHeight: 1.3,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {training.description}
-                  </p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        {coreTrainings.map(renderCard)}
       </div>
     </div>
   )

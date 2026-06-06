@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { CHINESE_ARGUMENTATIVE_RUBRIC, ENGLISH_ESSAY_RUBRIC } from '@/lib/training/rubrics'
 import { useNavigation } from '@/contexts/NavigationContext'
+import { getSidebarItems } from '@/components/training/ThinkingTrainingHub'
 
 interface Stats {
   totalCount: number
@@ -14,9 +15,13 @@ interface Stats {
 
 export default function RightPanel() {
   const pathname = usePathname()
+  const router = useRouter()
   const { userId } = useNavigation()
   const [chineseStats, setChineseStats] = useState<Stats>({ totalCount: 0, monthlyCount: 0, streak: 0 })
   const [englishStats, setEnglishStats] = useState<Stats>({ totalCount: 0, monthlyCount: 0, streak: 0 })
+
+  // Determine subject from URL
+  const subject = pathname.includes('english') ? 'english' : 'chinese'
 
   useEffect(() => {
     fetch(`/api/progress?userId=${encodeURIComponent(userId)}`)
@@ -143,6 +148,85 @@ export default function RightPanel() {
         </section>
       )}
 
+      {/* Thinking page: Sidebar Items */}
+      {pathname.startsWith('/thinking') && (
+        <section>
+          <h3
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              color: 'var(--theme_text-muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              marginBottom: '12px',
+            }}
+          >
+            辅助工具
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {getSidebarItems(subject).map((item) => (
+              <button
+                key={item.id}
+                onClick={() => router.push(`/thinking/${item.id}?subject=${subject}`)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-color)',
+                  background: 'var(--theme_bg)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all var(--transition-fast)',
+                  width: '100%',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--theme_button-primary)'
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-color)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              >
+                <span
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '6px',
+                    background: 'var(--theme_bg-secondary)',
+                    flexShrink: 0,
+                    color: 'var(--theme_text)',
+                  }}
+                >
+                  {item.icon}
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--theme_text)' }}>
+                    {item.name}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.6875rem',
+                      color: 'var(--theme_text-muted)',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {item.description}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Home page: Quick Stats */}
       {!rubric && (
         <>
@@ -231,7 +315,7 @@ function VersionFooter() {
         textAlign: 'center',
       }}
     >
-      v0.1.20260605.1800
+      v0.1.20260605.1900
     </div>
   )
 }

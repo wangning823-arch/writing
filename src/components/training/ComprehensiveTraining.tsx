@@ -123,7 +123,7 @@ export default function ComprehensiveTraining({ subject, onComplete, onBack }: C
             disabled={!topic.trim() || loading}
             style={{
               width: '100%', padding: '0.625rem', borderRadius: '0.5rem', border: 'none',
-              background: topic.trim() && !loading ? '#3b82f6' : '#9ca3af',
+              background: topic.trim() && !loading ? 'var(--theme_button-primary)' : '#9ca3af',
               color: '#fff', cursor: topic.trim() && !loading ? 'pointer' : 'not-allowed', fontSize: '0.875rem',
             }}
           >
@@ -154,7 +154,7 @@ export default function ComprehensiveTraining({ subject, onComplete, onBack }: C
             </button>
             <button
               onClick={() => setStage('write')}
-              style={{ flex: 2, padding: '0.625rem', borderRadius: '0.5rem', border: 'none', background: '#3b82f6', color: '#fff', cursor: 'pointer', fontSize: '0.875rem' }}
+              style={{ flex: 2, padding: '0.625rem', borderRadius: '0.5rem', border: 'none', background: 'var(--theme_button-primary)', color: '#fff', cursor: 'pointer', fontSize: '0.875rem' }}
             >
               开始写作
             </button>
@@ -185,7 +185,7 @@ export default function ComprehensiveTraining({ subject, onComplete, onBack }: C
             <button
               onClick={() => setStage('revise')}
               disabled={!essay.trim()}
-              style={{ flex: 2, padding: '0.625rem', borderRadius: '0.5rem', border: 'none', background: essay.trim() ? '#3b82f6' : '#9ca3af', color: '#fff', cursor: essay.trim() ? 'pointer' : 'not-allowed', fontSize: '0.875rem' }}
+              style={{ flex: 2, padding: '0.625rem', borderRadius: '0.5rem', border: 'none', background: essay.trim() ? 'var(--theme_button-primary)' : '#9ca3af', color: '#fff', cursor: essay.trim() ? 'pointer' : 'not-allowed', fontSize: '0.875rem' }}
             >
               进入修改
             </button>
@@ -221,7 +221,7 @@ export default function ComprehensiveTraining({ subject, onComplete, onBack }: C
             <button
               onClick={handleSubmitAll}
               disabled={loading}
-              style={{ flex: 2, padding: '0.625rem', borderRadius: '0.5rem', border: 'none', background: loading ? '#9ca3af' : '#3b82f6', color: '#fff', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.875rem' }}
+              style={{ flex: 2, padding: '0.625rem', borderRadius: '0.5rem', border: 'none', background: loading ? '#9ca3af' : 'var(--theme_button-primary)', color: '#fff', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.875rem' }}
             >
               {loading ? 'AI 评审中...' : '提交综合评审'}
             </button>

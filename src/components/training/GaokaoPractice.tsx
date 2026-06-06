@@ -86,13 +86,13 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
         </button>
 
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#eff6ff', color: '#2563eb' }}>
+          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--accent-light)', color: 'var(--primary-600)' }}>
             {selectedQuestion.year}年
           </span>
-          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#f0fdf4', color: '#16a34a' }}>
+          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--success-light)', color: 'var(--success-dark)' }}>
             {selectedQuestion.region}
           </span>
-          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#fef3c7', color: '#d97706' }}>
+          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--topic-info-bg)', color: 'var(--warning-dark)' }}>
             {selectedQuestion.theme}
           </span>
         </div>
@@ -108,10 +108,10 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
           )}
         </div>
 
-        <div style={{ padding: '0.75rem', borderRadius: '0.5rem', background: '#fffbeb', border: '1px solid #fde68a', marginBottom: '1rem' }}>
-          <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#92400e', margin: '0 0 0.25rem' }}>写作要求</p>
+        <div style={{ padding: '0.75rem', borderRadius: '0.5rem', background: 'var(--warning-light)', border: '1px solid var(--warning-border)', marginBottom: '1rem' }}>
+          <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--topic-info-text)', margin: '0 0 0.25rem' }}>写作要求</p>
           {selectedQuestion.requirements.map((req, i) => (
-            <p key={i} style={{ fontSize: '0.8125rem', color: '#78350f', margin: '0 0 0.125rem' }}>• {req}</p>
+            <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--topic-info-text)', margin: '0 0 0.125rem' }}>• {req}</p>
           ))}
         </div>
 
@@ -136,7 +136,7 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
             disabled={!response.trim() || isAnalyzing}
             style={{
               padding: '0.5rem 1.5rem', borderRadius: '0.5rem', border: 'none',
-              background: response.trim() && !isAnalyzing ? '#3b82f6' : '#9ca3af',
+              background: response.trim() && !isAnalyzing ? 'var(--theme_button-primary)' : '#9ca3af',
               color: '#fff', cursor: response.trim() && !isAnalyzing ? 'pointer' : 'not-allowed', fontSize: '0.875rem', fontWeight: 500,
             }}
           >
@@ -161,9 +161,9 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
           onClick={() => setFilterYear(null)}
           style={{
             padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem',
-            border: `1px solid ${!filterYear ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-            background: !filterYear ? '#eff6ff' : 'var(--bg-card, #fff)',
-            color: !filterYear ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+            border: `1px solid ${!filterYear ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+            background: !filterYear ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+            color: !filterYear ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
             cursor: 'pointer',
           }}
         >
@@ -175,9 +175,9 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
             onClick={() => setFilterYear(y)}
             style={{
               padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem',
-              border: `1px solid ${filterYear === y ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-              background: filterYear === y ? '#eff6ff' : 'var(--bg-card, #fff)',
-              color: filterYear === y ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+              border: `1px solid ${filterYear === y ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+              background: filterYear === y ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+              color: filterYear === y ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
               cursor: 'pointer',
             }}
           >
@@ -191,9 +191,9 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
           onClick={() => setFilterTheme(null)}
           style={{
             padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem',
-            border: `1px solid ${!filterTheme ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-            background: !filterTheme ? '#eff6ff' : 'var(--bg-card, #fff)',
-            color: !filterTheme ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+            border: `1px solid ${!filterTheme ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+            background: !filterTheme ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+            color: !filterTheme ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
             cursor: 'pointer',
           }}
         >
@@ -205,9 +205,9 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
             onClick={() => setFilterTheme(t)}
             style={{
               padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem',
-              border: `1px solid ${filterTheme === t ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-              background: filterTheme === t ? '#eff6ff' : 'var(--bg-card, #fff)',
-              color: filterTheme === t ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+              border: `1px solid ${filterTheme === t ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+              background: filterTheme === t ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+              color: filterTheme === t ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
               cursor: 'pointer',
             }}
           >
@@ -228,13 +228,13 @@ export default function GaokaoPractice({ subject, onComplete, onBack }: GaokaoPr
             }}
           >
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: '#eff6ff', color: '#2563eb' }}>
+              <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: 'var(--accent-light)', color: 'var(--primary-600)' }}>
                 {q.year}
               </span>
-              <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: '#f0fdf4', color: '#16a34a' }}>
+              <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: 'var(--success-light)', color: 'var(--success-dark)' }}>
                 {q.region}
               </span>
-              <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: '#fef3c7', color: '#d97706' }}>
+              <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: 'var(--topic-info-bg)', color: 'var(--warning-dark)' }}>
                 {q.theme}
               </span>
             </div>

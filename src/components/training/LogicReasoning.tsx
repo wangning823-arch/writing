@@ -156,7 +156,7 @@ export default function LogicReasoning({ subject, onComplete, onBack, userId }: 
   return (
     <div style={{ padding: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-        <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#fef2f2', color: '#dc2626' }}>
+        <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--danger-light)', color: 'var(--danger-dark)' }}>
           {TYPE_LABELS[exercise.type]}
         </span>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary, #9ca3af)' }}>
@@ -183,12 +183,12 @@ export default function LogicReasoning({ subject, onComplete, onBack, userId }: 
                 display: 'block', width: '100%', padding: '0.75rem 1rem', marginBottom: '0.5rem',
                 borderRadius: '0.5rem', textAlign: 'left', fontSize: '0.875rem',
                 border: '1px solid',
-                borderColor: showExplanation && i === exercise.correctAnswer ? '#16a34a' :
-                  showExplanation && i === selectedOption && !isCorrect ? '#dc2626' :
-                  selectedOption === i ? '#3b82f6' : 'var(--border-color, #e5e7eb)',
-                background: showExplanation && i === exercise.correctAnswer ? '#f0fdf4' :
-                  showExplanation && i === selectedOption && !isCorrect ? '#fef2f2' :
-                  selectedOption === i ? '#eff6ff' : 'var(--bg-card, #fff)',
+                borderColor: showExplanation && i === exercise.correctAnswer ? 'var(--success-dark)' :
+                  showExplanation && i === selectedOption && !isCorrect ? 'var(--danger-dark)' :
+                  selectedOption === i ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)',
+                background: showExplanation && i === exercise.correctAnswer ? 'var(--success-light)' :
+                  showExplanation && i === selectedOption && !isCorrect ? 'var(--danger-light)' :
+                  selectedOption === i ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
                 color: 'var(--text-primary, #111827)',
                 cursor: showExplanation ? 'default' : 'pointer',
               }}
@@ -220,10 +220,10 @@ export default function LogicReasoning({ subject, onComplete, onBack, userId }: 
       {showExplanation && (
         <div style={{
           padding: '1rem', borderRadius: '0.5rem', marginBottom: '1rem',
-          background: isCorrect ? '#f0fdf4' : '#fef2f2',
-          border: `1px solid ${isCorrect ? '#bbf7d0' : '#fecaca'}`,
+          background: isCorrect ? 'var(--success-light)' : 'var(--danger-light)',
+          border: `1px solid ${isCorrect ? 'var(--success-border)' : 'var(--danger-border)'}`,
         }}>
-          <p style={{ fontSize: '0.875rem', fontWeight: 600, color: isCorrect ? '#16a34a' : '#dc2626', margin: '0 0 0.5rem' }}>
+          <p style={{ fontSize: '0.875rem', fontWeight: 600, color: isCorrect ? 'var(--success-dark)' : 'var(--danger-dark)', margin: '0 0 0.5rem' }}>
             {isCorrect ? '回答正确！' : '回答有误'}
           </p>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary, #6b7280)', margin: 0, lineHeight: 1.6 }}>

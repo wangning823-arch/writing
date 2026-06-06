@@ -45,6 +45,26 @@
   --topic-info-text: #92400e;
   --typing-dot: #9ca3af;
   --drag-border: #d1d5db;
+
+  /* Status border variants */
+  --success-dark: #16a34a;
+  --success-border: #bbf7d0;
+  --danger-dark: #dc2626;
+  --danger-border: #fecaca;
+  --warning-dark: #d97706;
+  --warning-border: #fde68a;
+
+  /* Purple (structure badges) */
+  --purple-light: #f3e8ff;
+  --purple: #7c3aed;
+  --purple-text: #6d28d9;
+
+  /* Suggestion/Info (orange-tinted) */
+  --suggestion-bg: #fff7ed;
+  --suggestion-border: #fed7aa;
+  --suggestion-text: #9a3412;
+  --info-bg: #f0f9ff;
+  --info-border: #bfdbfe;
 }
 
 [data-theme="dark"] {
@@ -79,6 +99,38 @@
   /* Legacy variables mapped to dark values */
   --background: #111827;
   --foreground: #f9fafb;
+
+  /* Primary color scale (dark overrides) */
+  --primary-50: #172554;
+  --primary-100: #1e3a5f;
+  --primary-200: #1e40af;
+  --primary-300: #1d4ed8;
+  --primary-400: #2563eb;
+  --primary-500: #3b82f6;
+  --primary-600: #60a5fa;
+  --primary-700: #93c5fd;
+  --primary-800: #bfdbfe;
+  --primary-900: #dbeafe;
+
+  /* Status border variants (dark) */
+  --success-dark: #22c55e;
+  --success-border: #14532d;
+  --danger-dark: #f87171;
+  --danger-border: #7f1d1d;
+  --warning-dark: #fbbf24;
+  --warning-border: #78350f;
+
+  /* Purple (dark) */
+  --purple-light: #2e1065;
+  --purple: #8b5cf6;
+  --purple-text: #c4b5fd;
+
+  /* Suggestion/Info (dark) */
+  --suggestion-bg: #431407;
+  --suggestion-border: #9a3412;
+  --suggestion-text: #fed7aa;
+  --info-bg: #172554;
+  --info-border: #1e40af;
 }
 
 * {
@@ -652,8 +704,8 @@ body {
 }
 
 .type-structure {
-  background: #f3e8ff;
-  color: #7c3aed;
+  background: var(--purple-light);
+  color: var(--purple);
 }
 
 .type-language {
@@ -1361,8 +1413,8 @@ body {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  background: #f3e8ff;
-  color: #7c3aed;
+  background: var(--purple-light);
+  color: var(--purple);
   font-size: 0.75rem;
   font-weight: 500;
   margin-bottom: 0.75rem;
@@ -1896,8 +1948,8 @@ body {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  background: #f3e8ff;
-  color: #7c3aed;
+  background: var(--purple-light);
+  color: var(--purple);
   font-size: 0.75rem;
   font-weight: 500;
   margin-bottom: 0.75rem;

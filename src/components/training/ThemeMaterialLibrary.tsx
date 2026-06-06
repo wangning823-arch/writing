@@ -96,7 +96,7 @@ export default function ThemeMaterialLibrary({ onBack, userId }: ThemeMaterialLi
         <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary, #6b7280)' }}>
           {item.author && `— ${item.author}`}{item.source && `《${item.source}》`}
         </span>
-        <span style={{ fontSize: '0.75rem', color: copiedIndex === index ? '#16a34a' : 'var(--text-tertiary, #9ca3af)' }}>
+        <span style={{ fontSize: '0.75rem', color: copiedIndex === index ? 'var(--success-dark)' : 'var(--text-tertiary, #9ca3af)' }}>
           {copiedIndex === index ? '✓ 已复制' : '点击复制'}
         </span>
       </div>
@@ -122,7 +122,7 @@ export default function ThemeMaterialLibrary({ onBack, userId }: ThemeMaterialLi
         <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary, #9ca3af)' }}>
           {item.source && `来源：${item.source}`}
         </span>
-        <span style={{ fontSize: '0.75rem', color: copiedIndex === index ? '#16a34a' : 'var(--text-tertiary, #9ca3af)' }}>
+        <span style={{ fontSize: '0.75rem', color: copiedIndex === index ? 'var(--success-dark)' : 'var(--text-tertiary, #9ca3af)' }}>
           {copiedIndex === index ? '✓ 已复制' : '点击复制'}
         </span>
       </div>
@@ -145,7 +145,7 @@ export default function ThemeMaterialLibrary({ onBack, userId }: ThemeMaterialLi
         {text}
       </p>
       <div style={{ textAlign: 'right', marginTop: '0.5rem' }}>
-        <span style={{ fontSize: '0.75rem', color: copiedIndex === index ? '#16a34a' : 'var(--text-tertiary, #9ca3af)' }}>
+        <span style={{ fontSize: '0.75rem', color: copiedIndex === index ? 'var(--success-dark)' : 'var(--text-tertiary, #9ca3af)' }}>
           {copiedIndex === index ? '✓ 已复制' : '点击复制'}
         </span>
       </div>
@@ -179,7 +179,7 @@ export default function ThemeMaterialLibrary({ onBack, userId }: ThemeMaterialLi
               borderRadius: '9999px',
               border: '1px solid',
               borderColor: selectedTheme === theme ? '#3b82f6' : 'var(--border-color, #e5e7eb)',
-              background: selectedTheme === theme ? '#3b82f6' : 'var(--bg-card, #fff)',
+              background: selectedTheme === theme ? 'var(--theme_button-primary)' : 'var(--bg-card, #fff)',
               color: selectedTheme === theme ? '#fff' : 'var(--text-primary, #111827)',
               fontSize: '0.8125rem',
               cursor: 'pointer',

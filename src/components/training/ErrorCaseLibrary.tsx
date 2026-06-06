@@ -22,9 +22,9 @@ const CHINESE_CATEGORIES = ['逻辑类', '结构类', '语言类', '规范类']
 const ENGLISH_CATEGORIES = ['语法类', '句式类', '内容类', '格式类']
 
 const SEVERITY_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  high: { label: '严重', color: '#dc2626', bg: '#fef2f2' },
-  medium: { label: '中等', color: '#d97706', bg: '#fffbeb' },
-  low: { label: '轻微', color: '#2563eb', bg: '#eff6ff' },
+  high: { label: '严重', color: 'var(--danger-dark)', bg: 'var(--danger-light)' },
+  medium: { label: '中等', color: 'var(--warning-dark)', bg: 'var(--warning-light)' },
+  low: { label: '轻微', color: 'var(--primary-600)', bg: 'var(--accent-light)' },
 }
 
 export default function ErrorCaseLibrary({ subject }: ErrorCaseLibraryProps) {

@@ -55,9 +55,9 @@ export default function PersonalizedPath({ subject, userId, onSelectTraining }: 
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return { bg: '#fef2f2', text: '#dc2626' }
-      case 'medium': return { bg: '#fffbeb', text: '#d97706' }
-      default: return { bg: '#f0fdf4', text: '#16a34a' }
+      case 'high': return { bg: 'var(--danger-light)', text: 'var(--danger-dark)' }
+      case 'medium': return { bg: 'var(--warning-light)', text: 'var(--warning-dark)' }
+      default: return { bg: 'var(--success-light)', text: 'var(--success-dark)' }
     }
   }
 
@@ -85,7 +85,7 @@ export default function PersonalizedPath({ subject, userId, onSelectTraining }: 
       )}
 
       {error && (
-        <p style={{ fontSize: '0.8125rem', color: '#dc2626', marginBottom: '1rem' }}>{error}</p>
+        <p style={{ fontSize: '0.8125rem', color: 'var(--danger-dark)', marginBottom: '1rem' }}>{error}</p>
       )}
 
       {!loading && path.length > 0 && (
@@ -104,7 +104,7 @@ export default function PersonalizedPath({ subject, userId, onSelectTraining }: 
               >
                 <div style={{
                   width: '2rem', height: '2rem', borderRadius: '50%',
-                  background: i === 0 ? '#3b82f6' : 'var(--bg-secondary, #f9fafb)',
+                  background: i === 0 ? 'var(--theme_button-primary)' : 'var(--bg-secondary, #f9fafb)',
                   color: i === 0 ? '#fff' : 'var(--text-secondary, #6b7280)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '0.8125rem', fontWeight: 600, flexShrink: 0,
@@ -126,7 +126,7 @@ export default function PersonalizedPath({ subject, userId, onSelectTraining }: 
                         onClick={() => onSelectTraining(item.type)}
                         style={{
                           fontSize: '0.75rem', padding: '0.25rem 0.75rem', borderRadius: '0.375rem',
-                          border: '1px solid #3b82f6', background: '#fff', color: '#3b82f6',
+                          border: '1px solid var(--theme_button-primary)', background: 'var(--bg-card)', color: 'var(--theme_button-primary)',
                           cursor: 'pointer',
                         }}
                       >

@@ -118,9 +118,9 @@ export default function Journal({ userId, subject }: JournalProps) {
                 onClick={() => setFormType(t)}
                 style={{
                   padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem',
-                  border: `1px solid ${formType === t ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-                  background: formType === t ? '#eff6ff' : 'var(--bg-card, #fff)',
-                  color: formType === t ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+                  border: `1px solid ${formType === t ? 'var(--accent)' : 'var(--border-color)'}`,
+                  background: formType === t ? 'var(--accent-light)' : 'var(--bg-card)',
+                  color: formType === t ? 'var(--accent)' : 'var(--text-secondary)',
                   cursor: 'pointer',
                 }}
               >
@@ -197,7 +197,7 @@ export default function Journal({ userId, subject }: JournalProps) {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                    <span style={{ fontSize: '0.625rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: '#eff6ff', color: '#2563eb' }}>
+                    <span style={{ fontSize: '0.625rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: 'var(--accent-light)', color: 'var(--accent)' }}>
                       {entry.type}
                     </span>
                     {entry.title && (

@@ -17,9 +17,9 @@ const DIMENSION_TO_LEVEL: Record<string, { subject: 'chinese' | 'english'; level
 }
 
 const PRIORITY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
-  high: { bg: '#fef2f2', text: '#dc2626', border: '#fecaca' },
-  medium: { bg: '#fffbeb', text: '#d97706', border: '#fde68a' },
-  low: { bg: '#f0fdf4', text: '#16a34a', border: '#bbf7d0' },
+  high: { bg: 'var(--danger-light)', text: 'var(--danger-dark)', border: 'var(--danger-border)' },
+  medium: { bg: 'var(--warning-light)', text: 'var(--warning-dark)', border: 'var(--warning-border)' },
+  low: { bg: 'var(--success-light)', text: 'var(--success-dark)', border: 'var(--success-border)' },
 }
 
 const PRIORITY_LABELS: Record<string, string> = {
@@ -29,9 +29,9 @@ const PRIORITY_LABELS: Record<string, string> = {
 }
 
 function getProgressColor(score: number): string {
-  if (score >= 80) return '#22c55e'
-  if (score >= 60) return '#f59e0b'
-  return '#ef4444'
+  if (score >= 80) return 'var(--success-dark)'
+  if (score >= 60) return 'var(--warning)'
+  return 'var(--danger)'
 }
 
 function SprintPointCard({
@@ -78,7 +78,7 @@ function SprintPointCard({
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>提分空间</span>
-          <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#22c55e' }}>
+          <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--success-dark)' }}>
             +{point.estimatedImprovement}
           </span>
         </div>
@@ -140,7 +140,7 @@ function SprintPointCard({
             borderRadius: '0.5rem',
             fontSize: '0.75rem',
             fontWeight: 500,
-            background: '#f59e0b',
+            background: 'var(--warning)',
             color: 'white',
             border: 'none',
             cursor: 'pointer',
@@ -227,7 +227,7 @@ export default function SprintDashboard({
   // No exam date set - show date input
   if (showDateInput || !sprintPath) {
     return (
-      <section className="training-section" style={{ borderLeft: '3px solid #f59e0b', padding: '1rem 1.25rem' }}>
+      <section className="training-section" style={{ borderLeft: '3px solid var(--warning)', padding: '1rem 1.25rem' }}>
         <h3 className="training-section-title">
           <span style={{ fontSize: '1.125rem' }}>冲刺模式</span>
           <span className="grade-label">高三专属</span>
@@ -267,7 +267,7 @@ export default function SprintDashboard({
                 borderRadius: '0.5rem',
                 fontSize: '0.875rem',
                 fontWeight: 500,
-                background: '#f59e0b',
+                background: 'var(--warning)',
                 color: 'white',
                 border: 'none',
                 cursor: !examDate || savingDate ? 'not-allowed' : 'pointer',
@@ -283,7 +283,7 @@ export default function SprintDashboard({
   }
 
   return (
-    <section className="training-section" style={{ borderLeft: '3px solid #f59e0b', padding: '1rem 1.25rem' }}>
+    <section className="training-section" style={{ borderLeft: '3px solid var(--warning)', padding: '1rem 1.25rem' }}>
       <h3 className="training-section-title">
         <span style={{ fontSize: '1.125rem' }}>冲刺模式</span>
         <span className="grade-label">高三专属</span>
@@ -294,7 +294,7 @@ export default function SprintDashboard({
         style={{
           padding: '1rem 1.25rem',
           borderRadius: '0.75rem',
-          background: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)',
+          background: 'linear-gradient(135deg, var(--warning) 0%, #f97316 100%)',
           color: 'white',
           marginBottom: '1rem',
           display: 'flex',
@@ -349,8 +349,8 @@ export default function SprintDashboard({
             marginTop: '0.75rem',
             padding: '0.5rem 0.75rem',
             borderRadius: '0.5rem',
-            background: '#fef2f2',
-            color: '#dc2626',
+            background: 'var(--danger-light)',
+            color: 'var(--danger-dark)',
             fontSize: '0.75rem',
           }}
         >

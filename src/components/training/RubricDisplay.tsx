@@ -23,7 +23,7 @@ export default function RubricDisplay({ rubric }: RubricDisplayProps) {
           <div className="rubric-levels">
             {rubric.levels.map((lvl, i) => (
               <div key={i} className="rubric-level" style={{
-                background: i === 0 ? '#f0fdf4' : i === 1 ? '#eff6ff' : i === 2 ? '#fffbeb' : '#fef2f2',
+                background: i === 0 ? 'var(--success-light)' : i === 1 ? 'var(--accent-light)' : i === 2 ? 'var(--warning-light)' : 'var(--danger-light)',
               }}>
                 <span className="rubric-level-name">{lvl.name}</span>
                 <span className="rubric-level-range">{lvl.scoreRange}分</span>
@@ -44,9 +44,9 @@ export default function RubricDisplay({ rubric }: RubricDisplayProps) {
                 <div className="rubric-dim-name">{dim.name}</div>
                 <div className="rubric-dim-desc">{dim.description}</div>
                 <div style={{ marginTop: '0.375rem', fontSize: '0.7rem' }}>
-                  <span style={{ color: '#16a34a' }}>{dim.excellent}</span>
+                  <span style={{ color: 'var(--success-dark)' }}>{dim.excellent}</span>
                   {' / '}
-                  <span style={{ color: '#dc2626' }}>{dim.poor}</span>
+                  <span style={{ color: 'var(--danger-dark)' }}>{dim.poor}</span>
                 </div>
               </div>
             ))}

@@ -154,8 +154,8 @@ export default function MultiAngleAnalysis({
           style={{
             padding: '1.25rem',
             borderRadius: '0.75rem',
-            background: results.totalScore >= 80 ? '#f0fdf4' : results.totalScore >= 60 ? '#fffbeb' : '#fef2f2',
-            border: `1px solid ${results.totalScore >= 80 ? '#22c55e' : results.totalScore >= 60 ? '#f59e0b' : '#ef4444'}`,
+            background: results.totalScore >= 80 ? 'var(--success-light)' : results.totalScore >= 60 ? 'var(--warning-light)' : 'var(--danger-light)',
+            border: `1px solid ${results.totalScore >= 80 ? 'var(--success-dark)' : results.totalScore >= 60 ? 'var(--warning)' : 'var(--danger)'}`,
             marginBottom: '1.5rem',
           }}
         >
@@ -164,7 +164,7 @@ export default function MultiAngleAnalysis({
               style={{
                 fontSize: '2rem',
                 fontWeight: 700,
-                color: results.totalScore >= 80 ? '#22c55e' : results.totalScore >= 60 ? '#f59e0b' : '#ef4444',
+                color: results.totalScore >= 80 ? 'var(--success-dark)' : results.totalScore >= 60 ? 'var(--warning)' : 'var(--danger)',
               }}
             >
               {results.totalScore}分
@@ -220,7 +220,7 @@ export default function MultiAngleAnalysis({
                   style={{
                     fontSize: '0.875rem',
                     fontWeight: 600,
-                    color: angleResult.score >= 80 ? '#22c55e' : angleResult.score >= 60 ? '#f59e0b' : '#ef4444',
+                    color: angleResult.score >= 80 ? 'var(--success-dark)' : angleResult.score >= 60 ? 'var(--warning)' : 'var(--danger)',
                   }}
                 >
                   {angleResult.score}分
@@ -335,8 +335,8 @@ export default function MultiAngleAnalysis({
                 fontSize: '0.8125rem',
                 fontWeight: 500,
                 border: '1px solid',
-                borderColor: activeAngle === idx ? '#3b82f6' : 'var(--border-color, #e5e7eb)',
-                background: activeAngle === idx ? '#3b82f6' : 'var(--bg-card, #fff)',
+                borderColor: activeAngle === idx ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)',
+                background: activeAngle === idx ? 'var(--theme_button-primary)' : 'var(--bg-card, #fff)',
                 color: activeAngle === idx ? '#fff' : 'var(--text-secondary, #6b7280)',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
@@ -352,7 +352,7 @@ export default function MultiAngleAnalysis({
                 <span
                   style={{
                     fontSize: '0.625rem',
-                    color: valid ? '#22c55e' : activeAngle === idx ? 'rgba(255,255,255,0.8)' : '#9ca3af',
+                    color: valid ? 'var(--success-dark)' : activeAngle === idx ? 'rgba(255,255,255,0.8)' : '#9ca3af',
                   }}
                 >
                   {count}/{MAX_CHARS}
@@ -431,7 +431,7 @@ export default function MultiAngleAnalysis({
               <span
                 style={{
                   fontSize: '0.75rem',
-                  color: isOver ? '#ef4444' : isUnder ? '#f59e0b' : count > 0 ? '#22c55e' : '#9ca3af',
+                  color: isOver ? 'var(--danger)' : isUnder ? 'var(--warning)' : count > 0 ? 'var(--success-dark)' : '#9ca3af',
                 }}
               >
                 {isOver
@@ -475,7 +475,7 @@ export default function MultiAngleAnalysis({
                 width: '2rem',
                 height: '4px',
                 borderRadius: '2px',
-                background: valid ? '#22c55e' : activeAngle === idx ? '#3b82f6' : 'var(--border-color, #e5e7eb)',
+                background: valid ? 'var(--success-dark)' : activeAngle === idx ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)',
                 transition: 'background 0.2s ease',
               }}
             />
@@ -493,7 +493,7 @@ export default function MultiAngleAnalysis({
             borderRadius: '0.5rem',
             fontSize: '0.875rem',
             fontWeight: 600,
-            background: allValid && !isEvaluating ? '#3b82f6' : '#9ca3af',
+            background: allValid && !isEvaluating ? 'var(--theme_button-primary)' : '#9ca3af',
             color: '#fff',
             border: 'none',
             cursor: allValid && !isEvaluating ? 'pointer' : 'not-allowed',
@@ -505,7 +505,7 @@ export default function MultiAngleAnalysis({
           <p
             style={{
               fontSize: '0.75rem',
-              color: '#f59e0b',
+              color: 'var(--warning)',
               marginTop: '0.5rem',
             }}
           >

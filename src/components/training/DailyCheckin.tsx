@@ -85,26 +85,26 @@ export default function DailyCheckin({ userId, subject }: DailyCheckinProps) {
       </p>
 
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div style={{ flex: 1, padding: '1rem', borderRadius: '0.75rem', background: '#eff6ff', border: '1px solid #bfdbfe', textAlign: 'center' }}>
-          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#2563eb', margin: '0 0 0.25rem' }}>{data?.streak || 0}</p>
-          <p style={{ fontSize: '0.75rem', color: '#3b82f6', margin: 0 }}>连续打卡</p>
+        <div style={{ flex: 1, padding: '1rem', borderRadius: '0.75rem', background: 'var(--accent-light)', border: '1px solid var(--primary-200)', textAlign: 'center' }}>
+          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary-600)', margin: '0 0 0.25rem' }}>{data?.streak || 0}</p>
+          <p style={{ fontSize: '0.75rem', color: 'var(--theme_button-primary)', margin: 0 }}>连续打卡</p>
         </div>
-        <div style={{ flex: 1, padding: '1rem', borderRadius: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', textAlign: 'center' }}>
-          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#16a34a', margin: '0 0 0.25rem' }}>{data?.longestStreak || 0}</p>
-          <p style={{ fontSize: '0.75rem', color: '#15803d', margin: 0 }}>最长连续</p>
+        <div style={{ flex: 1, padding: '1rem', borderRadius: '0.75rem', background: 'var(--success-light)', border: '1px solid var(--success-border)', textAlign: 'center' }}>
+          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--success-dark)', margin: '0 0 0.25rem' }}>{data?.longestStreak || 0}</p>
+          <p style={{ fontSize: '0.75rem', color: 'var(--success-dark)', margin: 0 }}>最长连续</p>
         </div>
-        <div style={{ flex: 1, padding: '1rem', borderRadius: '0.75rem', background: '#fffbeb', border: '1px solid #fde68a', textAlign: 'center' }}>
-          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#d97706', margin: '0 0 0.25rem' }}>{data?.todayWordCount || 0}</p>
-          <p style={{ fontSize: '0.75rem', color: '#92400e', margin: 0 }}>今日字数</p>
+        <div style={{ flex: 1, padding: '1rem', borderRadius: '0.75rem', background: 'var(--warning-light)', border: '1px solid var(--warning-border)', textAlign: 'center' }}>
+          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--warning-dark)', margin: '0 0 0.25rem' }}>{data?.todayWordCount || 0}</p>
+          <p style={{ fontSize: '0.75rem', color: 'var(--topic-info-text)', margin: 0 }}>今日字数</p>
         </div>
       </div>
 
       {data?.todayChecked ? (
-        <div style={{ padding: '1.5rem', borderRadius: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', textAlign: 'center' }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.5rem' }}>
+        <div style={{ padding: '1.5rem', borderRadius: '0.75rem', background: 'var(--success-light)', border: '1px solid var(--success-border)', textAlign: 'center' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--success-dark)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.5rem' }}>
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
           </svg>
-          <p style={{ fontSize: '0.9375rem', fontWeight: 500, color: '#15803d', margin: 0 }}>今日已打卡</p>
+          <p style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--success-dark)', margin: 0 }}>今日已打卡</p>
         </div>
       ) : (
         <>
@@ -141,7 +141,7 @@ export default function DailyCheckin({ userId, subject }: DailyCheckinProps) {
           />
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '0.75rem', color: wordCount >= goalTarget ? '#16a34a' : 'var(--text-tertiary, #9ca3af)' }}>
+            <span style={{ fontSize: '0.75rem', color: wordCount >= goalTarget ? 'var(--success-dark)' : 'var(--text-tertiary, #9ca3af)' }}>
               {wordCount} / {goalTarget} 字 {wordCount >= goalTarget ? '✓ 达标' : ''}
             </span>
           </div>
@@ -151,7 +151,7 @@ export default function DailyCheckin({ userId, subject }: DailyCheckinProps) {
             disabled={!content.trim() || checkinLoading}
             style={{
               width: '100%', padding: '0.625rem', borderRadius: '0.5rem', border: 'none',
-              background: content.trim() && !checkinLoading ? '#3b82f6' : '#9ca3af',
+              background: content.trim() && !checkinLoading ? 'var(--theme_button-primary)' : '#9ca3af',
               color: '#fff', cursor: content.trim() && !checkinLoading ? 'pointer' : 'not-allowed', fontSize: '0.875rem', fontWeight: 500,
             }}
           >
@@ -169,14 +169,14 @@ export default function DailyCheckin({ userId, subject }: DailyCheckinProps) {
                 key={i}
                 style={{
                   padding: '0.375rem', borderRadius: '0.375rem', textAlign: 'center',
-                  background: c.wordCount >= c.goalTarget ? '#dcfce7' : c.wordCount > 0 ? '#fef3c7' : 'var(--bg-secondary, #f9fafb)',
-                  border: `1px solid ${c.wordCount >= c.goalTarget ? '#bbf7d0' : c.wordCount > 0 ? '#fde68a' : 'var(--border-color, #e5e7eb)'}`,
+                  background: c.wordCount >= c.goalTarget ? 'var(--success-light)' : c.wordCount > 0 ? 'var(--topic-info-bg)' : 'var(--bg-secondary, #f9fafb)',
+                  border: `1px solid ${c.wordCount >= c.goalTarget ? 'var(--success-border)' : c.wordCount > 0 ? 'var(--warning-border)' : 'var(--border-color, #e5e7eb)'}`,
                 }}
               >
                 <p style={{ fontSize: '0.625rem', color: 'var(--text-secondary, #6b7280)', margin: '0 0 0.125rem' }}>
                   {c.date.split('-').slice(1).join('/')}
                 </p>
-                <p style={{ fontSize: '0.625rem', color: c.wordCount >= c.goalTarget ? '#16a34a' : 'var(--text-tertiary, #9ca3af)', margin: 0, fontWeight: 500 }}>
+                <p style={{ fontSize: '0.625rem', color: c.wordCount >= c.goalTarget ? 'var(--success-dark)' : 'var(--text-tertiary, #9ca3af)', margin: 0, fontWeight: 500 }}>
                   {c.wordCount}字
                 </p>
               </div>

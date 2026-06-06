@@ -178,8 +178,8 @@ export default function ArgumentChain({ topic, subject, onComplete }: ArgumentCh
           style={{
             padding: '1.25rem',
             borderRadius: '0.75rem',
-            background: results.totalScore >= 80 ? '#f0fdf4' : results.totalScore >= 60 ? '#fffbeb' : '#fef2f2',
-            border: `1px solid ${results.totalScore >= 80 ? '#22c55e' : results.totalScore >= 60 ? '#f59e0b' : '#ef4444'}`,
+            background: results.totalScore >= 80 ? 'var(--success-light)' : results.totalScore >= 60 ? 'var(--warning-light)' : 'var(--danger-light)',
+            border: `1px solid ${results.totalScore >= 80 ? 'var(--success-dark)' : results.totalScore >= 60 ? 'var(--warning)' : 'var(--danger)'}`,
             marginBottom: '1.5rem',
             textAlign: 'center',
           }}
@@ -188,7 +188,7 @@ export default function ArgumentChain({ topic, subject, onComplete }: ArgumentCh
             style={{
               fontSize: '2rem',
               fontWeight: 700,
-              color: results.totalScore >= 80 ? '#22c55e' : results.totalScore >= 60 ? '#f59e0b' : '#ef4444',
+              color: results.totalScore >= 80 ? 'var(--success-dark)' : results.totalScore >= 60 ? 'var(--warning)' : 'var(--danger)',
             }}
           >
             {results.totalScore}分
@@ -234,7 +234,7 @@ export default function ArgumentChain({ topic, subject, onComplete }: ArgumentCh
                   style={{
                     fontSize: '0.875rem',
                     fontWeight: 600,
-                    color: chainResult.score >= 80 ? '#22c55e' : chainResult.score >= 60 ? '#f59e0b' : '#ef4444',
+                    color: chainResult.score >= 80 ? 'var(--success-dark)' : chainResult.score >= 60 ? 'var(--warning)' : 'var(--danger)',
                   }}
                 >
                   {chainResult.score}分
@@ -319,8 +319,8 @@ export default function ArgumentChain({ topic, subject, onComplete }: ArgumentCh
               fontSize: '0.8125rem',
               fontWeight: 500,
               border: '1px solid',
-              borderColor: expandedChain === idx ? '#3b82f6' : 'var(--border-color, #e5e7eb)',
-              background: expandedChain === idx ? '#3b82f6' : 'var(--bg-card, #fff)',
+              borderColor: expandedChain === idx ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)',
+              background: expandedChain === idx ? 'var(--theme_button-primary)' : 'var(--bg-card, #fff)',
               color: expandedChain === idx ? '#fff' : 'var(--text-secondary, #6b7280)',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
@@ -421,7 +421,7 @@ export default function ArgumentChain({ topic, subject, onComplete }: ArgumentCh
                 <span
                   style={{
                     fontSize: '0.75rem',
-                    color: isValid ? '#22c55e' : '#9ca3af',
+                    color: isValid ? 'var(--success-dark)' : '#9ca3af',
                   }}
                 >
                   {isValid ? '已满足' : `至少${minLen}字`}
@@ -486,7 +486,7 @@ export default function ArgumentChain({ topic, subject, onComplete }: ArgumentCh
             borderRadius: '0.5rem',
             fontSize: '0.875rem',
             fontWeight: 600,
-            background: allValid && !isEvaluating ? '#3b82f6' : '#9ca3af',
+            background: allValid && !isEvaluating ? 'var(--theme_button-primary)' : '#9ca3af',
             color: '#fff',
             border: 'none',
             cursor: allValid && !isEvaluating ? 'pointer' : 'not-allowed',

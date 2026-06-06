@@ -96,21 +96,21 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
               border: '2px solid',
               borderColor:
                 idx === currentIdx
-                  ? '#3b82f6'
+                  ? 'var(--theme_button-primary)'
                   : completedScenarios.has(s.id)
-                    ? '#22c55e'
+                    ? 'var(--success-dark)'
                     : 'var(--border-color, #e5e7eb)',
               background:
                 idx === currentIdx
-                  ? '#3b82f6'
+                  ? 'var(--theme_button-primary)'
                   : completedScenarios.has(s.id)
-                    ? '#f0fdf4'
+                    ? 'var(--success-light)'
                     : 'var(--bg-card, #fff)',
               color:
                 idx === currentIdx
                   ? '#fff'
                   : completedScenarios.has(s.id)
-                    ? '#22c55e'
+                    ? 'var(--success-dark)'
                     : 'var(--text-secondary, #6b7280)',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
@@ -143,8 +143,8 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                   fontWeight: 500,
                   padding: '0.25rem 0.5rem',
                   borderRadius: '9999px',
-                  background: '#fef2f2',
-                  color: '#ef4444',
+                  background: 'var(--danger-light)',
+                  color: 'var(--danger)',
                 }}
               >
                 场景 {currentIdx + 1}/{PSYCHOLOGY_SCENARIOS.length}
@@ -156,8 +156,8 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                     fontWeight: 500,
                     padding: '0.25rem 0.5rem',
                     borderRadius: '9999px',
-                    background: '#f0fdf4',
-                    color: '#22c55e',
+                    background: 'var(--success-light)',
+                    color: 'var(--success-dark)',
                   }}
                 >
                   已完成
@@ -192,8 +192,8 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
               style={{
                 padding: '1rem',
                 borderRadius: '0.5rem',
-                background: '#eff6ff',
-                border: '1px solid #bfdbfe',
+                background: 'var(--accent-light)',
+                border: '1px solid var(--info-border)',
                 marginBottom: '1rem',
               }}
             >
@@ -201,7 +201,7 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                 style={{
                   fontSize: '0.8125rem',
                   fontWeight: 600,
-                  color: '#1d4ed8',
+                  color: 'var(--primary-700)',
                   margin: '0 0 0.5rem',
                 }}
               >
@@ -219,7 +219,7 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                     style={{
                       fontSize: '0.8125rem',
                       lineHeight: 1.7,
-                      color: '#1e40af',
+                      color: 'var(--primary-800)',
                       marginBottom: '0.25rem',
                     }}
                   >
@@ -295,11 +295,11 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                   border: '2px solid',
                   borderColor:
                     selectedOption === idx
-                      ? '#3b82f6'
+                      ? 'var(--theme_button-primary)'
                       : 'var(--border-color, #e5e7eb)',
                   background:
                     selectedOption === idx
-                      ? '#eff6ff'
+                      ? 'var(--accent-light)'
                       : 'var(--bg-card, #fff)',
                   textAlign: 'left',
                   cursor: 'pointer',
@@ -348,8 +348,8 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
             style={{
               padding: '1.5rem',
               borderRadius: '0.75rem',
-              background: scenario.practiceOptions[selectedOption].isCorrect ? '#f0fdf4' : '#fef2f2',
-              border: `1px solid ${scenario.practiceOptions[selectedOption].isCorrect ? '#22c55e' : '#ef4444'}`,
+              background: scenario.practiceOptions[selectedOption].isCorrect ? 'var(--success-light)' : 'var(--danger-light)',
+              border: `1px solid ${scenario.practiceOptions[selectedOption].isCorrect ? 'var(--success-dark)' : 'var(--danger)'}`,
               marginBottom: '1.5rem',
             }}
           >
@@ -361,7 +361,7 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                 style={{
                   fontSize: '1rem',
                   fontWeight: 600,
-                  color: scenario.practiceOptions[selectedOption].isCorrect ? '#22c55e' : '#ef4444',
+                  color: scenario.practiceOptions[selectedOption].isCorrect ? 'var(--success-dark)' : 'var(--danger)',
                 }}
               >
                 {scenario.practiceOptions[selectedOption].isCorrect ? '正确！' : '不太对'}
@@ -385,8 +385,8 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
               style={{
                 padding: '1rem',
                 borderRadius: '0.75rem',
-                background: '#f0fdf4',
-                border: '1px solid #bbf7d0',
+                background: 'var(--success-light)',
+                border: '1px solid var(--success-border)',
                 marginBottom: '1rem',
               }}
             >
@@ -394,7 +394,7 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                 style={{
                   fontSize: '0.8125rem',
                   fontWeight: 600,
-                  color: '#166534',
+                  color: 'var(--success-dark)',
                   margin: '0 0 0.5rem',
                 }}
               >
@@ -408,7 +408,7 @@ export default function WritingPsychology({ onComplete }: WritingPsychologyProps
                     style={{
                       fontSize: '0.8125rem',
                       lineHeight: 1.7,
-                      color: '#166534',
+                      color: 'var(--success-dark)',
                       margin: 0,
                     }}
                   >

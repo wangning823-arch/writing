@@ -89,10 +89,10 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
         </p>
       </div>
 
-      <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#eff6ff', border: '1px solid #bfdbfe', marginBottom: '1.5rem' }}>
-        <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#1d4ed8', margin: '0 0 0.25rem' }}>写作话题</p>
-        <p style={{ fontSize: '0.9375rem', color: '#1e40af', margin: 0, fontWeight: 500 }}>{topic}</p>
-        {genre && <p style={{ fontSize: '0.8125rem', color: '#3b82f6', margin: '0.25rem 0 0' }}>文体：{genre}</p>}
+      <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--accent-light)', border: '1px solid var(--primary-200)', marginBottom: '1.5rem' }}>
+        <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--primary-700)', margin: '0 0 0.25rem' }}>写作话题</p>
+        <p style={{ fontSize: '0.9375rem', color: 'var(--primary-800)', margin: 0, fontWeight: 500 }}>{topic}</p>
+        {genre && <p style={{ fontSize: '0.8125rem', color: 'var(--theme_button-primary)', margin: '0.25rem 0 0' }}>文体：{genre}</p>}
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
@@ -101,9 +101,9 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
             key={p}
             onClick={() => { setPhase(p); setResult(null) }}
             style={{
-              flex: 1, padding: '0.5rem', borderRadius: '0.5rem', border: `1px solid ${phase === p ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-              background: phase === p ? '#eff6ff' : 'var(--bg-card, #fff)',
-              color: phase === p ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+              flex: 1, padding: '0.5rem', borderRadius: '0.5rem', border: `1px solid ${phase === p ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+              background: phase === p ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+              color: phase === p ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
               cursor: 'pointer', fontSize: '0.8125rem', fontWeight: phase === p ? 600 : 400,
             }}
           >
@@ -133,7 +133,7 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
         disabled={loading}
         style={{
           width: '100%', padding: '0.625rem', borderRadius: '0.5rem', border: 'none',
-          background: loading ? '#9ca3af' : '#3b82f6', color: '#fff',
+          background: loading ? '#9ca3af' : 'var(--theme_button-primary)', color: '#fff',
           cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.875rem', fontWeight: 500, marginBottom: '1.5rem',
         }}
       >
@@ -151,23 +151,23 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
       {!loading && result && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {result.questions && (
-            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#fef3c7', border: '1px solid #fcd34d' }}>
-              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#92400e', margin: '0 0 0.5rem' }}>思考问题</h4>
+            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--topic-info-bg)', border: '1px solid var(--warning-border)' }}>
+              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--topic-info-text)', margin: '0 0 0.5rem' }}>思考问题</h4>
               {result.questions.map((q: string, i: number) => (
-                <p key={i} style={{ fontSize: '0.875rem', color: '#78350f', margin: '0 0 0.25rem', lineHeight: 1.6 }}>• {q}</p>
+                <p key={i} style={{ fontSize: '0.875rem', color: 'var(--topic-info-text)', margin: '0 0 0.25rem', lineHeight: 1.6 }}>• {q}</p>
               ))}
             </div>
           )}
 
           {result.mindMap && (
-            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
-              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#16a34a', margin: '0 0 0.5rem' }}>思维导图</h4>
-              <p style={{ fontSize: '0.875rem', color: '#15803d', margin: '0 0 0.5rem', fontWeight: 500 }}>核心：{result.mindMap.central}</p>
+            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--success-light)', border: '1px solid var(--success-border)' }}>
+              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--success-dark)', margin: '0 0 0.5rem' }}>思维导图</h4>
+              <p style={{ fontSize: '0.875rem', color: 'var(--success-dark)', margin: '0 0 0.5rem', fontWeight: 500 }}>核心：{result.mindMap.central}</p>
               {result.mindMap.branches?.map((b: any, i: number) => (
                 <div key={i} style={{ marginLeft: '1rem', marginBottom: '0.25rem' }}>
-                  <p style={{ fontSize: '0.8125rem', color: '#166534', margin: 0, fontWeight: 500 }}>• {b.label}</p>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--success-dark)', margin: 0, fontWeight: 500 }}>• {b.label}</p>
                   {b.children?.map((c: string, j: number) => (
-                    <p key={j} style={{ fontSize: '0.8125rem', color: '#15803d', margin: '0 0 0 1rem' }}>  - {c}</p>
+                    <p key={j} style={{ fontSize: '0.8125rem', color: 'var(--success-dark)', margin: '0 0 0 1rem' }}>  - {c}</p>
                   ))}
                 </div>
               ))}
@@ -175,15 +175,15 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
           )}
 
           {result.outline && (
-            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#f5f3ff', border: '1px solid #ddd6fe' }}>
-              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#7c3aed', margin: '0 0 0.5rem' }}>写作提纲</h4>
+            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--purple-light)', border: '1px solid var(--purple)' }}>
+              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--purple)', margin: '0 0 0.5rem' }}>写作提纲</h4>
               {result.outline.map((item: any, i: number) => (
                 <div key={i} style={{ marginLeft: `${(item.level - 1) * 1}rem`, marginBottom: '0.25rem' }}>
-                  <p style={{ fontSize: '0.875rem', color: '#5b21b6', margin: 0, fontWeight: item.level === 1 ? 600 : 400 }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--purple-text)', margin: 0, fontWeight: item.level === 1 ? 600 : 400 }}>
                     {item.level === 1 ? '■' : '•'} {item.text}
                   </p>
                   {item.children?.map((c: string, j: number) => (
-                    <p key={j} style={{ fontSize: '0.8125rem', color: '#6d28d9', margin: '0 0 0 1.5rem' }}>  - {c}</p>
+                    <p key={j} style={{ fontSize: '0.8125rem', color: 'var(--purple-text)', margin: '0 0 0 1.5rem' }}>  - {c}</p>
                   ))}
                 </div>
               ))}
@@ -191,39 +191,39 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
           )}
 
           {result.review && (
-            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#fff7ed', border: '1px solid #fed7aa' }}>
-              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#9a3412', margin: '0 0 0.5rem' }}>提纲评审</h4>
+            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--suggestion-bg)', border: '1px solid var(--suggestion-border)' }}>
+              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--suggestion-text)', margin: '0 0 0.5rem' }}>提纲评审</h4>
               <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem' }}>
                 {Object.entries(result.review).map(([k, v]) => (
-                  <span key={k} style={{ fontSize: '0.75rem', color: '#c2410c' }}>{k.replace('Score', '')}: {v as number}分</span>
+                  <span key={k} style={{ fontSize: '0.75rem', color: 'var(--suggestion-text)' }}>{k.replace('Score', '')}: {v as number}分</span>
                 ))}
               </div>
               {result.revisedOutline && (
-                <p style={{ fontSize: '0.8125rem', color: '#78350f', margin: '0.5rem 0 0', lineHeight: 1.6 }}>{result.revisedOutline}</p>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--suggestion-text)', margin: '0.5rem 0 0', lineHeight: 1.6 }}>{result.revisedOutline}</p>
               )}
             </div>
           )}
 
           {result.strengths && result.strengths.length > 0 && (
-            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
-              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#16a34a', margin: '0 0 0.25rem' }}>亮点</h4>
+            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--success-light)', border: '1px solid var(--success-border)' }}>
+              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--success-dark)', margin: '0 0 0.25rem' }}>亮点</h4>
               {result.strengths.map((s: string, i: number) => (
-                <p key={i} style={{ fontSize: '0.8125rem', color: '#15803d', margin: '0 0 0.125rem' }}>• {s}</p>
+                <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--success-dark)', margin: '0 0 0.125rem' }}>• {s}</p>
               ))}
             </div>
           )}
 
           {result.suggestions && result.suggestions.length > 0 && (
-            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#fefce8', border: '1px solid #fde68a' }}>
-              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#854d0e', margin: '0 0 0.25rem' }}>改进建议</h4>
+            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--warning-light)', border: '1px solid var(--warning-border)' }}>
+              <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--warning-dark)', margin: '0 0 0.25rem' }}>改进建议</h4>
               {result.suggestions.map((s: string, i: number) => (
-                <p key={i} style={{ fontSize: '0.8125rem', color: '#713f12', margin: '0 0 0.125rem' }}>• {s}</p>
+                <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--warning-dark)', margin: '0 0 0.125rem' }}>• {s}</p>
               ))}
             </div>
           )}
 
           {result.encouragement && (
-            <p style={{ fontSize: '0.875rem', color: '#3b82f6', textAlign: 'center', fontStyle: 'italic' }}>{result.encouragement}</p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--theme_button-primary)', textAlign: 'center', fontStyle: 'italic' }}>{result.encouragement}</p>
           )}
 
           {phase !== 'polish' && (
@@ -234,8 +234,8 @@ export default function PreWritingIdeation({ topic, genre, subject, onComplete, 
                 setResult(null)
               }}
               style={{
-                width: '100%', padding: '0.625rem', borderRadius: '0.5rem', border: '1px solid #3b82f6',
-                background: '#fff', color: '#3b82f6', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
+                width: '100%', padding: '0.625rem', borderRadius: '0.5rem', border: '1px solid var(--theme_button-primary)',
+                background: 'var(--bg-card)', color: 'var(--theme_button-primary)', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
               }}
             >
               进入下一阶段：{phase === 'brainstorm' ? '提纲组织' : '提纲完善'}

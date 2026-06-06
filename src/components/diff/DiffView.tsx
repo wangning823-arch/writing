@@ -10,10 +10,10 @@ interface DiffViewProps {
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  resolved: { label: '已解决', color: '#166534', bg: '#dcfce7' },
-  unresolved: { label: '未解决', color: '#92400e', bg: '#fef3c7' },
-  misdirected: { label: '偏差', color: '#991b1b', bg: '#fee2e2' },
-  'new-issue': { label: '新问题', color: '#1e40af', bg: '#dbeafe' },
+  resolved: { label: '已解决', color: 'var(--success-dark)', bg: 'var(--success-light)' },
+  unresolved: { label: '未解决', color: 'var(--topic-info-text)', bg: 'var(--topic-info-bg)' },
+  misdirected: { label: '偏差', color: 'var(--danger-dark)', bg: 'var(--danger-light)' },
+  'new-issue': { label: '新问题', color: 'var(--primary-800)', bg: 'var(--primary-100)' },
 }
 
 export default function DiffView({ segments, onStatusChange }: DiffViewProps) {

@@ -30,14 +30,14 @@ export default function ArgumentationLibrary({ subject, onComplete, onBack, user
           {selectedMethod.name}
         </h3>
 
-        <div style={{ padding: '1rem', borderRadius: '0.5rem', background: '#eff6ff', border: '1px solid #bfdbfe', marginBottom: '1rem' }}>
+        <div style={{ padding: '1rem', borderRadius: '0.5rem', background: 'var(--accent-light)', border: '1px solid #bfdbfe', marginBottom: '1rem' }}>
           <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#1d4ed8', margin: '0 0 0.25rem' }}>定义</h4>
           <p style={{ fontSize: '0.875rem', color: '#1e40af', margin: 0 }}>{selectedMethod.definition}</p>
         </div>
 
-        <div style={{ padding: '1rem', borderRadius: '0.5rem', background: '#f0fdf4', border: '1px solid #bbf7d0', marginBottom: '1rem' }}>
-          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#16a34a', margin: '0 0 0.25rem' }}>作用</h4>
-          <p style={{ fontSize: '0.875rem', color: '#15803d', margin: 0 }}>{selectedMethod.role}</p>
+        <div style={{ padding: '1rem', borderRadius: '0.5rem', background: 'var(--success-light)', border: '1px solid var(--success-border)', marginBottom: '1rem' }}>
+          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--success-dark)', margin: '0 0 0.25rem' }}>作用</h4>
+          <p style={{ fontSize: '0.875rem', color: 'var(--success-dark)', margin: 0 }}>{selectedMethod.role}</p>
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
@@ -76,8 +76,8 @@ export default function ArgumentationLibrary({ subject, onComplete, onBack, user
               </button>
             </div>
             {showAnswer && (
-              <div style={{ marginTop: '0.5rem', padding: '0.75rem', borderRadius: '0.375rem', background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
-                <p style={{ fontSize: '0.8125rem', color: '#15803d', margin: 0 }}>{selectedMethod.recognitionAnswer}</p>
+              <div style={{ marginTop: '0.5rem', padding: '0.75rem', borderRadius: '0.375rem', background: 'var(--success-light)', border: '1px solid var(--success-border)' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--success-dark)', margin: 0 }}>{selectedMethod.recognitionAnswer}</p>
               </div>
             )}
           </div>
@@ -110,8 +110,8 @@ export default function ArgumentationLibrary({ subject, onComplete, onBack, user
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(59,130,246,0.1)' }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-color, #e5e7eb)'; e.currentTarget.style.boxShadow = 'none' }}
           >
-            <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.5rem', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#2563eb' }}>{method.name.charAt(0)}</span>
+            <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.5rem', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--primary-600)' }}>{method.name.charAt(0)}</span>
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h4 style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary, #111827)', margin: '0 0 0.25rem' }}>{method.name}</h4>

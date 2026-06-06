@@ -23,11 +23,11 @@ export function Card({ children, className = '', padding = 'md', hover = false }
 
   return (
     <div className={`
-      bg-white border border-[#e0e2e6] rounded-2xl
+      border rounded-2xl
       ${paddingClasses[padding]}
       ${hover ? 'transition-shadow hover:shadow-[rgba(45,127,249,0.28)_0px_1px_3px]' : ''}
       ${className}
-    `}>
+    `} style={{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }}>
       {children}
     </div>
   )
@@ -39,12 +39,13 @@ export function CardButton({ children, className = '', padding = 'md', onClick, 
       onClick={onClick}
       disabled={disabled}
       className={`
-        bg-white border border-[#e0e2e6] rounded-2xl
+        border rounded-2xl
         ${padding === 'sm' ? 'p-3' : padding === 'md' ? 'p-4' : 'p-6'}
         text-left transition-all
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-[#1b61c9] hover:shadow-[rgba(45,127,249,0.28)_0px_1px_3px]'}
         ${className}
       `}
+      style={{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }}
     >
       {children}
     </button>

@@ -113,7 +113,7 @@ export default function CurrentReading({ subject, userId }: CurrentReadingProps)
             onClick={handleGenerate}
             style={{
               padding: '0.5rem 1.5rem', borderRadius: '0.5rem', border: 'none',
-              background: '#3b82f6', color: '#fff', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
+              background: 'var(--theme_button-primary)', color: '#fff', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
             }}
           >
             AI 生成本周推荐
@@ -128,8 +128,8 @@ export default function CurrentReading({ subject, userId }: CurrentReadingProps)
                 onClick={() => setSelectedArticle(selectedArticle?.title === article.title ? null : article)}
                 style={{
                   padding: '1rem', borderRadius: '0.75rem', cursor: 'pointer',
-                  border: `1px solid ${selectedArticle?.title === article.title ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-                  background: selectedArticle?.title === article.title ? '#eff6ff' : 'var(--bg-card, #fff)',
+                  border: `1px solid ${selectedArticle?.title === article.title ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+                  background: selectedArticle?.title === article.title ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
                 }}
               >
                 <h4 style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary, #111827)', margin: '0 0 0.25rem' }}>
@@ -144,7 +144,7 @@ export default function CurrentReading({ subject, userId }: CurrentReadingProps)
                 {article.tags && article.tags.length > 0 && (
                   <div style={{ display: 'flex', gap: '0.375rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                     {article.tags.map((tag, j) => (
-                      <span key={j} style={{ fontSize: '0.625rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: '#f0fdf4', color: '#16a34a' }}>
+                      <span key={j} style={{ fontSize: '0.625rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: 'var(--success-light)', color: 'var(--success-dark)' }}>
                         {tag}
                       </span>
                     ))}
@@ -155,8 +155,8 @@ export default function CurrentReading({ subject, userId }: CurrentReadingProps)
           </div>
 
           {selectedArticle && (
-            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#f5f3ff', border: '1px solid #ddd6fe', marginBottom: '1rem' }}>
-              <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: '#7c3aed', margin: '0 0 0.5rem' }}>
+            <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--purple-light)', border: '1px solid var(--purple)', marginBottom: '1rem' }}>
+              <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--purple)', margin: '0 0 0.5rem' }}>
                 阅读笔记 - {selectedArticle.title}
               </h4>
               <textarea
@@ -166,7 +166,7 @@ export default function CurrentReading({ subject, userId }: CurrentReadingProps)
                 placeholder="写下你的阅读感悟..."
                 style={{
                   width: '100%', padding: '0.5rem', borderRadius: '0.375rem',
-                  border: '1px solid #ddd6fe', background: '#fff', fontSize: '0.875rem',
+                  border: '1px solid var(--purple)', background: 'var(--bg-card)', fontSize: '0.875rem',
                   color: 'var(--text-primary, #111827)', resize: 'vertical', boxSizing: 'border-box', marginBottom: '0.5rem',
                 }}
               />
@@ -175,7 +175,7 @@ export default function CurrentReading({ subject, userId }: CurrentReadingProps)
                 disabled={!note.trim() || saving}
                 style={{
                   padding: '0.375rem 1rem', borderRadius: '0.375rem', border: 'none',
-                  background: note.trim() ? '#7c3aed' : '#9ca3af', color: '#fff',
+                  background: note.trim() ? 'var(--purple)' : '#9ca3af', color: '#fff',
                   cursor: note.trim() ? 'pointer' : 'not-allowed', fontSize: '0.8125rem',
                 }}
               >

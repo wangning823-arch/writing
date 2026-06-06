@@ -22,13 +22,13 @@ export default function GenreBadge({ genre, isConsistent }: GenreBadgeProps) {
   let borderColor = `${baseColor}40`
 
   if (isConsistent === true) {
-    bgColor = '#f0fdf4'
-    textColor = '#166534'
-    borderColor = '#bbf7d0'
+    bgColor = 'var(--success-light)'
+    textColor = 'var(--success-dark)'
+    borderColor = 'var(--success-border)'
   } else if (isConsistent === false) {
-    bgColor = '#fef2f2'
-    textColor = '#dc2626'
-    borderColor = '#fecaca'
+    bgColor = 'var(--danger-light)'
+    textColor = 'var(--danger-dark)'
+    borderColor = 'var(--danger-border)'
   }
 
   return (

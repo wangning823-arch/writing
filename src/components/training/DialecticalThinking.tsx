@@ -107,7 +107,7 @@ export default function DialecticalThinking({ subject, onComplete, onBack, userI
   return (
     <div style={{ padding: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-        <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#fffbeb', color: '#d97706' }}>
+        <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--warning-light)', color: 'var(--warning-dark)' }}>
           {exercise.difficulty === 'easy' ? '基础' : exercise.difficulty === 'medium' ? '进阶' : '挑战'}
         </span>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary, #9ca3af)' }}>
@@ -181,7 +181,7 @@ export default function DialecticalThinking({ subject, onComplete, onBack, userI
             disabled={!responseA.trim() || !responseB.trim() || isAnalyzing}
             style={{
               padding: '0.5rem 1.5rem', borderRadius: '0.5rem', border: 'none',
-              background: responseA.trim() && responseB.trim() && !isAnalyzing ? '#3b82f6' : '#9ca3af',
+              background: responseA.trim() && responseB.trim() && !isAnalyzing ? 'var(--theme_button-primary)' : '#9ca3af',
               color: '#fff', cursor: responseA.trim() && responseB.trim() && !isAnalyzing ? 'pointer' : 'not-allowed',
               fontSize: '0.875rem', fontWeight: 500,
             }}

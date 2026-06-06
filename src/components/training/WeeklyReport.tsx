@@ -222,11 +222,11 @@ export default function WeeklyReport({ userId, subject }: WeeklyReportProps) {
           style={{
             padding: '1rem',
             borderRadius: '0.75rem',
-            border: '1px solid #bbf7d0',
-            background: '#f0fdf4',
+            border: '1px solid var(--success-border)',
+            background: 'var(--success-light)',
           }}
         >
-          <h4 style={{ fontSize: '0.8rem', fontWeight: 600, color: '#16a34a', marginBottom: '0.5rem' }}>
+          <h4 style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--success-dark)', marginBottom: '0.5rem' }}>
             本周亮点
           </h4>
           {stats.highlights.map((h, i) => (
@@ -234,7 +234,7 @@ export default function WeeklyReport({ userId, subject }: WeeklyReportProps) {
               key={i}
               style={{
                 fontSize: '0.8rem',
-                color: '#15803d',
+                color: 'var(--success-dark)',
                 padding: '0.25rem 0',
                 display: 'flex',
                 alignItems: 'flex-start',
@@ -254,11 +254,11 @@ export default function WeeklyReport({ userId, subject }: WeeklyReportProps) {
           style={{
             padding: '1rem',
             borderRadius: '0.75rem',
-            border: '1px solid #fecaca',
-            background: '#fef2f2',
+            border: '1px solid var(--danger-border)',
+            background: 'var(--danger-light)',
           }}
         >
-          <h4 style={{ fontSize: '0.8rem', fontWeight: 600, color: '#dc2626', marginBottom: '0.5rem' }}>
+          <h4 style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--danger-dark)', marginBottom: '0.5rem' }}>
             需要加强
           </h4>
           {stats.improvementAreas.map((area, i) => (

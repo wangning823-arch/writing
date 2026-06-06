@@ -39,9 +39,9 @@ function ScoreRing({ score, max, label, color, size = 56 }: { score: number; max
 
 export default function ScoreCard({ feedback }: ScoreCardProps) {
   const scoreColor = (score: number) => {
-    if (score >= 80) return '#22c55e'
-    if (score >= 60) return '#f59e0b'
-    return '#ef4444'
+    if (score >= 80) return 'var(--success-dark)'
+    if (score >= 60) return 'var(--warning)'
+    return 'var(--danger)'
   }
 
   const gradeClass = (score: number) => {
@@ -82,9 +82,9 @@ export default function ScoreCard({ feedback }: ScoreCardProps) {
       </div>
 
       <div className="dimension-scores">
-        <ScoreRing score={feedback.scores.content} max={30} label="内容" color="#3b82f6" />
+        <ScoreRing score={feedback.scores.content} max={30} label="内容" color="var(--theme_button-primary)" />
         <ScoreRing score={feedback.scores.structure} max={25} label="结构" color="#8b5cf6" />
-        <ScoreRing score={feedback.scores.language} max={25} label="语言" color="#f59e0b" />
+        <ScoreRing score={feedback.scores.language} max={25} label="语言" color="var(--warning)" />
         <ScoreRing score={feedback.scores.norm} max={20} label="规范" color="#10b981" />
       </div>
     </div>

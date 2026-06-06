@@ -9,11 +9,11 @@ interface KnowledgeGraphProps {
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  '思维能力': { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe' },
-  '结构能力': { bg: '#f0fdf4', text: '#16a34a', border: '#bbf7d0' },
-  '论证能力': { bg: '#fef3c7', text: '#d97706', border: '#fde68a' },
+  '思维能力': { bg: 'var(--accent-light)', text: 'var(--primary-700)', border: 'var(--primary-200)' },
+  '结构能力': { bg: 'var(--success-light)', text: 'var(--success-dark)', border: 'var(--success-border)' },
+  '论证能力': { bg: 'var(--topic-info-bg)', text: 'var(--warning-dark)', border: 'var(--warning-border)' },
   '语言能力': { bg: '#fce7f3', text: '#9d174d', border: '#fbcfe8' },
-  '写作习惯': { bg: '#f5f3ff', text: '#7c3aed', border: '#ddd6fe' },
+  '写作习惯': { bg: 'var(--purple-light)', text: 'var(--purple)', border: 'var(--purple)' },
 }
 
 const LEVEL_LABELS: Record<string, string> = {
@@ -46,8 +46,8 @@ export default function KnowledgeGraph({ subject, masteredNodes = [] }: Knowledg
           style={{
             padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.6875rem',
             border: `1px solid ${!filterCategory ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-            background: !filterCategory ? '#eff6ff' : 'var(--bg-card, #fff)',
-            color: !filterCategory ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+            background: !filterCategory ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+            color: !filterCategory ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
             cursor: 'pointer',
           }}
         >
@@ -92,7 +92,7 @@ export default function KnowledgeGraph({ subject, masteredNodes = [] }: Knowledg
                       style={{
                         padding: '0.375rem 0.75rem', borderRadius: '0.375rem',
                         border: `1px solid ${isSelected ? colors.text : isConnected ? colors.border : 'var(--border-color, #e5e7eb)'}`,
-                        background: isSelected ? colors.bg : isMastered ? '#f0fdf4' : 'var(--bg-card, #fff)',
+                        background: isSelected ? colors.bg : isMastered ? 'var(--success-light)' : 'var(--bg-card, #fff)',
                         cursor: 'pointer', fontSize: '0.75rem', fontWeight: isSelected ? 600 : 400,
                         color: isSelected ? colors.text : 'var(--text-primary, #111827)',
                         boxShadow: isSelected ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',

@@ -25,9 +25,9 @@ const SORT_OPTIONS = [
 ]
 
 const SOURCE_COLORS: Record<string, { bg: string; text: string }> = {
-  '范文': { bg: '#dbeafe', text: '#1e40af' },
-  'AI推荐': { bg: '#f3e8ff', text: '#7c3aed' },
-  '学生整理': { bg: '#dcfce7', text: '#166534' },
+  '范文': { bg: 'var(--primary-100)', text: '#1e40af' },
+  'AI推荐': { bg: 'var(--purple-light)', text: 'var(--purple)' },
+  '学生整理': { bg: 'var(--success-light)', text: 'var(--success-dark)' },
 }
 
 export default function MaterialLibrary({ userId, subject }: MaterialLibraryProps) {

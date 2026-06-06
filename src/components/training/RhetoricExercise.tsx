@@ -13,7 +13,7 @@ interface RhetoricExerciseProps {
 }
 
 const TYPE_LABELS = { recognition: '识别', imitation: '仿写', application: '应用' }
-const TYPE_COLORS = { recognition: { bg: '#eff6ff', text: '#2563eb' }, imitation: { bg: '#f0fdf4', text: '#16a34a' }, application: { bg: '#fffbeb', text: '#d97706' } }
+const TYPE_COLORS = { recognition: { bg: 'var(--accent-light)', text: 'var(--primary-600)' }, imitation: { bg: 'var(--success-light)', text: 'var(--success-dark)' }, application: { bg: 'var(--warning-light)', text: 'var(--warning-dark)' } }
 
 export default function RhetoricExerciseComponent({ subject, onComplete, onBack, userId }: RhetoricExerciseProps) {
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -154,10 +154,10 @@ export default function RhetoricExerciseComponent({ subject, onComplete, onBack,
           {showResult && (
             <div style={{
               marginTop: '0.75rem', padding: '1rem', borderRadius: '0.5rem',
-              background: selectedRecognition === exercise.rhetoricType ? '#f0fdf4' : '#fffbeb',
-              border: `1px solid ${selectedRecognition === exercise.rhetoricType ? '#bbf7d0' : '#fde68a'}`,
+              background: selectedRecognition === exercise.rhetoricType ? 'var(--success-light)' : 'var(--warning-light)',
+              border: `1px solid ${selectedRecognition === exercise.rhetoricType ? 'var(--success-border)' : 'var(--warning-border)'}`,
             }}>
-              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: selectedRecognition === exercise.rhetoricType ? '#16a34a' : '#d97706', margin: '0 0 0.5rem' }}>
+              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: selectedRecognition === exercise.rhetoricType ? 'var(--success-dark)' : 'var(--warning-dark)', margin: '0 0 0.5rem' }}>
                 {selectedRecognition === exercise.rhetoricType ? '回答正确！' : `正确答案：${exercise.rhetoricType}`}
               </p>
               {exercise.modelAnswer && (

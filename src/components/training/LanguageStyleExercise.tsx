@@ -97,7 +97,7 @@ export default function LanguageStyleExercise({ subject, onComplete, onBack }: L
       </p>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-        <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#f5f3ff', color: '#7c3aed' }}>
+        <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--purple-light)', color: 'var(--purple)' }}>
           {exercise.type === 'identification' ? '风格识别' : exercise.type === 'imitation' ? '风格模仿' : '风格分析'}
         </span>
         <span style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary, #9ca3af)' }}>

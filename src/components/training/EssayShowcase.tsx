@@ -60,10 +60,10 @@ export default function EssayShowcase({ subject }: EssayShowcaseProps) {
         </button>
 
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
-          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#eff6ff', color: '#2563eb' }}>
+          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--accent-light)', color: 'var(--primary-600)' }}>
             {selectedEssay.theme}
           </span>
-          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#f0fdf4', color: '#16a34a' }}>
+          <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--success-light)', color: 'var(--success-dark)' }}>
             {selectedEssay.score}分
           </span>
         </div>
@@ -85,7 +85,7 @@ export default function EssayShowcase({ subject }: EssayShowcaseProps) {
           <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary, #6b7280)' }}>技巧标签：</span>
             {selectedEssay.techniques.map((t, i) => (
-              <span key={i} style={{ fontSize: '0.625rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: '#f5f3ff', color: '#7c3aed' }}>
+              <span key={i} style={{ fontSize: '0.625rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: '#f5f3ff', color: 'var(--purple)' }}>
                 {t}
               </span>
             ))}
@@ -109,9 +109,9 @@ export default function EssayShowcase({ subject }: EssayShowcaseProps) {
           onClick={() => setFilterTheme(null)}
           style={{
             padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.6875rem',
-            border: `1px solid ${!filterTheme ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-            background: !filterTheme ? '#eff6ff' : 'var(--bg-card, #fff)',
-            color: !filterTheme ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+            border: `1px solid ${!filterTheme ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+            background: !filterTheme ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+            color: !filterTheme ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
             cursor: 'pointer',
           }}
         >
@@ -123,9 +123,9 @@ export default function EssayShowcase({ subject }: EssayShowcaseProps) {
             onClick={() => setFilterTheme(t)}
             style={{
               padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.6875rem',
-              border: `1px solid ${filterTheme === t ? '#3b82f6' : 'var(--border-color, #e5e7eb)'}`,
-              background: filterTheme === t ? '#eff6ff' : 'var(--bg-card, #fff)',
-              color: filterTheme === t ? '#2563eb' : 'var(--text-secondary, #6b7280)',
+              border: `1px solid ${filterTheme === t ? 'var(--theme_button-primary)' : 'var(--border-color, #e5e7eb)'}`,
+              background: filterTheme === t ? 'var(--accent-light)' : 'var(--bg-card, #fff)',
+              color: filterTheme === t ? 'var(--primary-600)' : 'var(--text-secondary, #6b7280)',
               cursor: 'pointer',
             }}
           >
@@ -154,7 +154,7 @@ export default function EssayShowcase({ subject }: EssayShowcaseProps) {
                 <h4 style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary, #111827)', margin: 0 }}>
                   {essay.title}
                 </h4>
-                <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: '#f0fdf4', color: '#16a34a' }}>
+                <span style={{ fontSize: '0.6875rem', padding: '0.125rem 0.375rem', borderRadius: '9999px', background: 'var(--success-light)', color: 'var(--success-dark)' }}>
                   {essay.score}分
                 </span>
               </div>

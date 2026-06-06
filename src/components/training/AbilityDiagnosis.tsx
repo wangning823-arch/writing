@@ -80,9 +80,9 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#16a34a'
-    if (score >= 60) return '#d97706'
-    return '#dc2626'
+    if (score >= 80) return 'var(--success-dark)'
+    if (score >= 60) return 'var(--warning-dark)'
+    return 'var(--danger-dark)'
   }
 
   const getTrendIcon = (trend: string) => {
@@ -95,8 +95,8 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'up': return '#16a34a'
-      case 'down': return '#dc2626'
+      case 'up': return 'var(--success-dark)'
+      case 'down': return 'var(--danger-dark)'
       default: return '#6b7280'
     }
   }
@@ -124,7 +124,7 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
         </p>
 
         <div style={{ padding: '2rem', borderRadius: '0.75rem', background: 'var(--bg-secondary, #f9fafb)', border: '1px solid var(--border-color, #e5e7eb)', textAlign: 'center' }}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '1rem' }}>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--theme_button-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '1rem' }}>
             <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
           </svg>
           <p style={{ fontSize: '0.9375rem', color: 'var(--text-primary, #111827)', marginBottom: '1rem' }}>
@@ -135,13 +135,13 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
             disabled={loading}
             style={{
               padding: '0.625rem 1.5rem', borderRadius: '0.5rem', border: 'none',
-              background: loading ? '#9ca3af' : '#3b82f6', color: '#fff',
+              background: loading ? '#9ca3af' : 'var(--theme_button-primary)', color: '#fff',
               cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.875rem', fontWeight: 500,
             }}
           >
             {loading ? '诊断中...' : '开始诊断'}
           </button>
-          {error && <p style={{ fontSize: '0.8125rem', color: '#dc2626', marginTop: '0.75rem' }}>{error}</p>}
+          {error && <p style={{ fontSize: '0.8125rem', color: 'var(--danger-dark)', marginTop: '0.75rem' }}>{error}</p>}
         </div>
       </div>
     )
@@ -156,10 +156,10 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
         基于训练数据的多维度写作能力分析
       </p>
 
-      <div style={{ padding: '1.5rem', borderRadius: '0.75rem', background: '#eff6ff', border: '1px solid #bfdbfe', marginBottom: '1.5rem', textAlign: 'center' }}>
-        <p style={{ fontSize: '0.8125rem', color: '#3b82f6', margin: '0 0 0.25rem', fontWeight: 500 }}>综合等级</p>
-        <p style={{ fontSize: '2rem', fontWeight: 700, color: '#1d4ed8', margin: '0 0 0.25rem' }}>{result.overallLevel}</p>
-        <p style={{ fontSize: '0.875rem', color: '#2563eb', margin: 0 }}>综合得分：{result.overallScore}</p>
+      <div style={{ padding: '1.5rem', borderRadius: '0.75rem', background: 'var(--accent-light)', border: '1px solid var(--primary-200)', marginBottom: '1.5rem', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.8125rem', color: 'var(--theme_button-primary)', margin: '0 0 0.25rem', fontWeight: 500 }}>综合等级</p>
+        <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary-700)', margin: '0 0 0.25rem' }}>{result.overallLevel}</p>
+        <p style={{ fontSize: '0.875rem', color: 'var(--primary-600)', margin: 0 }}>综合得分：{result.overallScore}</p>
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
@@ -169,7 +169,7 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.375rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary, #111827)' }}>{dim.name}</span>
-                <span style={{ fontSize: '0.6875rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: '#eff6ff', color: '#2563eb' }}>{dim.level}</span>
+                <span style={{ fontSize: '0.6875rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: 'var(--accent-light)', color: 'var(--primary-600)' }}>{dim.level}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                 <span style={{ fontSize: '0.875rem', fontWeight: 600, color: getScoreColor(dim.score) }}>{dim.score}</span>
@@ -185,37 +185,37 @@ export default function AbilityDiagnosis({ subject, userId }: AbilityDiagnosisPr
       </div>
 
       {result.strengths.length > 0 && (
-        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', marginBottom: '1rem' }}>
-          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#16a34a', margin: '0 0 0.5rem' }}>优势</h4>
+        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--success-light)', border: '1px solid var(--success-border)', marginBottom: '1rem' }}>
+          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--success-dark)', margin: '0 0 0.5rem' }}>优势</h4>
           {result.strengths.map((s, i) => (
-            <p key={i} style={{ fontSize: '0.8125rem', color: '#15803d', margin: '0 0 0.25rem' }}>• {s}</p>
+            <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--success-dark)', margin: '0 0 0.25rem' }}>• {s}</p>
           ))}
         </div>
       )}
 
       {result.weakPoints.length > 0 && (
-        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#fef2f2', border: '1px solid #fecaca', marginBottom: '1rem' }}>
-          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#dc2626', margin: '0 0 0.5rem' }}>薄弱点</h4>
+        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--danger-light)', border: '1px solid var(--danger-border)', marginBottom: '1rem' }}>
+          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--danger-dark)', margin: '0 0 0.5rem' }}>薄弱点</h4>
           {result.weakPoints.map((w, i) => (
-            <p key={i} style={{ fontSize: '0.8125rem', color: '#991b1b', margin: '0 0 0.25rem' }}>• {w}</p>
+            <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--danger-dark)', margin: '0 0 0.25rem' }}>• {w}</p>
           ))}
         </div>
       )}
 
       {result.recommendations.length > 0 && (
-        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#fffbeb', border: '1px solid #fde68a', marginBottom: '1rem' }}>
-          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#92400e', margin: '0 0 0.5rem' }}>训练建议</h4>
+        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--warning-light)', border: '1px solid var(--warning-border)', marginBottom: '1rem' }}>
+          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--topic-info-text)', margin: '0 0 0.5rem' }}>训练建议</h4>
           {result.recommendations.map((r, i) => (
-            <p key={i} style={{ fontSize: '0.8125rem', color: '#78350f', margin: '0 0 0.25rem' }}>{i + 1}. {r}</p>
+            <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--topic-info-text)', margin: '0 0 0.25rem' }}>{i + 1}. {r}</p>
           ))}
         </div>
       )}
 
       {result.nextSteps.length > 0 && (
-        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: '#f5f3ff', border: '1px solid #ddd6fe' }}>
-          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#7c3aed', margin: '0 0 0.5rem' }}>下一步行动</h4>
+        <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--purple-light)', border: '1px solid var(--purple)' }}>
+          <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--purple)', margin: '0 0 0.5rem' }}>下一步行动</h4>
           {result.nextSteps.map((n, i) => (
-            <p key={i} style={{ fontSize: '0.8125rem', color: '#5b21b6', margin: '0 0 0.25rem' }}>{i + 1}. {n}</p>
+            <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--purple-text)', margin: '0 0 0.25rem' }}>{i + 1}. {n}</p>
           ))}
         </div>
       )}

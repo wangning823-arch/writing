@@ -130,11 +130,11 @@ export default function ParagraphOrdering({
           let borderColor = 'var(--border-color, #e5e7eb)'
           let bgColor = 'var(--bg-card, #fff)'
           if (status === 'correct') {
-            borderColor = '#22c55e'
-            bgColor = '#f0fdf4'
+            borderColor = 'var(--success-dark)'
+            bgColor = 'var(--success-light)'
           } else if (status === 'wrong') {
-            borderColor = '#ef4444'
-            bgColor = '#fef2f2'
+            borderColor = 'var(--danger)'
+            bgColor = 'var(--danger-light)'
           }
 
           return (
@@ -167,9 +167,9 @@ export default function ParagraphOrdering({
                   borderRadius: '50%',
                   background:
                     status === 'correct'
-                      ? '#22c55e'
+                      ? 'var(--success-dark)'
                       : status === 'wrong'
-                        ? '#ef4444'
+                        ? 'var(--danger)'
                         : 'var(--bg-secondary, #f3f4f6)',
                   color: status === 'pending' ? 'var(--text-secondary, #6b7280)' : '#fff',
                   fontSize: '0.875rem',
@@ -244,8 +244,8 @@ export default function ParagraphOrdering({
             style={{
               padding: '1.25rem',
               borderRadius: '0.75rem',
-              background: allCorrect ? '#f0fdf4' : '#fffbeb',
-              border: `1px solid ${allCorrect ? '#22c55e' : '#f59e0b'}`,
+              background: allCorrect ? 'var(--success-light)' : 'var(--warning-light)',
+              border: `1px solid ${allCorrect ? 'var(--success-dark)' : 'var(--warning)'}`,
               marginBottom: '1rem',
             }}
           >
@@ -261,7 +261,7 @@ export default function ParagraphOrdering({
                 style={{
                   fontSize: '1.5rem',
                   fontWeight: 700,
-                  color: allCorrect ? '#22c55e' : '#f59e0b',
+                  color: allCorrect ? 'var(--success-dark)' : 'var(--warning)',
                 }}
               >
                 {score}分

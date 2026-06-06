@@ -17,6 +17,7 @@ interface TrainingType {
   difficulty: 'easy' | 'medium' | 'hard'
   icon: React.ReactNode
   availableFor: Subject[]
+  category: 'core' | 'sidebar'
 }
 
 const TRAINING_TYPES: TrainingType[] = [
@@ -28,6 +29,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
     availableFor: ['chinese'],
+    category: 'core',
   },
   {
     id: 'paragraph-ordering',
@@ -37,6 +39,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'argument-chain',
@@ -46,6 +49,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'multi-angle',
@@ -55,6 +59,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'paragraph-cards',
@@ -64,6 +69,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>,
     availableFor: ['chinese'],
+    category: 'core',
   },
   {
     id: 'writing-psychology',
@@ -73,6 +79,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <ThinkingIcon size={20} />,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'deep-reading',
@@ -82,6 +89,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'dialectical-thinking',
@@ -91,6 +99,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'concept-analysis',
@@ -100,6 +109,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'logic-reasoning',
@@ -109,6 +119,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'hard',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'rhetoric-training',
@@ -118,6 +129,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>,
     availableFor: ['chinese'],
+    category: 'core',
   },
   {
     id: 'sentence-transformation',
@@ -127,6 +139,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>,
     availableFor: ['chinese'],
+    category: 'core',
   },
   {
     id: 'argumentation-library',
@@ -136,6 +149,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
     availableFor: ['chinese'],
+    category: 'core',
   },
   {
     id: 'pre-writing',
@@ -145,6 +159,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'revision-guide',
@@ -154,6 +169,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'ability-diagnosis',
@@ -163,6 +179,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'personalized-path',
@@ -172,6 +189,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'daily-checkin',
@@ -181,6 +199,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'journal',
@@ -190,6 +209,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'current-reading',
@@ -199,6 +219,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'gaokao-practice',
@@ -208,6 +229,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'hard',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
     availableFor: ['chinese'],
+    category: 'core',
   },
   {
     id: 'comprehensive-training',
@@ -217,6 +239,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'hard',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
     availableFor: ['chinese'],
+    category: 'core',
   },
   {
     id: 'knowledge-graph',
@@ -226,6 +249,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="9" x2="19" y2="5"/><line x1="12" y1="9" x2="5" y2="5"/><line x1="12" y1="15" x2="5" y2="19"/><line x1="12" y1="15" x2="19" y2="19"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'language-style',
@@ -235,6 +259,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'medium',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'core',
   },
   {
     id: 'error-pattern',
@@ -244,6 +269,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'essay-showcase',
@@ -253,6 +279,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
   {
     id: 'writing-goals',
@@ -262,6 +289,7 @@ const TRAINING_TYPES: TrainingType[] = [
     difficulty: 'easy',
     icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
     availableFor: ['chinese', 'english'],
+    category: 'sidebar',
   },
 ]
 
@@ -272,16 +300,135 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 }
 
 const DIFFICULTY_COLORS: Record<string, { bg: string; text: string }> = {
-  easy: { bg: '#f0fdf4', text: '#16a34a' },
-  medium: { bg: '#fffbeb', text: '#d97706' },
-  hard: { bg: '#fef2f2', text: '#dc2626' },
+  easy: { bg: 'var(--success-light)', text: 'var(--success-dark)' },
+  medium: { bg: 'var(--warning-light)', text: 'var(--warning-dark)' },
+  hard: { bg: 'var(--danger-light)', text: 'var(--danger-dark)' },
 }
 
 export default function ThinkingTrainingHub({ subject, onSelectTraining }: ThinkingTrainingHubProps) {
-  const available = TRAINING_TYPES.filter((t) => t.availableFor.includes(subject))
+  const coreTrainings = TRAINING_TYPES.filter((t) => t.availableFor.includes(subject) && t.category === 'core')
+  const sidebarItems = TRAINING_TYPES.filter((t) => t.availableFor.includes(subject) && t.category === 'sidebar')
+
+  const renderCard = (training: TrainingType) => {
+    const diffColor = DIFFICULTY_COLORS[training.difficulty]
+    return (
+      <button
+        key={training.id}
+        onClick={() => onSelectTraining(training.id)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+          padding: '1.25rem',
+          borderRadius: '0.75rem',
+          border: '1px solid var(--border-color, #e5e7eb)',
+          background: 'var(--bg-card, #fff)',
+          textAlign: 'left',
+          cursor: 'pointer',
+          transition: 'all 0.15s ease',
+          width: '100%',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = 'var(--theme_button-primary)'
+          e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = 'var(--border-color, #e5e7eb)'
+          e.currentTarget.style.boxShadow = 'none'
+        }}
+      >
+        <span
+          style={{
+            width: '3rem',
+            height: '3rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '0.75rem',
+            background: 'var(--bg-secondary, #f9fafb)',
+            flexShrink: 0,
+            color: 'var(--text-primary, #111827)',
+          }}
+        >
+          {training.icon}
+        </span>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              marginBottom: '0.25rem',
+            }}
+          >
+            <h3
+              style={{
+                fontSize: '0.9375rem',
+                fontWeight: 600,
+                color: 'var(--text-primary, #111827)',
+                margin: 0,
+              }}
+            >
+              {training.name}
+            </h3>
+            <span
+              style={{
+                fontSize: '0.6875rem',
+                fontWeight: 500,
+                padding: '0.125rem 0.5rem',
+                borderRadius: '9999px',
+                background: diffColor.bg,
+                color: diffColor.text,
+              }}
+            >
+              {DIFFICULTY_LABELS[training.difficulty]}
+            </span>
+          </div>
+          <p
+            style={{
+              fontSize: '0.8125rem',
+              color: 'var(--text-secondary, #6b7280)',
+              margin: 0,
+              lineHeight: 1.5,
+            }}
+          >
+            {training.description}
+          </p>
+        </div>
+
+        <div
+          style={{
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: '0.25rem',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '0.75rem',
+              color: 'var(--text-tertiary, #9ca3af)',
+            }}
+          >
+            {training.estimatedTime}
+          </span>
+          <span
+            style={{
+              fontSize: '1rem',
+              color: 'var(--text-tertiary, #9ca3af)',
+            }}
+          >
+            →
+          </span>
+        </div>
+      </button>
+    )
+  }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1.5rem' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.5rem' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h2
           style={{
@@ -303,124 +450,120 @@ export default function ThinkingTrainingHub({ subject, onSelectTraining }: Think
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        {available.map((training) => {
-          const diffColor = DIFFICULTY_COLORS[training.difficulty]
-          return (
-            <button
-              key={training.id}
-              onClick={() => onSelectTraining(training.id)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                padding: '1.25rem',
-                borderRadius: '0.75rem',
-                border: '1px solid var(--border-color, #e5e7eb)',
-                background: 'var(--bg-card, #fff)',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                width: '100%',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#3b82f6'
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-color, #e5e7eb)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
-            >
-              <span
+      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+        {/* 左侧 - 核心训练区 */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h3
+            style={{
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              color: 'var(--text-secondary, #6b7280)',
+              marginBottom: '0.75rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
+            核心训练
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {coreTrainings.map(renderCard)}
+          </div>
+        </div>
+
+        {/* 右侧 - 辅助功能区 */}
+        <div style={{ width: '280px', flexShrink: 0 }}>
+          <h3
+            style={{
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              color: 'var(--text-secondary, #6b7280)',
+              marginBottom: '0.75rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
+            辅助工具
+          </h3>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+              padding: '1rem',
+              borderRadius: '0.75rem',
+              background: 'var(--bg-secondary, #f9fafb)',
+              border: '1px solid var(--border-color, #e5e7eb)',
+            }}
+          >
+            {sidebarItems.map((training) => (
+              <button
+                key={training.id}
+                onClick={() => onSelectTraining(training.id)}
                 style={{
-                  width: '3rem',
-                  height: '3rem',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '0.75rem',
-                  background: 'var(--bg-secondary, #f9fafb)',
-                  flexShrink: 0,
-                  color: 'var(--text-primary, #111827)',
+                  gap: '0.75rem',
+                  padding: '0.75rem',
+                  borderRadius: '0.5rem',
+                  border: 'none',
+                  background: 'var(--bg-card, #fff)',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  width: '100%',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'none'
                 }}
               >
-                {training.icon}
-              </span>
-
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div
+                <span
                   style={{
+                    width: '2rem',
+                    height: '2rem',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
-                    marginBottom: '0.25rem',
+                    justifyContent: 'center',
+                    borderRadius: '0.5rem',
+                    background: 'var(--bg-secondary, #f3f4f6)',
+                    flexShrink: 0,
+                    color: 'var(--text-primary, #111827)',
                   }}
                 >
-                  <h3
+                  {training.icon}
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h4
                     style={{
-                      fontSize: '0.9375rem',
-                      fontWeight: 600,
+                      fontSize: '0.8125rem',
+                      fontWeight: 500,
                       color: 'var(--text-primary, #111827)',
                       margin: 0,
+                      lineHeight: 1.3,
                     }}
                   >
                     {training.name}
-                  </h3>
-                  <span
+                  </h4>
+                  <p
                     style={{
-                      fontSize: '0.6875rem',
-                      fontWeight: 500,
-                      padding: '0.125rem 0.5rem',
-                      borderRadius: '9999px',
-                      background: diffColor.bg,
-                      color: diffColor.text,
+                      fontSize: '0.75rem',
+                      color: 'var(--text-tertiary, #9ca3af)',
+                      margin: 0,
+                      lineHeight: 1.3,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    {DIFFICULTY_LABELS[training.difficulty]}
-                  </span>
+                    {training.description}
+                  </p>
                 </div>
-                <p
-                  style={{
-                    fontSize: '0.8125rem',
-                    color: 'var(--text-secondary, #6b7280)',
-                    margin: 0,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {training.description}
-                </p>
-              </div>
-
-              <div
-                style={{
-                  flexShrink: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  gap: '0.25rem',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--text-tertiary, #9ca3af)',
-                  }}
-                >
-                  {training.estimatedTime}
-                </span>
-                <span
-                  style={{
-                    fontSize: '1rem',
-                    color: 'var(--text-tertiary, #9ca3af)',
-                  }}
-                >
-                  →
-                </span>
-              </div>
-            </button>
-          )
-        })}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )

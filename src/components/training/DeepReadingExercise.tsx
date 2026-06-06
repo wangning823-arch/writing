@@ -207,7 +207,7 @@ export default function DeepReadingExercise({
             onClick={handleAnalyze}
             style={{
               padding: '0.5rem 1.5rem', borderRadius: '0.5rem', border: 'none',
-              background: '#3b82f6', color: '#fff', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
+              background: 'var(--theme_button-primary)', color: '#fff', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
             }}
           >
             提交分析
@@ -233,7 +233,7 @@ export default function DeepReadingExercise({
           <div
             style={{
               height: '100%',
-              background: '#3b82f6',
+              background: 'var(--theme_button-primary)',
               borderRadius: '2px',
               width: `${((currentParagraph + 1) / paragraphs.length) * 100}%`,
               transition: 'width 0.3s',
@@ -269,8 +269,8 @@ export default function DeepReadingExercise({
               style={{
                 padding: '0.75rem',
                 borderRadius: '0.5rem',
-                background: '#f0f9ff',
-                border: '1px solid #bae6fd',
+                background: 'var(--info-bg)',
+                border: '1px solid var(--info-border)',
                 marginBottom: '0.5rem',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -278,7 +278,7 @@ export default function DeepReadingExercise({
               }}
             >
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#0369a1', background: '#e0f2fe', padding: '0.125rem 0.5rem', borderRadius: '9999px' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent)', background: 'var(--accent-light)', padding: '0.125rem 0.5rem', borderRadius: '9999px' }}>
                   {anno.technique}
                 </span>
                 {anno.effect && <p style={{ fontSize: '0.8125rem', color: 'var(--text-primary, #111827)', margin: '0.25rem 0 0' }}>{anno.effect}</p>}
@@ -286,7 +286,7 @@ export default function DeepReadingExercise({
               </div>
               <button
                 onClick={() => removeAnnotation(currentParagraph, i)}
-                style={{ border: 'none', background: 'none', color: '#dc2626', cursor: 'pointer', fontSize: '0.75rem', padding: '0.25rem' }}
+                style={{ border: 'none', background: 'none', color: 'var(--danger-dark)', cursor: 'pointer', fontSize: '0.75rem', padding: '0.25rem' }}
               >
                 删除
               </button>
@@ -373,7 +373,7 @@ export default function DeepReadingExercise({
               disabled={!currentAnnotation.technique}
               style={{
                 padding: '0.375rem 0.75rem', borderRadius: '0.375rem', border: 'none',
-                background: currentAnnotation.technique ? '#3b82f6' : '#9ca3af',
+                background: currentAnnotation.technique ? 'var(--theme_button-primary)' : '#9ca3af',
                 color: '#fff', cursor: currentAnnotation.technique ? 'pointer' : 'not-allowed', fontSize: '0.8125rem',
               }}
             >
@@ -416,7 +416,7 @@ export default function DeepReadingExercise({
             onClick={() => setCurrentParagraph(currentParagraph + 1)}
             style={{
               padding: '0.5rem 1rem', borderRadius: '0.5rem', border: 'none',
-              background: '#3b82f6', color: '#fff', cursor: 'pointer', fontSize: '0.875rem',
+              background: 'var(--theme_button-primary)', color: '#fff', cursor: 'pointer', fontSize: '0.875rem',
             }}
           >
             下一段 →
@@ -426,7 +426,7 @@ export default function DeepReadingExercise({
             onClick={() => setPhase('reflection')}
             style={{
               padding: '0.5rem 1rem', borderRadius: '0.5rem', border: 'none',
-              background: '#16a34a', color: '#fff', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
+              background: 'var(--success-dark)', color: '#fff', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
             }}
           >
             完成阅读，写反思

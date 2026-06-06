@@ -304,8 +304,8 @@ export default function ResultPage() {
                           borderRadius: '4px',
                           fontSize: '0.6875rem',
                           fontWeight: 500,
-                          background: s.type === 'content' ? '#dbeafe' : s.type === 'structure' ? '#f3e8ff' : s.type === 'language' ? '#dcfce7' : '#fef3c7',
-                          color: s.type === 'content' ? '#2563eb' : s.type === 'structure' ? '#9333ea' : s.type === 'language' ? '#16a34a' : '#d97706',
+                          background: s.type === 'content' ? 'var(--primary-100)' : s.type === 'structure' ? 'var(--purple-light)' : s.type === 'language' ? 'var(--success-light)' : 'var(--topic-info-bg)',
+                          color: s.type === 'content' ? 'var(--primary-600)' : s.type === 'structure' ? 'var(--purple)' : s.type === 'language' ? 'var(--success-dark)' : 'var(--warning-dark)',
                         }}>
                           {s.type === 'content' ? '内容' : s.type === 'structure' ? '结构' : s.type === 'language' ? '语言' : '规范'}
                         </span>

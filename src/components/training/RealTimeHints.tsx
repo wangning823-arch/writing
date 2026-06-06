@@ -74,7 +74,7 @@ export default function RealTimeHints({ content, topic, subject, onHint }: RealT
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
         <span style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-secondary, #6b7280)' }}>写作助手</span>
-        <span style={{ fontSize: '0.6875rem', color: wordCount >= targetMin ? '#16a34a' : 'var(--text-tertiary, #9ca3af)' }}>
+        <span style={{ fontSize: '0.6875rem', color: wordCount >= targetMin ? 'var(--success-dark)' : 'var(--text-tertiary, #9ca3af)' }}>
           {wordCount} / {targetMin}-{targetMax} 字
         </span>
       </div>
@@ -83,7 +83,7 @@ export default function RealTimeHints({ content, topic, subject, onHint }: RealT
         <div style={{
           height: '100%', borderRadius: '2px',
           width: `${progress}%`,
-          background: progress >= 100 ? '#16a34a' : progress >= 60 ? '#3b82f6' : '#f59e0b',
+          background: progress >= 100 ? 'var(--success-dark)' : progress >= 60 ? 'var(--theme_button-primary)' : 'var(--warning)',
           transition: 'width 0.3s',
         }} />
       </div>
@@ -97,7 +97,7 @@ export default function RealTimeHints({ content, topic, subject, onHint }: RealT
       {hints.length > 0 && !loading && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           {hints.map((hint, i) => (
-            <p key={i} style={{ fontSize: '0.75rem', color: '#3b82f6', margin: 0, lineHeight: 1.4 }}>
+            <p key={i} style={{ fontSize: '0.75rem', color: 'var(--theme_button-primary)', margin: 0, lineHeight: 1.4 }}>
               💡 {hint}
             </p>
           ))}

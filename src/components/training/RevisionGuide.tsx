@@ -70,8 +70,8 @@ export default function RevisionGuide({ subject, essayContent, genre }: Revision
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case 'L1': return { bg: '#dbeafe', text: '#1d4ed8' }
-      case 'L2': return { bg: '#fef3c7', text: '#92400e' }
+      case 'L1': return { bg: 'var(--primary-100)', text: 'var(--primary-700)' }
+      case 'L2': return { bg: 'var(--topic-info-bg)', text: 'var(--topic-info-text)' }
       case 'L3': return { bg: '#fce7f3', text: '#9d174d' }
       default: return { bg: '#f3f4f6', text: '#374151' }
     }
@@ -89,10 +89,10 @@ export default function RevisionGuide({ subject, essayContent, genre }: Revision
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
           <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary, #6b7280)' }}>完成进度</span>
-          <span style={{ fontSize: '0.8125rem', fontWeight: 500, color: progress >= 80 ? '#16a34a' : '#3b82f6' }}>{checkedCount}/{totalItems} ({progress}%)</span>
+          <span style={{ fontSize: '0.8125rem', fontWeight: 500, color: progress >= 80 ? 'var(--success-dark)' : 'var(--theme_button-primary)' }}>{checkedCount}/{totalItems} ({progress}%)</span>
         </div>
         <div style={{ height: '6px', borderRadius: '3px', background: 'var(--border-color, #e5e7eb)', overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${progress}%`, borderRadius: '3px', background: progress >= 80 ? '#16a34a' : '#3b82f6', transition: 'width 0.3s' }} />
+          <div style={{ height: '100%', width: `${progress}%`, borderRadius: '3px', background: progress >= 80 ? 'var(--success-dark)' : 'var(--theme_button-primary)', transition: 'width 0.3s' }} />
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default function RevisionGuide({ subject, essayContent, genre }: Revision
                       style={{
                         display: 'flex', alignItems: 'flex-start', gap: '0.5rem',
                         padding: '0.5rem', borderRadius: '0.375rem', cursor: 'pointer',
-                        background: checked.has(item.id) ? '#f0fdf4' : 'transparent',
+                        background: checked.has(item.id) ? 'var(--success-light)' : 'transparent',
                       }}
                     >
                       <input
@@ -166,8 +166,8 @@ export default function RevisionGuide({ subject, essayContent, genre }: Revision
       })}
 
       {progress >= 80 && (
-        <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.875rem', color: '#15803d', margin: 0, fontWeight: 500 }}>
+        <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '0.75rem', background: 'var(--success-light)', border: '1px solid var(--success-border)', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--success-dark)', margin: 0, fontWeight: 500 }}>
             检查完成度 {progress}%，文章质量良好！
           </p>
         </div>

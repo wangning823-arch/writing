@@ -104,7 +104,7 @@ export default function ConceptAnalysis({ subject, onComplete, onBack, userId }:
   return (
     <div style={{ padding: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-        <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px', background: '#f0fdf4', color: '#16a34a' }}>
+        <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px', background: 'var(--success-light)', color: 'var(--success-dark)' }}>
           {TYPE_LABELS[exercise.type]}
         </span>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary, #9ca3af)' }}>
@@ -115,7 +115,7 @@ export default function ConceptAnalysis({ subject, onComplete, onBack, userId }:
       <div style={{ padding: '1rem', borderRadius: '0.75rem', background: 'var(--bg-secondary, #f9fafb)', border: '1px solid var(--border-color, #e5e7eb)', marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
           {exercise.concepts.map((c) => (
-            <span key={c} style={{ fontSize: '0.875rem', fontWeight: 600, color: '#3b82f6', background: '#eff6ff', padding: '0.25rem 0.75rem', borderRadius: '9999px' }}>{c}</span>
+            <span key={c} style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--theme_button-primary)', background: 'var(--accent-light)', padding: '0.25rem 0.75rem', borderRadius: '9999px' }}>{c}</span>
           ))}
         </div>
         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary, #6b7280)', margin: 0, lineHeight: 1.6 }}>{exercise.prompt}</p>
@@ -160,7 +160,7 @@ export default function ConceptAnalysis({ subject, onComplete, onBack, userId }:
             disabled={!response.trim() || isAnalyzing}
             style={{
               padding: '0.5rem 1.5rem', borderRadius: '0.5rem', border: 'none',
-              background: response.trim() && !isAnalyzing ? '#3b82f6' : '#9ca3af',
+              background: response.trim() && !isAnalyzing ? 'var(--theme_button-primary)' : '#9ca3af',
               color: '#fff', cursor: response.trim() && !isAnalyzing ? 'pointer' : 'not-allowed', fontSize: '0.875rem', fontWeight: 500,
             }}
           >

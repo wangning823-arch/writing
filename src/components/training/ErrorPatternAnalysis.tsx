@@ -48,8 +48,8 @@ export default function ErrorPatternAnalysis({ userId, subject }: ErrorPatternAn
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'increasing': return '#dc2626'
-      case 'decreasing': return '#16a34a'
+      case 'increasing': return 'var(--danger-dark)'
+      case 'decreasing': return 'var(--success-dark)'
       default: return '#6b7280'
     }
   }
@@ -84,7 +84,7 @@ export default function ErrorPatternAnalysis({ userId, subject }: ErrorPatternAn
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <span style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary, #111827)' }}>{p.type}</span>
-                  <span style={{ fontSize: '0.6875rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: '#fef2f2', color: '#dc2626' }}>
+                  <span style={{ fontSize: '0.6875rem', padding: '0.0625rem 0.375rem', borderRadius: '9999px', background: 'var(--danger-light)', color: 'var(--danger-dark)' }}>
                     {p.count}次
                   </span>
                 </div>

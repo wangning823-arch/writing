@@ -127,14 +127,14 @@ export default function WritingGoals({ userId, subject }: WritingGoalsProps) {
           return (
             <div key={goal.id} style={{
               padding: '1rem', borderRadius: '0.75rem',
-              border: `1px solid ${isCompleted ? '#bbf7d0' : 'var(--border-color, #e5e7eb)'}`,
-              background: isCompleted ? '#f0fdf4' : 'var(--bg-card, #fff)',
+              border: `1px solid ${isCompleted ? 'var(--success-border)' : 'var(--border-color, #e5e7eb)'}`,
+              background: isCompleted ? 'var(--success-light)' : 'var(--bg-card, #fff)',
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <h4 style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary, #111827)', margin: 0 }}>
                   {goal.title}
                 </h4>
-                <span style={{ fontSize: '0.6875rem', color: isCompleted ? '#16a34a' : 'var(--text-tertiary, #9ca3af)' }}>
+                <span style={{ fontSize: '0.6875rem', color: isCompleted ? 'var(--success-dark)' : 'var(--text-tertiary, #9ca3af)' }}>
                   {goal.current}/{goal.target}{goal.unit}
                 </span>
               </div>
@@ -142,7 +142,7 @@ export default function WritingGoals({ userId, subject }: WritingGoalsProps) {
                 <div style={{
                   height: '100%', borderRadius: '3px',
                   width: `${Math.min(progress, 100)}%`,
-                  background: isCompleted ? '#16a34a' : '#3b82f6',
+                  background: isCompleted ? 'var(--success-dark)' : 'var(--theme_button-primary)',
                   transition: 'width 0.3s',
                 }} />
               </div>

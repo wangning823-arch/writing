@@ -19,9 +19,12 @@ export default function LevelIcon({ level, size = 'md', completed = false }: Lev
   return (
     <div className={`${sizeClasses[size]} rounded-full flex items-center justify-center ${
       completed
-        ? 'bg-[#1b61c9] text-white'
-        : 'bg-[#f8fafc] border border-[#e0e2e6]'
-    }`}>
+        ? 'text-white'
+        : 'border'
+    }`} style={{
+      background: completed ? 'var(--theme_button-primary)' : 'var(--theme_bg-subtle)',
+      borderColor: completed ? undefined : 'var(--border-color)',
+    }}>
       {icon}
     </div>
   )

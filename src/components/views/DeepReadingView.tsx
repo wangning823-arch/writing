@@ -67,28 +67,28 @@ export default function DeepReadingView({ onBack, subject, userId }: DeepReading
         </div>
 
         {result.strengths?.length > 0 && (
-          <div style={{ padding: '1rem', borderRadius: '0.5rem', background: '#f0fdf4', border: '1px solid #bbf7d0', marginBottom: '1rem' }}>
-            <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#16a34a', marginBottom: '0.5rem' }}>做得好的方面</h4>
+          <div style={{ padding: '1rem', borderRadius: '0.5rem', background: 'var(--success-light)', border: '1px solid var(--success-border)', marginBottom: '1rem' }}>
+            <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--success-dark)', marginBottom: '0.5rem' }}>做得好的方面</h4>
             {result.strengths.map((s: string, i: number) => (
-              <p key={i} style={{ fontSize: '0.8125rem', color: '#15803d', margin: '0.25rem 0' }}>· {s}</p>
+              <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--success-dark)', margin: '0.25rem 0' }}>· {s}</p>
             ))}
           </div>
         )}
 
         {result.suggestions?.length > 0 && (
-          <div style={{ padding: '1rem', borderRadius: '0.5rem', background: '#fffbeb', border: '1px solid #fde68a', marginBottom: '1rem' }}>
-            <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#d97706', marginBottom: '0.5rem' }}>改进建议</h4>
+          <div style={{ padding: '1rem', borderRadius: '0.5rem', background: 'var(--warning-light)', border: '1px solid var(--warning-border)', marginBottom: '1rem' }}>
+            <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--warning-dark)', marginBottom: '0.5rem' }}>改进建议</h4>
             {result.suggestions.map((s: string, i: number) => (
-              <p key={i} style={{ fontSize: '0.8125rem', color: '#92400e', margin: '0.25rem 0' }}>· {s}</p>
+              <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--warning-dark)', margin: '0.25rem 0' }}>· {s}</p>
             ))}
           </div>
         )}
 
         {result.techniquesMissed?.length > 0 && (
-          <div style={{ padding: '1rem', borderRadius: '0.5rem', background: '#fef2f2', border: '1px solid #fecaca', marginBottom: '1rem' }}>
-            <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#dc2626', marginBottom: '0.5rem' }}>遗漏的技巧</h4>
+          <div style={{ padding: '1rem', borderRadius: '0.5rem', background: 'var(--danger-light)', border: '1px solid var(--danger-border)', marginBottom: '1rem' }}>
+            <h4 style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--danger-dark)', marginBottom: '0.5rem' }}>遗漏的技巧</h4>
             {result.techniquesMissed.map((t: string, i: number) => (
-              <p key={i} style={{ fontSize: '0.8125rem', color: '#991b1b', margin: '0.25rem 0' }}>· {t}</p>
+              <p key={i} style={{ fontSize: '0.8125rem', color: 'var(--danger-dark)', margin: '0.25rem 0' }}>· {t}</p>
             ))}
           </div>
         )}

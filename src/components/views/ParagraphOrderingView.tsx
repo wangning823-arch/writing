@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import ParagraphOrdering from '@/components/training/ParagraphOrdering'
 import { PARAGRAPH_ORDER_EXERCISES } from '@/lib/training/thinking-exercises'
 
@@ -12,29 +12,32 @@ interface ParagraphOrderingViewProps {
 export default function ParagraphOrderingView({ onBack, subject }: ParagraphOrderingViewProps) {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
   const [key, setKey] = useState(0) // Force remount of ParagraphOrdering
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
 
   // Get available topics for the subject
-  const availableTopics = PARAGRAPH_ORDER_EXERCISES
-    .filter(e => e.subject === subject)
-    .map(e => e.topic)
+  const availableTopics = useMemo(() => {
+    return PARAGRAPH_ORDER_EXERCISES
+      .filter(e => e.subject === subject)
+      .map(e => e.topic)
+  }, [subject])
 
-  // Randomly select a topic
-  const selectRandomTopic = useCallback(() => {
+  // Randomly select a topic on mount
+  useEffect(() => {
+    if (availableTopics.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availableTopics.length)
+      setSelectedTopic(availableTopics[randomIndex])
+    }
+  }, []) // Only run on mount
+
+  const handleComplete = (score: number, completedDifficulty: 'easy' | 'medium' | 'hard') => {
+    // Remember difficulty for next question
+    setDifficulty(completedDifficulty)
+    // Auto switch to next random topic
     if (availableTopics.length > 0) {
       const randomIndex = Math.floor(Math.random() * availableTopics.length)
       setSelectedTopic(availableTopics[randomIndex])
       setKey(prev => prev + 1) // Force remount
     }
-  }, [availableTopics])
-
-  // Randomly select a topic on mount
-  useEffect(() => {
-    selectRandomTopic()
-  }, [selectRandomTopic])
-
-  const handleComplete = (score: number) => {
-    // Auto switch to next random topic
-    selectRandomTopic()
   }
 
   if (!selectedTopic) {
@@ -91,6 +94,7 @@ export default function ParagraphOrderingView({ onBack, subject }: ParagraphOrde
         key={key}
         topic={selectedTopic}
         subject={subject}
+        initialDifficulty={difficulty}
         onComplete={handleComplete}
       />
     </div>

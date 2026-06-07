@@ -72,6 +72,7 @@ export default function ThreeColumnLayout({ children, hideRightPanel = false }: 
           zIndex: 201,
           transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.25s ease',
+          pointerEvents: sidebarOpen ? 'auto' : 'none',
         }}
       >
         <Sidebar />

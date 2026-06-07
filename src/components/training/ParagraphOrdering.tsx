@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
   PARAGRAPH_ORDER_EXERCISES,
   type ParagraphOrderExercise,
@@ -9,7 +9,8 @@ import {
 interface ParagraphOrderingProps {
   topic: string
   subject: 'chinese' | 'english'
-  onComplete: (score: number) => void
+  initialDifficulty?: 'easy' | 'medium' | 'hard'
+  onComplete: (score: number, difficulty: 'easy' | 'medium' | 'hard') => void
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -30,9 +31,10 @@ const DIFFICULTY_CONFIG = {
 export default function ParagraphOrdering({
   topic,
   subject,
+  initialDifficulty,
   onComplete,
 }: ParagraphOrderingProps) {
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(null)
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(initialDifficulty || null)
 
   const availableExercises = useMemo(() => {
     return PARAGRAPH_ORDER_EXERCISES.filter((e) => e.subject === subject)
@@ -53,20 +55,19 @@ export default function ParagraphOrdering({
       // Fallback to any exercise of the subject
       return availableExercises[Math.floor(Math.random() * availableExercises.length)]
     }
-    // Try to match topic first
-    const topicMatch = candidates.find((e) => e.topic === topic)
-    if (topicMatch) return topicMatch
+    // Randomly select from available exercises in this difficulty
     return candidates[Math.floor(Math.random() * candidates.length)]
-  }, [selectedDifficulty, topic, exercisesByDifficulty, availableExercises])
+  }, [selectedDifficulty, exercisesByDifficulty, availableExercises])
 
   const [items, setItems] = useState<ParagraphOrderExercise['paragraphs']>([])
   const [submitted, setSubmitted] = useState(false)
   const [dragIdx, setDragIdx] = useState<number | null>(null)
 
   // Initialize items when exercise is selected
-  useMemo(() => {
-    if (exercise && items.length === 0) {
+  useEffect(() => {
+    if (exercise) {
       setItems(shuffle(exercise.paragraphs).map((p) => ({ ...p })))
+      setSubmitted(false)
     }
   }, [exercise])
 
@@ -140,6 +141,10 @@ export default function ParagraphOrdering({
 
   const handleSubmit = () => {
     setSubmitted(true)
+  }
+
+  const handleComplete = () => {
+    onComplete(score, selectedDifficulty || 'easy')
   }
 
   const correctOrder = useMemo(
@@ -538,7 +543,7 @@ export default function ParagraphOrdering({
 
           <div style={{ textAlign: 'center' }}>
             <button
-              onClick={() => onComplete(score)}
+              onClick={handleComplete}
               style={{
                 padding: '0.75rem 2rem',
                 borderRadius: '0.5rem',

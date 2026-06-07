@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Fragment } from 'react'
 import { BookIcon } from '@/components/icons'
+import MaterialDetailModal from './MaterialDetailModal'
 
 interface Material {
   id: string
@@ -36,7 +37,7 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
   const [searchQuery, setSearchQuery] = useState('')
   const [category, setCategory] = useState('全部')
   const [sort, setSort] = useState('newest')
-  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [selectedMaterial, setSelectedMaterial] = useState<Material | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [categories, setCategories] = useState<string[]>(['全部'])
 
@@ -109,6 +110,7 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
   }
 
   return (
+    <Fragment>
     <div className="material-library">
       {/* Header */}
       <div className="ml-header">
@@ -166,7 +168,7 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
             <div
               key={material.id}
               className="ml-card"
-              onClick={() => setExpandedId(expandedId === material.id ? null : material.id)}
+              onClick={() => setSelectedMaterial(material)}
             >
               {/* Source badge */}
               <div className="ml-card-header">
@@ -183,7 +185,7 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
               </div>
 
               {/* Content preview */}
-              <p className={`ml-card-content ${expandedId === material.id ? 'ml-card-expanded' : ''}`}>
+              <p className="ml-card-content">
                 {material.content}
               </p>
 
@@ -215,5 +217,15 @@ export default function MaterialLibrary({ userId, subject }: MaterialLibraryProp
         </div>
       )}
     </div>
+
+      {selectedMaterial && (
+        <MaterialDetailModal
+          material={selectedMaterial}
+          onClose={() => setSelectedMaterial(null)}
+          onCopy={handleUseMaterial}
+          copiedId={copiedId}
+        />
+      )}
+    </Fragment>
   )
 }

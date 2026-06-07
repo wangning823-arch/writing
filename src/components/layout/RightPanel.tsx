@@ -315,7 +315,7 @@ function VersionFooter() {
         textAlign: 'center',
       }}
     >
-      v0.1.20260605.2000
+      v0.1.20260607.1500
     </div>
   )
 }
